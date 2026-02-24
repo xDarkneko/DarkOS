@@ -1,8 +1,3 @@
-// ============================================================
-//  ⚡ DarkOS – Website Konfiguration
-//  Hier alles anpassen. Keine Programmierkenntnisse nötig!
-// ============================================================
-
 const DARKOS_CONFIG = {
 
   // ── Bot & API ─────────────────────────────────────────────────
