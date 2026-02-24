@@ -71,12 +71,14 @@
 <script src="../config.js"></script>
 <script>
   const C = window.DARKOS || {};
+  const CLIENT = C.clientId || '1425314501057839174';
+  const GUILDID = C.guildId || '1023175719209144380';
   let accessToken = null;
 
   // ── OAuth2 Implicit Flow ───────────────────────────────────────
   const REDIRECT_URI = window.location.href.split('?')[0].split('#')[0];
   const OAUTH_URL = 'https://discord.com/oauth2/authorize' +
-    '?client_id=' + encodeURIComponent(C.clientId || '') +
+    '?client_id=' + encodeURIComponent(CLIENT) +
     '&response_type=token' +
     '&redirect_uri=' + encodeURIComponent(REDIRECT_URI) +
     '&scope=identify+guilds';
@@ -97,7 +99,7 @@
         headers: { Authorization: 'Bearer ' + token }
       });
       const guilds = await guildsRes.json();
-      const guild = Array.isArray(guilds) && guilds.find(g => g.id === C.guildId);
+      const guild = Array.isArray(guilds) && guilds.find(g => g.id === GUILDID);
 
       if (!guild) { showErr('❌ Du bist nicht im Community Server.'); return; }
 

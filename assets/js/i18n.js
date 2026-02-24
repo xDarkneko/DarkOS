@@ -6,7 +6,15 @@ const UI_LABELS = {
   de: { 'stat.members':'Mitglieder','stat.tickets':'Tickets','stat.messages':'Nachrichten','stat.joins':'Beitritte','stat.leaves':'Abgänge','stat.version':'Version' }
 };
 
-function setText(id, val) { const el = document.getElementById(id); if (el && val !== undefined) el.textContent = val; }
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el && val !== undefined) el.textContent = val;
+}
+
+function updateFlagBtn() {
+  const btn = document.getElementById('langToggle');
+  if (btn) btn.textContent = currentLang === 'en' ? '🇺🇸' : '🇩🇪';
+}
 
 function applyPage() {
   const C = window.DARKOS;
@@ -20,16 +28,15 @@ function applyPage() {
   document.documentElement.style.setProperty('--accent3', C.colors.danger);
   document.documentElement.style.setProperty('--glow',    C.colors.primary + '55');
 
-  // Static UI labels
+  // data-key labels
   const labels = UI_LABELS[lg] || UI_LABELS.en;
   document.querySelectorAll('[data-key]').forEach(el => {
     const k = el.getAttribute('data-key');
     if (labels[k]) el.textContent = labels[k];
   });
 
-  // Nav & footer brand
-  const nb = document.getElementById('navBotName');
-  if (nb) nb.textContent = C.botName;
+  // Nav brand
+  setText('navBotName', C.botName);
 
   // Hero
   setText('heroBadge', 'v' + C.botVersion + ' · ' + (lg === 'de' ? 'Jetzt Live' : 'Now Live'));
@@ -42,15 +49,8 @@ function applyPage() {
   if (cb) { cb.href = C.links.communityServer; cb.textContent = t.communityBtn; }
 
   setText('statVersion', C.botVersion);
-
-  // Stats section
-  setText('statsTitle', t.statsTitle || '');
-  setText('statsLive',  t.statsLive  || '');
-
-  // Team CTA
-  setText('teamCtaTitle', lg === 'de' ? 'Unser Team' : 'Our Team');
-  setText('teamCtaSub',   lg === 'de' ? 'Lerne die Leute hinter DarkOS kennen.' : 'Meet the people behind DarkOS.');
-  setText('teamCtaBtn',   lg === 'de' ? 'Team ansehen' : 'View Team');
+  setText('statsTitle',  t.statsTitle || '');
+  setText('statsLive',   t.statsLive  || '');
 
   // Footer
   setText('footerBrand', '⚡ ' + C.botName + ' v' + C.botVersion);
@@ -60,27 +60,19 @@ function applyPage() {
   if (fc) fc.href = C.links.communityServer;
   if (fg) fg.href = C.links.github;
 
-  // Admin dashboard OAuth link
-  const oauthUrl = `https://discord.com/oauth2/authorize?client_id=${C.clientId}&response_type=code&redirect_uri=${encodeURIComponent(window.location.origin + window.location.pathname.replace('index.html','') + 'callback.html')}&scope=identify+guilds`;
-  window._oauthUrl = oauthUrl;
-
   document.title = C.botName + ' – Discord Bot';
+
+  updateFlagBtn();
 }
 
 function toggleLang() {
   currentLang = currentLang === 'en' ? 'de' : 'en';
   localStorage.setItem('darkos-lang', currentLang);
-  const btn = document.getElementById('langToggle');
-  if (btn) btn.innerHTML = currentLang === 'en' ? '🇺🇸' : '🇩🇪';
+  updateFlagBtn();
   applyPage();
 }
 
-function t(key) { return (UI_LABELS[currentLang] || UI_LABELS.en)[key] || key; }
-
 document.addEventListener('DOMContentLoaded', function() {
-  if (currentLang === 'de') {
-    const btn = document.getElementById('langToggle');
-    if (btn) btn.innerHTML = '🇬🇧';
-  }
+  updateFlagBtn();
   applyPage();
 });

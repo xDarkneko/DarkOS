@@ -397,9 +397,11 @@
 <script src="../config.js"></script>
 <script>
 // ── Config ─────────────────────────────────────────────────────
+// Fallback values if config.js doesn't load in time
 const C       = window.DARKOS || {};
-const API_URL = C.apiUrl || 'https://your-api-host.example.com';
-const GUILD   = C.guildId || '';
+const API_URL = C.apiUrl   || 'https://your-api-host.example.com';
+const GUILD   = C.guildId  || '1023175719209144380';
+const CLIENT  = C.clientId || '1425314501057839174'; // fallback hardcoded
 
 // ── OAuth2 Implicit Flow (kein Backend nötig!) ────────────────
 // Redirect URI = diese Seite selbst
@@ -407,7 +409,7 @@ const REDIRECT_URI = window.location.href.split('?')[0].split('#')[0];
 
 // Implicit flow: response_type=token → Token kommt direkt im URL-Hash zurück
 const OAUTH_URL = 'https://discord.com/oauth2/authorize' +
-  '?client_id=' + encodeURIComponent(C.clientId || '') +
+  '?client_id=' + encodeURIComponent(CLIENT) +
   '&response_type=token' +
   '&redirect_uri=' + encodeURIComponent(REDIRECT_URI) +
   '&scope=identify+guilds';
@@ -415,8 +417,8 @@ const OAUTH_URL = 'https://discord.com/oauth2/authorize' +
 let accessToken = null;
 
 function doLogin() {
-  if (!C.clientId || C.clientId === 'DEINE_CLIENT_ID_HIER') {
-    showErr('❌ Bitte zuerst config.js ausfüllen (clientId)!');
+  if (!CLIENT) {
+    showErr('❌ clientId fehlt in config.js!');
     return;
   }
   window.location.href = OAUTH_URL;

@@ -1,6 +1,6 @@
 // DarkOS – Main JS
 
-// ── Intersection Observer (animate in) ────────────────────────
+// Animate stat cards on scroll
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) {
@@ -17,30 +17,25 @@ document.querySelectorAll('.stat-card').forEach(el => {
   observer.observe(el);
 });
 
-// ── Smooth scroll – nur für echte Seitenanker ─────────────────
-// FIX: Nur Anker die wirklich auf der Seite existieren, nicht externe Links!
+// Smooth scroll – only for real page anchors, never external links
 document.querySelectorAll('a[href^="#"]').forEach(link => {
-  const targetId = link.getAttribute('href');
-  if (targetId === '#' || !document.querySelector(targetId)) return; // skip leere/externe
+  const href = link.getAttribute('href');
+  if (href.length <= 1) return; // skip bare "#"
   link.addEventListener('click', e => {
-    e.preventDefault();
-    document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+    const target = document.querySelector(href);
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
   });
 });
 
-// ── Badge typing – läuft NACH i18n (DOMContentLoaded) ─────────
+// Badge typing effect – runs after i18n sets the text
 document.addEventListener('DOMContentLoaded', () => {
-  // Kurz warten bis applyPage() den Badge-Text gesetzt hat
   setTimeout(() => {
     const badge = document.querySelector('.hero-badge');
-    if (!badge) return;
+    if (!badge || badge.textContent === 'Loading...') return;
     const text = badge.textContent;
-    if (!text || text === 'Loading...') return;
     badge.textContent = '';
     let i = 0;
-    const type = () => {
-      if (i < text.length) { badge.textContent += text[i++]; setTimeout(type, 35); }
-    };
+    const type = () => { if (i < text.length) { badge.textContent += text[i++]; setTimeout(type, 35); } };
     type();
-  }, 100);
+  }, 150);
 });
