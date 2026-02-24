@@ -1,13 +1,18 @@
+// ============================================================
+//  ⚡ DarkOS – Website Konfiguration
+//  Hier alles anpassen. Keine Programmierkenntnisse nötig!
+// ============================================================
+
 const DARKOS_CONFIG = {
 
   // ── Bot & API ─────────────────────────────────────────────────
   apiUrl:   'https://your-api-host.example.com',
   guildId:  '1023175719209144380',
-  clientId: '1425314501057839134',
+  clientId: '1425314501057839134', // ← Public, safe hier einzutragen
 
   // ── Bot Info ──────────────────────────────────────────────────
   botName:    'DarkOS',
-  botVersion: '0.0.1a',
+  botVersion: '2.0.0',
 
   // ── Farben ────────────────────────────────────────────────────
   colors: {
@@ -26,10 +31,10 @@ const DARKOS_CONFIG = {
   landing: {
     en: {
       heroSub:      'The ultimate Discord bot for your community.',
-      communityBtn: '💬 Team Darkness',
+      communityBtn: '💬 Join Community',
       statsTitle:   'Live Statistics',
       statsLive:    'Updated in real time',
-      footerCopy:   '© 2026 DarkOS. All rights reserved.',
+      footerCopy:   '© 2025 DarkOS. All rights reserved.',
     },
     de: {
       heroSub:      'Der ultimative Discord Bot für deine Community.',

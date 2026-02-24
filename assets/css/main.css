@@ -486,3 +486,26 @@ code { font-family: var(--font-mono); }
   font-size: 1.1rem;
   padding: .9rem 2.5rem;
 }
+
+/* ── Logo ───────────────────────────────────────────────────── */
+.nav-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 8px var(--accent, #7f5af0));
+}
+
+.hero-logo {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 0 24px #7f5af0aa);
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}

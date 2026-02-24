@@ -27,7 +27,7 @@ function applyPage() {
     if (labels[k]) el.textContent = labels[k];
   });
 
-  // Nav brand
+  // Nav & footer brand
   const nb = document.getElementById('navBotName');
   if (nb) nb.textContent = C.botName;
 
@@ -36,17 +36,18 @@ function applyPage() {
   const ht = document.getElementById('heroTitle');
   if (ht) { ht.textContent = C.botName; ht.dataset.text = C.botName; }
   setText('heroSub', t.heroSub);
-  const inv = document.getElementById('inviteBtn');
-  const sup = document.getElementById('supportBtn');
-  if (inv) { inv.href = C.links.invite; inv.textContent = t.inviteBtn; }
-  if (sup) { sup.href = C.links.supportServer; sup.textContent = t.supportBtn; }
+
+  // Community button
+  const cb = document.getElementById('communityBtn');
+  if (cb) { cb.href = C.links.communityServer; cb.textContent = t.communityBtn; }
+
   setText('statVersion', C.botVersion);
 
   // Stats section
   setText('statsTitle', t.statsTitle || '');
   setText('statsLive',  t.statsLive  || '');
 
-  // Team CTA section
+  // Team CTA
   setText('teamCtaTitle', lg === 'de' ? 'Unser Team' : 'Our Team');
   setText('teamCtaSub',   lg === 'de' ? 'Lerne die Leute hinter DarkOS kennen.' : 'Meet the people behind DarkOS.');
   setText('teamCtaBtn',   lg === 'de' ? 'Team ansehen' : 'View Team');
@@ -54,13 +55,16 @@ function applyPage() {
   // Footer
   setText('footerBrand', '⚡ ' + C.botName + ' v' + C.botVersion);
   setText('footerCopy',  t.footerCopy || '');
-  const fs = document.getElementById('footerSupport');
+  const fc = document.getElementById('footerCommunity');
   const fg = document.getElementById('footerGithub');
-  if (fs) fs.href = C.links.supportServer;
+  if (fc) fc.href = C.links.communityServer;
   if (fg) fg.href = C.links.github;
 
-  // Page title
-  document.title = C.botName + ' – The Ultimate Discord Bot';
+  // Admin dashboard OAuth link
+  const oauthUrl = `https://discord.com/oauth2/authorize?client_id=${C.clientId}&response_type=code&redirect_uri=${encodeURIComponent(window.location.origin + window.location.pathname.replace('index.html','') + 'callback.html')}&scope=identify+guilds`;
+  window._oauthUrl = oauthUrl;
+
+  document.title = C.botName + ' – Discord Bot';
 }
 
 function toggleLang() {
