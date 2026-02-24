@@ -1,18 +1,13 @@
-// ============================================================
-//  ⚡ DarkOS – Website Konfiguration
-//  Hier alles anpassen. Keine Programmierkenntnisse nötig!
-// ============================================================
-
 const DARKOS_CONFIG = {
 
   // ── Bot & API ─────────────────────────────────────────────────
   apiUrl:   'https://your-api-host.example.com',
   guildId:  '1023175719209144380',
-  clientId: '1425314501057839134', // ← Public, safe hier einzutragen
+  clientId: '1425314501057839174', // ← Public, safe hier einzutragen
 
   // ── Bot Info ──────────────────────────────────────────────────
   botName:    'DarkOS',
-  botVersion: '2.0.0',
+  botVersion: '0.0.1a',
 
   // ── Farben ────────────────────────────────────────────────────
   colors: {
@@ -30,18 +25,18 @@ const DARKOS_CONFIG = {
   // ── Landing Page Texte ────────────────────────────────────────
   landing: {
     en: {
-      heroSub:      'The ultimate Discord bot for your community.',
+      heroSub:      'Made with love for the Team Darkness community.',
       communityBtn: '💬 Join Community',
       statsTitle:   'Live Statistics',
       statsLive:    'Updated in real time',
-      footerCopy:   '© 2025 DarkOS. All rights reserved.',
+      footerCopy:   '© 2026 DarkOS. All rights reserved.',
     },
     de: {
-      heroSub:      'Der ultimative Discord Bot für deine Community.',
+      heroSub:      'Gemacht mit Liebe fuer die Team Darkness Community.',
       communityBtn: '💬 Community beitreten',
       statsTitle:   'Live Statistiken',
       statsLive:    'Wird in Echtzeit aktualisiert',
-      footerCopy:   '© 2025 DarkOS. Alle Rechte vorbehalten.',
+      footerCopy:   '© 2026 DarkOS. Alle Rechte vorbehalten.',
     },
   },
 };
