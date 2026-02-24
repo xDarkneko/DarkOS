@@ -489,6 +489,7 @@ code { font-family: var(--font-mono); }
 
 /* ── Logo ───────────────────────────────────────────────────── */
 .nav-logo {
+  mix-blend-mode: screen;
   width: 36px;
   height: 36px;
   object-fit: contain;
@@ -497,6 +498,7 @@ code { font-family: var(--font-mono); }
 }
 
 .hero-logo {
+  mix-blend-mode: screen;
   width: 120px;
   height: 120px;
   object-fit: contain;
@@ -508,4 +510,27 @@ code { font-family: var(--font-mono); }
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-10px); }
+}
+
+/* ── Hero content constraint ────────────────────────────────── */
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Logo fixes ──────────────────────────────────────────────── */
+.hero-logo {
+  width: 110px !important;
+  height: 110px !important;
+  max-width: 110px !important;
+}
+
+.nav-logo {
+  width: 34px !important;
+  height: 34px !important;
 }

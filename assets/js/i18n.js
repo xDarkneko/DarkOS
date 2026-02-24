@@ -71,7 +71,7 @@ function toggleLang() {
   currentLang = currentLang === 'en' ? 'de' : 'en';
   localStorage.setItem('darkos-lang', currentLang);
   const btn = document.getElementById('langToggle');
-  if (btn) btn.innerHTML = currentLang === 'en' ? '🇩🇪 DE' : '🇬🇧 EN';
+  if (btn) btn.innerHTML = currentLang === 'en' ? '🇩🇪' : '🇬🇧';
   applyPage();
 }
 
@@ -80,7 +80,7 @@ function t(key) { return (UI_LABELS[currentLang] || UI_LABELS.en)[key] || key; }
 document.addEventListener('DOMContentLoaded', function() {
   if (currentLang === 'de') {
     const btn = document.getElementById('langToggle');
-    if (btn) btn.innerHTML = '🇬🇧 EN';
+    if (btn) btn.innerHTML = '🇬🇧';
   }
   applyPage();
 });
