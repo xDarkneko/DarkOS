@@ -534,3 +534,9 @@ code { font-family: var(--font-mono); }
   width: 34px !important;
   height: 34px !important;
 }
+
+/* ── Logo black bg fix ───────────────────────────────────────── */
+.hero-logo {
+  border-radius: 50% !important;
+  background: transparent !important;
+}
