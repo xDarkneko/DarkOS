@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DarkOS – Authenticating...</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    :root { --accent: #7f5af0; --bg: #080c14; --text: #cdd6f4; --accent3: #ff4757; --accent2: #2cb67d; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; flex-direction: column; gap: 1.5rem;
+    }
+    .logo { font-family: 'Orbitron', monospace; font-size: 2rem; font-weight: 900; }
+    .logo span { color: var(--accent); }
+    .status {
+      font-size: 0.9rem; color: var(--accent);
+      letter-spacing: 0.08em; text-align: center;
+    }
+    .error { color: var(--accent3); }
+    .success { color: var(--accent2); }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(127,90,240,0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .log {
+      font-size: 0.75rem; color: #6c7a95; text-align: left;
+      max-width: 400px; width: 100%;
+      border: 1px solid #1e3050;
+      border-radius: 8px; padding: 1rem;
+      background: #111927;
+    }
+    .log div { margin: 2px 0; }
+    .log .ok  { color: var(--accent2); }
+    .log .err { color: var(--accent3); }
+    .log .info{ color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="logo">⚡ <span>Dark</span>OS</div>
+  <div class="spinner" id="spinner"></div>
+  <div class="status" id="status">Authenticating with Discord...</div>
+  <div class="log" id="log"></div>
+
+  <script src="config.js"></script>
+  <script>
+    const params   = new URLSearchParams(window.location.search);
+    const code     = params.get('code');
+    const error    = params.get('error');
+    // 'state' encodes which page triggered the login: 'admin' or 'team'
+    const state    = params.get('state') || 'admin';
+
+    const logEl    = document.getElementById('log');
+    const statusEl = document.getElementById('status');
+    const spinner  = document.getElementById('spinner');
+
+    function log(msg, type = 'info') {
+      const d = document.createElement('div');
+      d.className = type; d.textContent = '› ' + msg;
+      logEl.appendChild(d);
+    }
+
+    function setStatus(msg, type = '') {
+      statusEl.textContent = msg;
+      statusEl.className   = 'status ' + type;
+    }
+
+    async function doAuth() {
+      if (error) {
+        spinner.style.display = 'none';
+        setStatus('❌ Discord login was cancelled or denied.', 'error');
+        log('Discord returned error: ' + error, 'err');
+        log('Redirecting back in 3 seconds...', 'info');
+        setTimeout(() => window.location.href = 'pages/' + state + '.html', 3000);
+        return;
+      }
+
+      if (!code) {
+        setStatus('❌ No authorization code received.', 'error');
+        log('Missing ?code parameter in URL', 'err');
+        return;
+      }
+
+      log('Authorization code received ✓', 'ok');
+      log('Sending to API for token exchange...', 'info');
+
+      try {
+        // ── Token Exchange ──────────────────────────────────────
+        // The redirect_uri MUST be exactly the same as used in the authorization URL.
+        // We always use DARKOS.redirectUri (this callback page) for all flows.
+        const res  = await fetch(DARKOS.apiUrl + '/api/oauth/token', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({
+            code,
+            redirect_uri: DARKOS.redirectUri,  // ← Always this page!
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          spinner.style.display = 'none';
+          setStatus('❌ Login failed: ' + data.error, 'error');
+          log('API error: ' + data.error, 'err');
+          if (data.detail) log('Detail: ' + data.detail, 'err');
+          log('Redirecting back in 4 seconds...', 'info');
+          setTimeout(() => window.location.href = 'pages/' + state + '.html', 4000);
+          return;
+        }
+
+        log('Token exchange successful ✓', 'ok');
+        log('User: ' + data.user?.username, 'ok');
+        log('Roles – Admin: ' + data.roles.isAdmin + ' | Team: ' + data.roles.isTeam, 'ok');
+
+        // Role checks
+        if (state === 'admin' && !data.roles.isAdmin) {
+          spinner.style.display = 'none';
+          setStatus('❌ Admin role required for the dashboard.', 'error');
+          log('You do not have the admin role on the server.', 'err');
+          setTimeout(() => window.location.href = 'pages/admin.html', 3000);
+          return;
+        }
+
+        if (state === 'team' && !data.roles.isTeam && !data.roles.isAdmin) {
+          spinner.style.display = 'none';
+          setStatus('❌ Team role required for the portal.', 'error');
+          log('You do not have the team role on the server.', 'err');
+          setTimeout(() => window.location.href = 'pages/team.html', 3000);
+          return;
+        }
+
+        // ── Store session ────────────────────────────────────────
+        const prefix = 'darkos_' + state + '_';
+        sessionStorage.setItem(prefix + 'token', data.access_token);
+        sessionStorage.setItem(prefix + 'user',  JSON.stringify(data.user));
+        sessionStorage.setItem(prefix + 'roles', JSON.stringify(data.roles));
+
+        log('Session stored ✓', 'ok');
+        setStatus('✅ Login successful! Redirecting...', 'success');
+        spinner.style.display = 'none';
+
+        setTimeout(() => {
+          window.location.href = 'pages/' + state + '.html';
+        }, 800);
+
+      } catch (err) {
+        spinner.style.display = 'none';
+        setStatus('❌ Network error – is the bot API running?', 'error');
+        log('Fetch error: ' + err.message, 'err');
+        log('Make sure ' + DARKOS.apiUrl + ' is reachable', 'err');
+      }
+    }
+
+    doAuth();
+  </script>
+</body>
+</html>

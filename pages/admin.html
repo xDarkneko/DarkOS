@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DarkOS – Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <style>
+    body { padding-top:0; }
+    .layout { display:grid; grid-template-columns:230px 1fr; min-height:100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      background:var(--surface); border-right:1px solid var(--border);
+      padding:1.5rem 1rem; display:flex; flex-direction:column; gap:0.3rem;
+    }
+    .sidebar-logo {
+      font-family:var(--font-head); font-weight:900; font-size:1.1rem;
+      color:var(--text); padding-bottom:1rem; margin-bottom:0.5rem;
+      border-bottom:1px solid var(--border);
+    }
+    .sidebar-logo em { color:var(--accent); font-style:normal; }
+    .sidebar-section {
+      font-size:0.68rem; color:var(--text-dim);
+      text-transform:uppercase; letter-spacing:0.12em;
+      padding:0.8rem 0.6rem 0.3rem;
+    }
+    .nav-btn {
+      display:flex; align-items:center; gap:0.7rem;
+      padding:0.55rem 0.8rem; border-radius:6px;
+      cursor:pointer; font-size:0.86rem; color:var(--text-dim);
+      transition:all 0.15s; border:none; background:none; width:100%; text-align:left;
+    }
+    .nav-btn:hover  { background:var(--surface2); color:var(--text); }
+    .nav-btn.active { background:rgba(127,90,240,0.15); color:var(--accent); }
+    .sidebar-bottom { margin-top:auto; display:flex; flex-direction:column; gap:0.3rem; }
+    .user-row {
+      display:flex; align-items:center; gap:0.6rem;
+      padding:0.5rem; border-radius:8px; background:var(--surface2);
+    }
+    .user-row img { width:30px; height:30px; border-radius:50%; }
+    .user-row span { font-size:0.82rem; }
+    .badge-admin { background:rgba(127,90,240,0.2); color:var(--accent); font-size:0.65rem; padding:0.1rem 0.4rem; border-radius:999px; }
+
+    /* Main */
+    .main { padding:2.5rem; overflow-y:auto; }
+    .page-title { font-family:var(--font-head); font-size:1.3rem; margin-bottom:0.4rem; }
+    .page-sub   { font-size:0.85rem; color:var(--text-dim); margin-bottom:2rem; }
+    .page       { display:none; }
+    .page.active{ display:block; }
+
+    /* Cards */
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.6rem; margin-bottom:1.2rem; }
+    .card-title { font-size:0.9rem; font-weight:500; margin-bottom:1.2rem; display:flex; align-items:center; gap:0.5rem; }
+
+    /* Forms */
+    .form-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; }
+    .field label { display:block; font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.3rem; }
+    .field input, .field select {
+      width:100%; padding:0.55rem 0.8rem;
+      background:var(--bg); border:1px solid var(--border); border-radius:6px;
+      color:var(--text); font-family:var(--font-mono); font-size:0.84rem;
+      outline:none; transition:border-color 0.2s;
+    }
+    .field input:focus, .field select:focus { border-color:var(--accent); }
+    .field .hint { font-size:0.68rem; color:var(--text-dim); margin-top:0.3rem; }
+    .field-full { grid-column:1/-1; }
+
+    /* Buttons */
+    .btn { padding:0.55rem 1.2rem; background:var(--accent); color:#fff; border:none; border-radius:6px; font-family:var(--font-head); font-size:0.8rem; cursor:pointer; transition:all 0.2s; }
+    .btn:hover { background:#6a47e0; box-shadow:0 0 16px var(--glow); }
+    .btn-green  { background:var(--accent2); }
+    .btn-green:hover  { background:#239e69; }
+    .btn-danger { background:var(--accent3); }
+    .btn-danger:hover { background:#cc3245; }
+    .btn-ghost  { background:transparent; border:1px solid var(--border); color:var(--text-dim); }
+    .btn-ghost:hover  { border-color:var(--accent); color:var(--text); background:transparent; }
+    .btn-sm { padding:0.3rem 0.7rem; font-size:0.72rem; }
+
+    /* Stats row */
+    .stat-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+    .stat-box { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.1rem; text-align:center; }
+    .stat-box-num { font-family:var(--font-head); font-size:2rem; color:var(--accent); }
+    .stat-box-lbl { font-size:0.7rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; }
+
+    /* Table */
+    .tbl { width:100%; border-collapse:collapse; font-size:0.84rem; }
+    .tbl th { padding:0.5rem 0.8rem; text-align:left; color:var(--text-dim); font-weight:400; font-size:0.72rem; text-transform:uppercase; border-bottom:1px solid var(--border); }
+    .tbl td { padding:0.6rem 0.8rem; border-bottom:1px solid rgba(255,255,255,0.04); }
+    .tbl tr:hover td { background:rgba(127,90,240,0.04); }
+    .pill { padding:0.2rem 0.55rem; border-radius:999px; font-size:0.68rem; white-space:nowrap; }
+    .pill-purple { background:rgba(127,90,240,0.15); color:var(--accent); }
+    .pill-green  { background:rgba(44,182,125,0.15);  color:var(--accent2); }
+    .pill-red    { background:rgba(255,71,87,0.15);   color:var(--accent3); }
+
+    /* Login overlay */
+    .login-overlay {
+      position:fixed; inset:0; z-index:500; background:var(--bg);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .login-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:16px; padding:3rem 2.5rem;
+      max-width:420px; width:100%; text-align:center;
+    }
+    .login-card h2 { font-size:1.4rem; margin-bottom:0.5rem; }
+    .login-card p  { color:var(--text-dim); font-size:0.85rem; margin-bottom:2rem; line-height:1.6; }
+    .btn-discord {
+      display:inline-flex; align-items:center; justify-content:center; gap:0.75rem;
+      width:100%; padding:0.85rem 2rem;
+      background:#5865F2; color:#fff; border:none; border-radius:8px;
+      font-family:var(--font-head); font-size:0.9rem; cursor:pointer; transition:all 0.2s;
+    }
+    .btn-discord:hover { background:#4752c4; box-shadow:0 0 24px rgba(88,101,242,0.4); }
+
+    /* Warning box */
+    .warn { background:rgba(255,71,87,0.08); border:1px solid rgba(255,71,87,0.25); border-radius:8px; padding:0.8rem 1rem; font-size:0.82rem; color:var(--accent3); margin-bottom:1rem; }
+    .info { background:rgba(127,90,240,0.08); border:1px solid rgba(127,90,240,0.25); border-radius:8px; padding:0.8rem 1rem; font-size:0.82rem; color:var(--accent); margin-bottom:1rem; }
+
+    /* Toast */
+    .toast { position:fixed; bottom:2rem; right:2rem; background:var(--surface2); border:1px solid var(--accent2); color:var(--accent2); padding:0.75rem 1.4rem; border-radius:8px; font-family:var(--font-mono); font-size:0.83rem; opacity:0; transition:opacity 0.3s; pointer-events:none; z-index:999; }
+    .toast.show { opacity:1; }
+  </style>
+</head>
+<body>
+<div class="noise"></div>
+
+<!-- ══ Login ═════════════════════════════════════════════════ -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div style="font-size:3.5rem;margin-bottom:1rem">⚡</div>
+    <h2>Admin Dashboard</h2>
+    <p>Login with Discord. You need the <strong>Admin role</strong> on the community server to access this area.</p>
+    <button class="btn-discord" onclick="doLogin()">
+      <svg width="20" height="20" viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+      Login with Discord
+    </button>
+    <div id="loginError" style="color:var(--accent3);font-size:0.8rem;margin-top:1rem;display:none"></div>
+  </div>
+</div>
+
+<!-- ══ Dashboard ══════════════════════════════════════════════ -->
+<div class="layout" id="dashboard" style="display:none">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">⚡ <em>Dark</em>OS</div>
+
+    <div class="sidebar-section">Overview</div>
+    <button class="nav-btn active" onclick="show('overview',this)">📊 Statistics</button>
+
+    <div class="sidebar-section">Configuration</div>
+    <button class="nav-btn" onclick="show('bot-setup',this)">⚙️ Bot Setup</button>
+    <button class="nav-btn" onclick="show('logs',this)">📋 Log Channels</button>
+    <button class="nav-btn" onclick="show('subscriptions',this)">🔔 Subscriptions</button>
+
+    <div class="sidebar-section">Tools</div>
+    <button class="nav-btn" onclick="show('giveaway',this)">🎉 Giveaways</button>
+
+    <div class="sidebar-bottom">
+      <div class="user-row">
+        <img id="uAvatar" src="" alt="" />
+        <div>
+          <div id="uName" style="font-size:0.82rem"></div>
+          <span class="badge-admin">Admin</span>
+        </div>
+      </div>
+      <button class="nav-btn btn-danger" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- ── Overview ──────────────────────────────────────────── -->
+    <div class="page active" id="page-overview">
+      <div class="page-title">📊 Statistics</div>
+      <div class="page-sub">Live data from your community server.</div>
+      <div class="stat-row">
+        <div class="stat-box"><div class="stat-box-num" id="dMembers">—</div><div class="stat-box-lbl">Members</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="dTickets">—</div><div class="stat-box-lbl">Tickets</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="dMessages">—</div><div class="stat-box-lbl">Messages</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="dJoins">—</div><div class="stat-box-lbl">Joins</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="dLeaves">—</div><div class="stat-box-lbl">Leaves</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="dUptime">—</div><div class="stat-box-lbl">Uptime</div></div>
+      </div>
+    </div>
+
+    <!-- ── Bot Setup (replaces .env IDs) ─────────────────────── -->
+    <div class="page" id="page-bot-setup">
+      <div class="page-title">⚙️ Bot Setup</div>
+      <div class="page-sub">Configure all Server IDs, Channel IDs and Role IDs here. No need to edit .env!</div>
+
+      <div class="info">💡 Changes are saved to the database and applied immediately. The bot restarts are NOT needed.</div>
+
+      <div class="card">
+        <div class="card-title">🖥️ Server IDs</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Community Server ID</label>
+            <input type="text" id="s_community_server_id" placeholder="Rechtsklick auf Server → ID kopieren" />
+            <div class="hint">Your public Discord server</div>
+          </div>
+          <div class="field">
+            <label>Team Server ID</label>
+            <input type="text" id="s_team_server_id" placeholder="Private team server ID" />
+            <div class="hint">Where staff reply anonymously</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">👥 Role IDs</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Admin Role ID</label>
+            <input type="text" id="s_admin_role_id" placeholder="Admin role ID" />
+            <div class="hint">Can access this dashboard</div>
+          </div>
+          <div class="field">
+            <label>Team / Moderator Role ID</label>
+            <input type="text" id="s_team_role_id" placeholder="Team role ID" />
+            <div class="hint">Can use team portal & reply to tickets</div>
+          </div>
+          <div class="field">
+            <label>Moderator Role ID</label>
+            <input type="text" id="s_moderator_role_id" placeholder="Moderator role ID" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📁 Ticket Settings</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Ticket Category ID</label>
+            <input type="text" id="s_ticket_category_id" placeholder="Category where tickets are created" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📢 Notification Channels</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Giveaway Channel</label>
+            <input type="text" id="s_giveaway_channel_id" placeholder="Channel ID" />
+          </div>
+          <div class="field">
+            <label>War Feed Channel</label>
+            <input type="text" id="s_war_feed_channel_id" placeholder="Channel ID" />
+          </div>
+          <div class="field">
+            <label>Anime News Channel</label>
+            <input type="text" id="s_anime_channel_id" placeholder="Channel ID" />
+          </div>
+          <div class="field">
+            <label>Counting Channel</label>
+            <input type="text" id="s_counting_channel_id" placeholder="Channel ID" />
+          </div>
+          <div class="field">
+            <label>Driver Updates Channel</label>
+            <input type="text" id="s_driver_channel_id" placeholder="Channel ID" />
+          </div>
+          <div class="field">
+            <label>Twitch Announcements Channel</label>
+            <input type="text" id="s_twitch_channel_id" placeholder="Channel ID" />
+          </div>
+          <div class="field">
+            <label>YouTube Announcements Channel</label>
+            <input type="text" id="s_youtube_channel_id" placeholder="Channel ID" />
+          </div>
+          <div class="field">
+            <label>General Announce Channel</label>
+            <input type="text" id="s_announce_channel_id" placeholder="Channel ID" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🎨 Bot Appearance</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Bot Name</label>
+            <input type="text" id="s_bot_name" placeholder="DarkOS" />
+          </div>
+          <div class="field">
+            <label>Embed Color (Hex)</label>
+            <input type="text" id="s_bot_color" placeholder="#7f5af0" />
+          </div>
+          <div class="field field-full">
+            <label>Welcome Message</label>
+            <input type="text" id="s_welcome_message" placeholder="Welcome to the server!" />
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-green" onclick="saveSettings()">💾 Save All Settings</button>
+    </div>
+
+    <!-- ── Log Channels ───────────────────────────────────────── -->
+    <div class="page" id="page-logs">
+      <div class="page-title">📋 Log Channels</div>
+      <div class="page-sub">Configure where each type of log gets posted.</div>
+      <div class="card">
+        <div class="form-grid">
+          <div class="field"><label>🔴 Reports (Bans/Mutes/Timeouts)</label><input type="text" id="l_reports" placeholder="Channel ID" /></div>
+          <div class="field"><label>🔵 Server Logs (Channels/Roles)</label><input type="text" id="l_server"  placeholder="Channel ID" /></div>
+          <div class="field"><label>🎤 Voice Logs</label><input type="text" id="l_voice"   placeholder="Channel ID" /></div>
+          <div class="field"><label>👥 Member Logs (Join/Leave/Nick)</label><input type="text" id="l_member"  placeholder="Channel ID" /></div>
+          <div class="field"><label>💬 Message Logs (Edit/Delete)</label><input type="text" id="l_message" placeholder="Channel ID" /></div>
+          <div class="field"><label>🔗 Invite Logger</label><input type="text" id="l_invite"  placeholder="Channel ID" /></div>
+        </div>
+        <div style="margin-top:1.2rem"><button class="btn" onclick="saveLogs()">💾 Save Log Config</button></div>
+      </div>
+    </div>
+
+    <!-- ── Subscriptions ──────────────────────────────────────── -->
+    <div class="page" id="page-subscriptions">
+      <div class="page-title">🔔 Subscriptions</div>
+      <div class="page-sub">Manage anime, driver, stream and other notifications.</div>
+      <div class="card">
+        <div class="card-title">➕ Add Subscription</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Type</label>
+            <select id="sub_type">
+              <option value="anime">📺 Anime Episode</option>
+              <option value="driver_nvidia">🟢 NVIDIA Driver</option>
+              <option value="driver_amd">🔴 AMD Driver</option>
+              <option value="driver_intel">🔵 Intel Driver</option>
+              <option value="twitch">🟣 Twitch Streamer</option>
+              <option value="youtube">🔴 YouTube Channel</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Target</label>
+            <input type="text" id="sub_target" placeholder="Anime name / streamer / channel ID" />
+          </div>
+          <div class="field">
+            <label>Notification Channel ID</label>
+            <input type="text" id="sub_channel" placeholder="Where to post notifications" />
+          </div>
+        </div>
+        <div style="margin-top:1rem"><button class="btn btn-green" onclick="addSub()">➕ Add</button></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 Current Subscriptions</div>
+        <table class="tbl">
+          <thead><tr><th>Type</th><th>Target</th><th>Channel</th><th></th></tr></thead>
+          <tbody id="subsTbl"><tr><td colspan="4" style="color:var(--text-dim);padding:1rem">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Giveaways ──────────────────────────────────────────── -->
+    <div class="page" id="page-giveaway">
+      <div class="page-title">🎉 Giveaways</div>
+      <div class="page-sub">Create and manage giveaways directly from here.</div>
+      <div class="card">
+        <div class="card-title">🆕 New Giveaway</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Prize</label>
+            <input type="text" id="g_prize" placeholder="e.g. Discord Nitro 1 Month" />
+          </div>
+          <div class="field">
+            <label>Channel ID</label>
+            <input type="text" id="g_channel" placeholder="Where to post the giveaway" />
+          </div>
+          <div class="field">
+            <label>Duration (minutes)</label>
+            <input type="number" id="g_duration" value="60" min="1" />
+          </div>
+          <div class="field">
+            <label>Number of Winners</label>
+            <input type="number" id="g_winners" value="1" min="1" max="20" />
+          </div>
+        </div>
+        <div style="margin-top:1rem"><button class="btn btn-green" onclick="createGiveaway()">🎉 Start Giveaway</button></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Active Giveaways</div>
+        <table class="tbl">
+          <thead><tr><th>Prize</th><th>Ends</th><th>Entries</th><th>Winners</th><th></th></tr></thead>
+          <tbody id="gaTbl"><tr><td colspan="5" style="color:var(--text-dim)">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<div class="toast" id="toast"></div>
+
+<script src="../config.js"></script>
+<script>
+// ── Config ─────────────────────────────────────────────────────
+const C       = window.DARKOS || {};
+const API_URL = C.apiUrl || 'https://your-api-host.example.com';
+const GUILD   = C.guildId || '';
+
+// ── OAuth2 ─────────────────────────────────────────────────────
+// Build the OAuth URL from config
+const OAUTH_URL = 'https://discord.com/oauth2/authorize' +
+  '?client_id=' + encodeURIComponent(C.clientId || '') +
+  '&response_type=code' +
+  '&redirect_uri=' + encodeURIComponent(window.location.href.split('?')[0]) +
+  '&scope=identify';
+
+let accessToken = null;
+
+function doLogin() {
+  if (!C.clientId || C.clientId === 'DEINE_CLIENT_ID_HIER') {
+    showErr('❌ Bitte zuerst config.js ausfüllen (clientId)!');
+    return;
+  }
+  window.location.href = OAUTH_URL;
+}
+
+async function exchangeCode(code) {
+  try {
+    const res  = await fetch(API_URL + '/api/oauth/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code }),
+    });
+    const data = await res.json();
+    if (data.error) {
+      showErr('❌ ' + (data.detail?.error_description || data.error));
+      return;
+    }
+    if (!data.roles?.isAdmin) {
+      showErr('❌ Admin role required on the community server.');
+      return;
+    }
+    accessToken = data.access_token;
+    sessionStorage.setItem('dkos_token', accessToken);
+    sessionStorage.setItem('dkos_user',  JSON.stringify(data.user));
+    showDash(data.user);
+    window.history.replaceState({}, '', window.location.pathname);
+  } catch (e) {
+    showErr('❌ Login error: ' + e.message + '. Is the API server running?');
+  }
+}
+
+function logout() {
+  sessionStorage.clear();
+  location.reload();
+}
+
+function showDash(user) {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'grid';
+  document.getElementById('uName').textContent = user.username;
+  if (user.avatar) {
+    document.getElementById('uAvatar').src =
+      'https://cdn.discordapp.com/avatars/' + user.id + '/' + user.avatar + '.png?size=64';
+  }
+  loadStats();
+  loadSettings();
+}
+
+function showErr(msg) {
+  const el = document.getElementById('loginError');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+// Restore or check for OAuth code
+window.addEventListener('load', function() {
+  const code  = new URLSearchParams(window.location.search).get('code');
+  const token = sessionStorage.getItem('dkos_token');
+  const user  = sessionStorage.getItem('dkos_user');
+  if (code) { exchangeCode(code); return; }
+  if (token && user) { accessToken = token; showDash(JSON.parse(user)); }
+});
+
+// ── Navigation ─────────────────────────────────────────────────
+function show(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id === 'giveaway')      loadGiveaways();
+  if (id === 'subscriptions') loadSubs();
+  if (id === 'logs')          loadLogSettings();
+}
+
+// ── Stats ──────────────────────────────────────────────────────
+async function loadStats() {
+  try {
+    const res  = await fetch(API_URL + '/api/stats?guild=' + GUILD);
+    const d    = await res.json();
+    const s    = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v ?? '—'; };
+    s('dMembers',  d.members);
+    s('dTickets',  d.ticketCount);
+    s('dMessages', d.msgCount);
+    s('dJoins',    d.joins);
+    s('dLeaves',   d.leaves);
+    s('dUptime',   fmtUptime(d.uptime));
+  } catch {}
+}
+
+function fmtUptime(s) {
+  if (!s) return '—';
+  const d = Math.floor(s/86400), h = Math.floor((s%86400)/3600), m = Math.floor((s%3600)/60);
+  return d + 'd ' + h + 'h ' + m + 'm';
+}
+
+// ── Bot Settings ───────────────────────────────────────────────
+async function loadSettings() {
+  try {
+    const res  = await fetch(API_URL + '/api/settings');
+    const d    = await res.json();
+    const fields = [
+      'community_server_id','team_server_id',
+      'admin_role_id','team_role_id','moderator_role_id',
+      'ticket_category_id',
+      'giveaway_channel_id','war_feed_channel_id','anime_channel_id',
+      'counting_channel_id','driver_channel_id','twitch_channel_id',
+      'youtube_channel_id','announce_channel_id',
+      'bot_name','bot_color','welcome_message',
+    ];
+    fields.forEach(f => {
+      const el = document.getElementById('s_' + f);
+      if (el && d[f]) el.value = d[f];
+    });
+    // Also fill log channel fields
+    const logMap = { reports:'l_reports', server:'l_server', voice:'l_voice', member:'l_member', message:'l_message', invite:'l_invite' };
+    Object.entries(logMap).forEach(([key, id]) => {
+      const el = document.getElementById(id);
+      if (el && d['log_' + key + '_ch']) el.value = d['log_' + key + '_ch'];
+    });
+  } catch {}
+}
+
+async function saveSettings() {
+  const fields = [
+    'community_server_id','team_server_id',
+    'admin_role_id','team_role_id','moderator_role_id',
+    'ticket_category_id',
+    'giveaway_channel_id','war_feed_channel_id','anime_channel_id',
+    'counting_channel_id','driver_channel_id','twitch_channel_id',
+    'youtube_channel_id','announce_channel_id',
+    'bot_name','bot_color','welcome_message',
+  ];
+  const body = {};
+  fields.forEach(f => { const el = document.getElementById('s_' + f); if (el) body[f] = el.value; });
+
+  const res  = await fetch(API_URL + '/api/settings', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + accessToken },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  toast(data.success ? '✅ Settings saved! Applied immediately.' : '❌ ' + data.error);
+}
+
+// ── Log Channels ───────────────────────────────────────────────
+function loadLogSettings() { loadSettings(); } // same endpoint
+
+async function saveLogs() {
+  const body = {
+    log_reports_ch: document.getElementById('l_reports').value,
+    log_server_ch:  document.getElementById('l_server').value,
+    log_voice_ch:   document.getElementById('l_voice').value,
+    log_member_ch:  document.getElementById('l_member').value,
+    log_message_ch: document.getElementById('l_message').value,
+    log_invite_ch:  document.getElementById('l_invite').value,
+  };
+  const res  = await fetch(API_URL + '/api/settings', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + accessToken },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  toast(data.success ? '✅ Log channels saved!' : '❌ ' + data.error);
+}
+
+// ── Subscriptions ──────────────────────────────────────────────
+async function loadSubs() {
+  try {
+    const res  = await fetch(API_URL + '/api/subscriptions?guild=' + GUILD, {
+      headers: { Authorization: 'Bearer ' + accessToken }
+    });
+    const data = await res.json();
+    const tbody = document.getElementById('subsTbl');
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text-dim);padding:1rem">No subscriptions yet.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(s =>
+      '<tr><td><span class="pill pill-purple">' + s.type + '</span></td>' +
+      '<td>' + s.target + '</td>' +
+      '<td><code>' + s.channel_id + '</code></td>' +
+      '<td><button class="btn btn-danger btn-sm" onclick="delSub(' + s.id + ')">Remove</button></td></tr>'
+    ).join('');
+  } catch { }
+}
+
+async function addSub() {
+  const body = {
+    guildId:   GUILD,
+    type:      document.getElementById('sub_type').value,
+    target:    document.getElementById('sub_target').value.trim(),
+    channelId: document.getElementById('sub_channel').value.trim(),
+  };
+  if (!body.target || !body.channelId) return toast('❌ Fill in all fields.');
+  const res  = await fetch(API_URL + '/api/subscriptions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + accessToken },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  toast(data.success ? '✅ Subscription added!' : '❌ ' + (data.error || 'Error'));
+  if (data.success) loadSubs();
+}
+
+async function delSub(id) {
+  await fetch(API_URL + '/api/subscriptions/' + id, {
+    method: 'DELETE', headers: { Authorization: 'Bearer ' + accessToken }
+  });
+  toast('✅ Removed');
+  loadSubs();
+}
+
+// ── Giveaways ──────────────────────────────────────────────────
+async function loadGiveaways() {
+  try {
+    const res  = await fetch(API_URL + '/api/giveaways?guild=' + GUILD);
+    const data = await res.json();
+    const tbody = document.getElementById('gaTbl');
+    if (!data.active?.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="color:var(--text-dim)">No active giveaways.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.active.map(g =>
+      '<tr><td>' + g.prize + '</td>' +
+      '<td>' + new Date(g.ends_at * 1000).toLocaleString() + '</td>' +
+      '<td>' + JSON.parse(g.entries || '[]').length + '</td>' +
+      '<td>' + g.winners + '</td>' +
+      '<td><button class="btn btn-danger btn-sm" onclick="endGiveaway(\'' + g.message_id + '\')">End</button></td></tr>'
+    ).join('');
+  } catch {}
+}
+
+async function createGiveaway() {
+  const prize    = document.getElementById('g_prize').value.trim();
+  const channel  = document.getElementById('g_channel').value.trim();
+  const duration = parseInt(document.getElementById('g_duration').value);
+  const winners  = parseInt(document.getElementById('g_winners').value);
+  if (!prize || !channel) return toast('❌ Fill in prize and channel ID.');
+
+  const user = JSON.parse(sessionStorage.getItem('dkos_user') || '{}');
+  const res  = await fetch(API_URL + '/api/giveaways', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + accessToken },
+    body: JSON.stringify({ guildId: GUILD, channelId: channel, prize, winners, hostId: user.id, durationMs: duration * 60000 }),
+  });
+  const data = await res.json();
+  toast(data.success ? '🎉 Giveaway started!' : '❌ ' + data.error);
+  if (data.success) loadGiveaways();
+}
+
+async function endGiveaway(msgId) {
+  const res  = await fetch(API_URL + '/api/giveaways', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + accessToken },
+    body: JSON.stringify({ action: 'end', messageId: msgId, guildId: GUILD }),
+  });
+  toast('✅ Ended');
+  loadGiveaways();
+}
+
+// ── Toast ──────────────────────────────────────────────────────
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

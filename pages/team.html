@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DarkOS – Team Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/dashboard.css" />
+</head>
+<body>
+<div class="noise"></div>
+
+<div class="login-overlay" id="loginOverlay">
+  <div class="auth-card">
+    <div style="font-size:3rem;margin-bottom:1rem">🛡️</div>
+    <h2 id="loginTitle">Team Portal</h2>
+    <p id="loginDesc" style="color:var(--text-dim);margin-bottom:1.8rem;font-size:0.88rem">Team role required. Admin roles have full access.</p>
+    <button class="btn-discord" onclick="loginWithDiscord()">
+      <svg width="20" height="20" viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+      <span id="loginBtnText">Login with Discord</span>
+    </button>
+    <div style="margin-top:1.2rem">
+      <button class="lang-toggle" onclick="toggleTeamLang()">
+        <span id="langIcon">🇩🇪</span> <span id="langLabel">DE</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="dash-layout" id="portalLayout" style="display:none">
+  <div class="sidebar">
+    <div class="sidebar-brand">🛡️ <span style="color:var(--accent2)">Team</span></div>
+    <button class="nav-item active" onclick="showPage('tickets', this)">🎫 <span id="sTickets">Tickets</span></button>
+    <button class="nav-item"       onclick="showPage('stats',   this)">📊 <span id="sStats">Statistics</span></button>
+    <div id="adminLink" style="display:none">
+      <div style="font-size:0.7rem;color:var(--text-dim);padding:0.5rem;text-transform:uppercase;letter-spacing:0.1em">Admin</div>
+      <button class="nav-item" onclick="window.location.href='admin.html'">⚙️ Dashboard</button>
+    </div>
+    <div style="flex:1"></div>
+    <div class="user-pill" id="userPill">
+      <img id="userAvatar" src="" alt="" />
+      <span id="userName">—</span>
+    </div>
+    <button class="nav-item" style="margin-top:0.4rem;color:var(--accent3)" onclick="logout()">🚪 <span id="sLogout">Logout</span></button>
+  </div>
+
+  <div class="main-area">
+    <div class="page active" id="page-tickets">
+      <div class="page-title" id="titleTickets">Open Tickets</div>
+      <div class="info-banner" id="roleInfoBanner">Loading...</div>
+      <div id="ticketsList">
+        <div class="empty-state">
+          <div style="font-size:3rem">🎫</div>
+          <p id="noTicketsText">No open tickets at this time.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-stats">
+      <div class="page-title" id="titleStats">Statistics</div>
+      <div class="dash-stats" id="teamStatsGrid"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../config.js"></script>
+<script>
+  let _lang = localStorage.getItem('darkos-lang') || 'en';
+  let accessToken = null, userRoles = {};
+
+  const TX = {
+    en: {
+      loginTitle: 'Team Portal', loginBtnText: 'Login with Discord',
+      sTickets: 'Tickets', sStats: 'Statistics', sLogout: 'Logout',
+      titleTickets: 'Open Tickets', titleStats: 'Statistics',
+      noTicketsText: 'No open tickets at this time. 🎉',
+    },
+    de: {
+      loginTitle: 'Team Portal', loginBtnText: 'Mit Discord anmelden',
+      sTickets: 'Tickets', sStats: 'Statistiken', sLogout: 'Abmelden',
+      titleTickets: 'Offene Tickets', titleStats: 'Statistiken',
+      noTicketsText: 'Keine offenen Tickets. 🎉',
+    },
+  };
+
+  function toggleTeamLang() {
+    _lang = _lang === 'en' ? 'de' : 'en';
+    localStorage.setItem('darkos-lang', _lang);
+    document.getElementById('langIcon').textContent  = _lang === 'en' ? '🇩🇪' : '🇬🇧';
+    document.getElementById('langLabel').textContent = _lang === 'en' ? 'DE'   : 'EN';
+    applyLang();
+  }
+  function applyLang() {
+    const t = TX[_lang] || TX.en;
+    for (const [id, txt] of Object.entries(t)) {
+      const el = document.getElementById(id); if (el) el.textContent = txt;
+    }
+  }
+
+  function loginWithDiscord() {
+    window.location.href = DARKOS.oauthBase + '&state=team';
+  }
+
+  function logout() {
+    accessToken = null;
+    ['darkos_team_token','darkos_team_user','darkos_team_roles'].forEach(k => sessionStorage.removeItem(k));
+    document.getElementById('loginOverlay').style.display = 'flex';
+    document.getElementById('portalLayout').style.display = 'none';
+  }
+
+  function showPortal(user) {
+    document.getElementById('loginOverlay').style.display = 'none';
+    document.getElementById('portalLayout').style.display = 'grid';
+    const av = document.getElementById('userAvatar');
+    if (av) av.src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64`;
+    document.getElementById('userName').textContent = user.username;
+
+    if (userRoles.isAdmin) document.getElementById('adminLink').style.display = 'block';
+
+    const isDE = _lang === 'de';
+    document.getElementById('roleInfoBanner').textContent = userRoles.isAdmin
+      ? (isDE ? '⭐ Angemeldet als Admin – voller Zugriff.' : '⭐ Logged in as Admin – full access.')
+      : (isDE ? '🛡️ Angemeldet als Teammitglied.'          : '🛡️ Logged in as Team Member.');
+
+    loadTeamStats();
+  }
+
+  window.addEventListener('load', () => {
+    _lang = localStorage.getItem('darkos-lang') || 'en';
+    document.getElementById('langIcon').textContent  = _lang === 'en' ? '🇩🇪' : '🇬🇧';
+    document.getElementById('langLabel').textContent = _lang === 'en' ? 'DE'   : 'EN';
+    applyLang();
+
+    const token = sessionStorage.getItem('darkos_team_token');
+    const user  = sessionStorage.getItem('darkos_team_user');
+    const roles = sessionStorage.getItem('darkos_team_roles');
+    if (token && user) {
+      userRoles   = JSON.parse(roles || '{}');
+      if (!userRoles.isTeam && !userRoles.isAdmin) { showToast('❌ Team role required'); return; }
+      accessToken = token;
+      showPortal(JSON.parse(user));
+    }
+  });
+
+  function showPage(id, btn) {
+    document.querySelectorAll('.page').forEach(p     => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  async function loadTeamStats() {
+    try {
+      const data = await fetch(DARKOS.apiUrl + '/api/stats').then(r => r.json());
+      const isDE = _lang === 'de';
+      const items = [
+        [isDE ? 'Mitglieder'   : 'Members',  data.members],
+        ['Tickets',                            data.ticketCount],
+        [isDE ? 'Nachrichten' : 'Messages',  data.msgCount],
+        [isDE ? 'Beitritte'   : 'Joins',     data.joins],
+        [isDE ? 'Abgänge'     : 'Leaves',    data.leaves],
+      ];
+      document.getElementById('teamStatsGrid').innerHTML = items.map(([l, v]) => `
+        <div class="dash-stat">
+          <div class="dash-stat-num" style="color:var(--accent2)">${v ?? '—'}</div>
+          <div class="dash-stat-label">${l}</div>
+        </div>`).join('');
+    } catch { /* silent */ }
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+</script>
+</body>
+</html>

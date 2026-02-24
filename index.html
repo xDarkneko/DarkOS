@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DarkOS – Discord Bot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+<div class="noise"></div>
+<div class="scanlines"></div>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <span class="brand-icon">⚡</span>
+    <span class="brand-text" id="navBotName">DarkOS</span>
+  </div>
+  <div class="nav-links">
+    <a href="#stats">Stats</a>
+    <a href="pages/team.html">Team</a>
+    <a href="pages/admin.html" class="btn-nav">Dashboard</a>
+  </div>
+  <div class="nav-right">
+    <button class="lang-toggle" id="langToggle" onclick="toggleLang()">🇩🇪 DE</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge" id="heroBadge">Loading...</div>
+    <h1 class="hero-title"><span class="glitch" id="heroTitle" data-text="DarkOS">DarkOS</span></h1>
+    <p class="hero-sub" id="heroSub"></p>
+    <div class="hero-cta">
+      <a id="inviteBtn" class="btn-primary" target="_blank" href="#">⚡ Invite</a>
+      <a id="supportBtn" class="btn-ghost"  target="_blank" href="#">💬 Support</a>
+    </div>
+  </div>
+  <div class="hero-stats-strip">
+    <div class="stat-chip"><span class="stat-num" id="statMembers">—</span><span class="stat-label" data-key="stat.members">Members</span></div>
+    <div class="stat-chip"><span class="stat-num" id="statTickets">—</span><span class="stat-label" data-key="stat.tickets">Tickets</span></div>
+    <div class="stat-chip"><span class="stat-num" id="statMessages">—</span><span class="stat-label" data-key="stat.messages">Messages</span></div>
+    <div class="stat-chip"><span class="stat-num" id="statJoins">—</span><span class="stat-label"   data-key="stat.joins">Joins</span></div>
+    <div class="stat-chip"><span class="stat-num" id="statLeaves">—</span><span class="stat-label"  data-key="stat.leaves">Leaves</span></div>
+    <div class="stat-chip"><span class="stat-num" id="statVersion">—</span><span class="stat-label" data-key="stat.version">Version</span></div>
+  </div>
+</section>
+
+<section class="stats-section" id="stats">
+  <div class="section-header">
+    <h2 id="statsTitle"></h2>
+    <p class="stat-live-badge">● <span id="statsLive"></span></p>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-big" id="s2Members">—</div><div class="stat-name" data-key="stat.members">Members</div></div>
+    <div class="stat-card"><div class="stat-big" id="s2Tickets">—</div><div class="stat-name" data-key="stat.tickets">Tickets</div></div>
+    <div class="stat-card"><div class="stat-big" id="s2Messages">—</div><div class="stat-name" data-key="stat.messages">Messages</div></div>
+    <div class="stat-card"><div class="stat-big" id="s2Joins">—</div><div class="stat-name"   data-key="stat.joins">Joins</div></div>
+    <div class="stat-card"><div class="stat-big" id="s2Leaves">—</div><div class="stat-name"  data-key="stat.leaves">Leaves</div></div>
+  </div>
+</section>
+
+<section class="team-cta-section">
+  <div class="section-header">
+    <h2 id="teamCtaTitle"></h2>
+    <p id="teamCtaSub"></p>
+  </div>
+  <a href="pages/team.html" class="btn-primary">👥 <span id="teamCtaBtn"></span></a>
+</section>
+
+<footer class="footer">
+  <div class="footer-brand" id="footerBrand">⚡ DarkOS</div>
+  <div class="footer-links">
+    <a href="pages/team.html">Team</a>
+    <a href="pages/admin.html">Admin</a>
+    <a id="footerSupport" href="#" target="_blank">Discord</a>
+    <a id="footerGithub"  href="#" target="_blank">GitHub</a>
+  </div>
+  <div class="footer-copy" id="footerCopy"></div>
+</footer>
+
+<script src="config.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/stats.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
