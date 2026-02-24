@@ -38,7 +38,6 @@ const DARKOS_CONFIG = {
       statsLive:    'Wird in Echtzeit aktualisiert',
       footerCopy:   '© 2025 DarkOS. Alle Rechte vorbehalten.',
     },
-  },
 };
 
 if (typeof window !== 'undefined') window.DARKOS = DARKOS_CONFIG;

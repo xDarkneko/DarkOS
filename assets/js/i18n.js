@@ -71,7 +71,7 @@ function toggleLang() {
   currentLang = currentLang === 'en' ? 'de' : 'en';
   localStorage.setItem('darkos-lang', currentLang);
   const btn = document.getElementById('langToggle');
-  if (btn) btn.innerHTML = currentLang === 'en' ? '🇩🇪' : '🇺🇸';
+  if (btn) btn.innerHTML = currentLang === 'en' ? '🇺🇸' : '🇩🇪';
   applyPage();
 }
 
