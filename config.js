@@ -32,7 +32,7 @@ const DARKOS_CONFIG = {
       footerCopy:   '© 2026 DarkOS. All rights reserved.',
     },
     de: {
-      heroSub:      'Gemacht mit Liebe fuer die Team Darkness Community.',
+      heroSub:      'Gemacht mit Liebe für die Team Darkness Community.',
       communityBtn: '💬 Community beitreten',
       statsTitle:   'Live Statistiken',
       statsLive:    'Wird in Echtzeit aktualisiert',
