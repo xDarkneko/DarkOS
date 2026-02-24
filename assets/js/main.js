@@ -1,6 +1,4 @@
-// ============================================================
-//  DarkOS – Main JS (animations, interactions)
-// ============================================================
+// DarkOS – Main JS
 
 // ── Intersection Observer (animate in) ────────────────────────
 const observer = new IntersectionObserver((entries) => {
@@ -12,62 +10,37 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('.feat-card, .stat-card, .cmd-item').forEach(el => {
+document.querySelectorAll('.stat-card').forEach(el => {
   el.style.opacity = '0';
   el.style.transform = 'translateY(24px)';
   el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
   observer.observe(el);
 });
 
-// ── Number counter animation ───────────────────────────────────
-function animateNumber(el, target) {
-  const duration = 1200;
-  const start    = performance.now();
-  const from     = 0;
-
-  function step(now) {
-    const progress = Math.min((now - start) / duration, 1);
-    const ease     = 1 - Math.pow(1 - progress, 3);
-    const current  = Math.floor(from + (target - from) * ease);
-    el.textContent = current.toLocaleString();
-    if (progress < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-
-// Re-animate when stats load
-window.onStatsLoaded = (data) => {
-  const pairs = [
-    ['statMembers', data.members],
-    ['statTickets', data.ticketCount],
-    ['statMessages', data.msgCount],
-  ];
-  pairs.forEach(([id, val]) => {
-    const el = document.getElementById(id);
-    if (el && typeof val === 'number') animateNumber(el, val);
-  });
-};
-
-// ── Smooth scroll for nav links ────────────────────────────────
+// ── Smooth scroll – nur für echte Seitenanker ─────────────────
+// FIX: Nur Anker die wirklich auf der Seite existieren, nicht externe Links!
 document.querySelectorAll('a[href^="#"]').forEach(link => {
+  const targetId = link.getAttribute('href');
+  if (targetId === '#' || !document.querySelector(targetId)) return; // skip leere/externe
   link.addEventListener('click', e => {
     e.preventDefault();
-    const target = document.querySelector(link.getAttribute('href'));
-    if (target) target.scrollIntoView({ behavior: 'smooth' });
+    document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
   });
 });
 
-// ── Terminal typing effect for hero badge ─────────────────────
-const badge = document.querySelector('.hero-badge');
-if (badge) {
-  const text = badge.textContent;
-  badge.textContent = '';
-  let i = 0;
-  const type = () => {
-    if (i < text.length) {
-      badge.textContent += text[i++];
-      setTimeout(type, 40);
-    }
-  };
-  setTimeout(type, 400);
-}
+// ── Badge typing – läuft NACH i18n (DOMContentLoaded) ─────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Kurz warten bis applyPage() den Badge-Text gesetzt hat
+  setTimeout(() => {
+    const badge = document.querySelector('.hero-badge');
+    if (!badge) return;
+    const text = badge.textContent;
+    if (!text || text === 'Loading...') return;
+    badge.textContent = '';
+    let i = 0;
+    const type = () => {
+      if (i < text.length) { badge.textContent += text[i++]; setTimeout(type, 35); }
+    };
+    type();
+  }, 100);
+});
