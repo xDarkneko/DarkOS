@@ -25,18 +25,18 @@ const DARKOS_CONFIG = {
   // ── Landing Page Texte ────────────────────────────────────────
   landing: {
     en: {
-      heroSub:      'Made with love for the Team Darkness community.',
+      heroSub:      'The ultimate Discord bot for your community.',
       communityBtn: '💬 Join Community',
       statsTitle:   'Live Statistics',
       statsLive:    'Updated in real time',
-      footerCopy:   '© 2026 DarkOS. All rights reserved.',
+      footerCopy:   '© 2025 DarkOS. All rights reserved.',
     },
     de: {
-      heroSub:      'Gemacht mit Liebe fuer die Team Darkness Community.',
+      heroSub:      'Der ultimative Discord Bot für deine Community.',
       communityBtn: '💬 Community beitreten',
       statsTitle:   'Live Statistiken',
       statsLive:    'Wird in Echtzeit aktualisiert',
-      footerCopy:   '© 2026 DarkOS. Alle Rechte vorbehalten.',
+      footerCopy:   '© 2025 DarkOS. Alle Rechte vorbehalten.',
     },
   },
 };

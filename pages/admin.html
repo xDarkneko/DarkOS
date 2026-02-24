@@ -527,6 +527,27 @@ function fmtUptime(s) {
 
 // ── Bot Settings ───────────────────────────────────────────────
 async function loadSettings() {
+  // Load from localStorage first
+  const saved = localStorage.getItem('darkos_settings');
+  if (saved) {
+    try {
+      const d = JSON.parse(saved);
+      const fields = [
+        'community_server_id','team_server_id',
+        'admin_role_id','team_role_id','moderator_role_id',
+        'ticket_category_id',
+        'giveaway_channel_id','war_feed_channel_id','anime_channel_id',
+        'counting_channel_id','driver_channel_id','twitch_channel_id',
+        'youtube_channel_id','announce_channel_id',
+        'bot_name','bot_color','welcome_message',
+      ];
+      fields.forEach(f => {
+        const el = document.getElementById('s_' + f);
+        if (el && d[f]) el.value = d[f];
+      });
+    } catch {}
+  }
+  // Also try API
   try {
     const res  = await fetch(API_URL + '/api/settings');
     const d    = await res.json();
@@ -565,13 +586,23 @@ async function saveSettings() {
   const body = {};
   fields.forEach(f => { const el = document.getElementById('s_' + f); if (el) body[f] = el.value; });
 
-  const res  = await fetch(API_URL + '/api/settings', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + accessToken },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json();
-  toast(data.success ? '✅ Settings saved! Applied immediately.' : '❌ ' + data.error);
+  // Save to localStorage (works without API)
+  localStorage.setItem('darkos_settings', JSON.stringify(body));
+
+  // Also try API if configured
+  if (API_URL && !API_URL.includes('your-api-host')) {
+    try {
+      const res = await fetch(API_URL + '/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + accessToken },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      toast(data.success ? '✅ Saved & synced to bot!' : '✅ Saved locally. (API: ' + data.error + ')');
+      return;
+    } catch {}
+  }
+  toast('✅ Saved locally! (Läuft dein Bot? Dann trage die API URL in config.js ein)');
 }
 
 // ── Log Channels ───────────────────────────────────────────────
