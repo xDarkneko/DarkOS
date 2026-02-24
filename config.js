@@ -2,8 +2,8 @@ const DARKOS_CONFIG = {
 
   // ── Bot & API ─────────────────────────────────────────────────
   apiUrl:   'https://your-api-host.example.com',
-  guildId:  'DEINE_SERVER_ID_HIER',
-  clientId: '1425314501057839134', // ← Public, safe hier einzutragen
+  guildId:  '1023175719209144380',
+  clientId: '1425314501057839134',
 
   // ── Bot Info ──────────────────────────────────────────────────
   botName:    'DarkOS',
