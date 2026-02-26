@@ -24,6 +24,18 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btn) btn.textContent = saved === 'light' ? '🌙' : '☀️';
 });
 
+function updateLogos(isLight) {
+  const logos = document.querySelectorAll(
+    '.nav-logo, .hero-logo, .footer-logo'
+  );
+
+  logos.forEach(img => {
+    img.src = isLight
+      ? 'assets/logo_white.png'
+      : 'assets/logo.png';
+  });
+}
+
 // ── Animate stat cards on scroll ───────────────────────────────
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => {
