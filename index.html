@@ -7,9 +7,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/main.css" />
-  <!-- Load config + i18n first so theme applies before paint -->
-  <script src="config.js"></script>
-  <script src="assets/js/i18n.js"></script>
+  <script>
+    // Apply saved theme before paint to prevent flash
+    (function(){
+      var t = localStorage.getItem('darkos-theme') ||
+              (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      if (t === 'light') document.documentElement.classList.add('preload-light');
+    })();
+  </script>
 </head>
 <body>
 <div class="noise"></div>
@@ -66,7 +71,7 @@
 
 <section class="twitch-section" id="twitch">
   <div class="section-header">
-    <h2 id="twitchTitle">Live on Twitch</h2>
+    <h2 id="twitchTitle">Follow us on Twitch</h2>
   </div>
   <a id="twitchCard" class="twitch-card" href="https://twitch.tv/xDarkNeko_" target="_blank">
     <div class="twitch-icon">
@@ -95,6 +100,8 @@
   <div class="footer-copy" id="footerCopy">© 2026 DarkOS</div>
 </footer>
 
+<script src="config.js"></script>
+<script src="assets/js/i18n.js"></script>
 <script src="assets/js/stats.js"></script>
 <script src="assets/js/twitch.js"></script>
 <script src="assets/js/main.js"></script>

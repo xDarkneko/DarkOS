@@ -7,13 +7,34 @@ const systemDark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let currentTheme  = savedTheme || (systemDark ? 'dark' : 'light');
 
 function applyTheme(theme) {
-  if (theme === 'light') {
-    document.body.classList.add('light-mode');
+  // body may not exist yet if called from <head> – defer safely
+  const apply = () => {
+    if (theme === 'light') {
+      document.body.classList.add('light-mode');
+    } else {
+      document.body.classList.remove('light-mode');
+    }
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.textContent = theme === 'light' ? '🌙' : '☀️';
+
+    // Swap logo: dark mode = logo.png, light mode = logo_white.png
+    const logos = document.querySelectorAll('.nav-logo, .hero-logo, .footer-logo');
+    logos.forEach(img => {
+      if (theme === 'light') {
+        img.src = img.src.replace('logo.png', 'logo_white.png');
+        if (!img.src.includes('logo_white')) img.src = img.getAttribute('data-src-light') || img.src;
+      } else {
+        img.src = img.src.replace('logo_white.png', 'logo.png');
+        if (img.src.includes('logo_white')) img.src = img.getAttribute('data-src-dark') || img.src.replace('logo_white.png','logo.png');
+      }
+    });
+  };
+
+  if (document.body) {
+    apply();
   } else {
-    document.body.classList.remove('light-mode');
+    document.addEventListener('DOMContentLoaded', apply);
   }
-  const btn = document.getElementById('themeToggle');
-  if (btn) btn.textContent = theme === 'light' ? '🌙' : '☀️';
 }
 
 function toggleTheme() {
@@ -44,7 +65,7 @@ const TEXTS = {
     communityBtn: '💬 Join Community',
     statsTitle:   'Live Statistics',
     statsLive:    'Updated in real time',
-    twitchTitle:  'Live on Twitch',
+    twitchTitle:  'Follow us on Twitch',
     footerCopy:   '© 2026 DarkOS. All rights reserved.',
   },
   de: {
@@ -52,7 +73,7 @@ const TEXTS = {
     communityBtn: '💬 Community beitreten',
     statsTitle:   'Live Statistiken',
     statsLive:    'Wird in Echtzeit aktualisiert',
-    twitchTitle:  'Live auf Twitch',
+    twitchTitle:  'Folge uns auf Twitch',
     footerCopy:   '© 2026 DarkOS. Alle Rechte vorbehalten.',
   }
 };
@@ -110,7 +131,7 @@ function toggleLang() {
 }
 
 // ── Init ─────────────────────────────────────────────────────
-// Apply theme BEFORE DOMContentLoaded to avoid flash
-applyTheme(currentTheme);
-
-document.addEventListener('DOMContentLoaded', applyPage);
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(currentTheme);
+  applyPage();
+});
