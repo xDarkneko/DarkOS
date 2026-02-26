@@ -23,8 +23,7 @@
 }
 
 /* Preload class on <html> prevents flash before body loads */
-html.preload-light body,
-body.light-mode {
+html.light-mode {
   --bg:       #f0f2f7;
   --bg2:      #e4e8f2;
   --surface:  #ffffff;
@@ -72,7 +71,7 @@ a { color: inherit; text-decoration: none; }
   border-bottom: 1px solid var(--border);
   transition: background 0.3s;
 }
-body.light-mode .nav { background: rgba(240,242,247,0.88); }
+html.light-mode .nav { background: rgba(240,242,247,0.88); }
 
 .nav-brand {
   display: flex; align-items: center; gap: 0.6rem;
@@ -82,7 +81,7 @@ body.light-mode .nav { background: rgba(240,242,247,0.88); }
   width: 32px; height: 32px; object-fit: contain; border-radius: 50%;
   filter: drop-shadow(0 0 8px var(--glow));
 }
-body.light-mode .nav-logo { mix-blend-mode: multiply; }
+html.light-mode .nav-logo { mix-blend-mode: multiply; }
 
 .nav-links {
   display: flex; align-items: center; gap: 0.5rem; margin-left: auto;
@@ -133,7 +132,7 @@ body.light-mode .nav-logo { mix-blend-mode: multiply; }
     radial-gradient(ellipse 40% 40% at 80% 70%, rgba(44,182,125,0.07) 0%, transparent 60%);
   transition: background 0.3s;
 }
-body.light-mode .hero::before {
+html.light-mode .hero::before {
   background:
     radial-gradient(ellipse 60% 50% at 50% 30%, rgba(91,61,232,0.09) 0%, transparent 70%),
     radial-gradient(ellipse 40% 40% at 80% 70%, rgba(14,165,160,0.06) 0%, transparent 60%);
@@ -160,7 +159,7 @@ body.light-mode .hero::before {
   animation: float 5s ease-in-out infinite;
   transition: filter 0.3s;
 }
-body.light-mode .hero-logo {
+html.light-mode .hero-logo {
   mix-blend-mode: multiply;
   filter: drop-shadow(0 8px 32px rgba(91,61,232,0.2)) drop-shadow(0 2px 8px rgba(0,0,0,0.06));
 }
@@ -220,7 +219,7 @@ body.light-mode .hero-logo {
   background: rgba(127,90,240,0.06);
   box-shadow: inset 0 0 20px rgba(127,90,240,0.06);
 }
-body.light-mode .stat-chip:hover {
+html.light-mode .stat-chip:hover {
   background: rgba(91,61,232,0.04);
   box-shadow: inset 0 0 16px rgba(91,61,232,0.05);
 }
@@ -238,7 +237,7 @@ body.light-mode .stat-chip:hover {
     radial-gradient(ellipse 70% 60% at 50% 50%, rgba(127,90,240,0.07) 0%, transparent 70%),
     radial-gradient(ellipse 40% 40% at 20% 80%, rgba(44,182,125,0.05) 0%, transparent 60%);
 }
-body.light-mode .stats-section::before {
+html.light-mode .stats-section::before {
   background:
     radial-gradient(ellipse 70% 60% at 50% 50%, rgba(91,61,232,0.06) 0%, transparent 70%),
     radial-gradient(ellipse 40% 40% at 20% 80%, rgba(14,165,160,0.04) 0%, transparent 60%);
@@ -275,7 +274,7 @@ body.light-mode .stats-section::before {
   box-shadow: 0 16px 48px var(--glow), 0 0 0 1px rgba(127,90,240,0.2), inset 0 0 24px rgba(127,90,240,0.04);
   border-color: rgba(127,90,240,0.25);
 }
-body.light-mode .stat-card:hover {
+html.light-mode .stat-card:hover {
   box-shadow: 0 16px 48px rgba(91,61,232,0.15), 0 0 0 1px rgba(91,61,232,0.18), inset 0 0 20px rgba(91,61,232,0.03);
   border-color: rgba(91,61,232,0.22);
 }
@@ -327,7 +326,7 @@ body.light-mode .stat-card:hover {
   width: 28px; height: 28px; object-fit: contain; border-radius: 50%;
   filter: drop-shadow(0 0 6px var(--glow));
 }
-body.light-mode .footer-logo { mix-blend-mode: multiply; }
+html.light-mode .footer-logo { mix-blend-mode: multiply; }
 .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .footer-links a { font-size: 0.8rem; font-weight: 600; color: var(--text-dim); transition: color 0.2s; letter-spacing: 0.06em; text-transform: uppercase; }
 .footer-links a:hover { color: var(--accent); }

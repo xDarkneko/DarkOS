@@ -7,8 +7,8 @@ const systemDark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let currentTheme  = savedTheme || (systemDark ? 'dark' : 'light');
 
 function applyTheme(theme) {
-  // Direct, no closures
-  document.body.classList.toggle('light-mode', theme === 'light');
+  // Always use <html> element - consistent with preload script
+  document.documentElement.classList.toggle('light-mode', theme === 'light');
 
   const btn = document.getElementById('themeToggle');
   if (btn) btn.textContent = theme === 'light' ? '🌙' : '☀️';
