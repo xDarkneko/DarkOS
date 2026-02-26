@@ -17,13 +17,16 @@ function toggleTheme() {
 // Apply saved theme on load
 document.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem('darkos-theme');
+  const isLight = saved === 'light';
 
-  if (saved === 'light') {
+  if (isLight) {
     document.body.classList.add('light');
   }
 
   const btn = document.getElementById('themeToggle');
-  if (btn) btn.textContent = saved === 'light' ? '🌙' : '☀️';
+  if (btn) btn.textContent = isLight ? '🌙' : '☀️';
+
+  updateLogos(isLight);
 });
 
 function updateLogos(isLight) {
