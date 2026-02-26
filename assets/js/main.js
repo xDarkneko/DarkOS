@@ -2,22 +2,26 @@
 
 // ── Theme toggle ───────────────────────────────────────────────
 function toggleTheme() {
-  const html = document.documentElement;
-  const isDark = html.getAttribute('data-theme') === 'dark';
-  const newTheme = isDark ? 'light' : 'dark';
+  const body = document.body;
+  const isLight = body.classList.contains('light');
 
-  html.setAttribute('data-theme', newTheme);
-  localStorage.setItem('darkos-theme', newTheme);
+  body.classList.toggle('light', !isLight);
+  localStorage.setItem('darkos-theme', isLight ? 'dark' : 'light');
 
   const btn = document.getElementById('themeToggle');
-  if (btn) btn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+  if (btn) btn.textContent = isLight ? '🌙' : '☀️';
 }
 
-// Apply theme button state on load
+// Apply saved theme on load
 document.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('darkos-theme') || 'light';
+  const saved = localStorage.getItem('darkos-theme');
+
+  if (saved === 'light') {
+    document.body.classList.add('light');
+  }
+
   const btn = document.getElementById('themeToggle');
-  if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  if (btn) btn.textContent = saved === 'light' ? '🌙' : '☀️';
 });
 
 // ── Animate stat cards on scroll ───────────────────────────────
