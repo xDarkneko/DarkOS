@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DarkOS – Discord Bot</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/main.css" />
 </head>
 <body>
 <div class="noise"></div>
-<div class="scanlines"></div>
 
 <nav class="nav">
-  <div class="nav-brand">
-    <img src="assets/logo.png" alt="DarkOS" class="nav-logo" />
-    <span class="brand-text" id="navBotName">DarkOS</span>
-  </div>
+  <a href="#" class="nav-brand">
+    <img src="assets/logo_white.png" alt="DarkOS" class="nav-logo" />
+    <span id="navBotName">DarkOS</span>
+  </a>
   <div class="nav-links">
     <a href="#stats">Stats</a>
-    <a href="pages/admin.html" class="btn-nav" id="dashboardBtn">Dashboard</a>
+    <a href="pages/admin.html" class="btn-nav">Dashboard</a>
   </div>
   <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
     <button class="lang-toggle" id="langToggle" onclick="toggleLang()">🇺🇸</button>
   </div>
 </nav>
@@ -29,52 +29,73 @@
 <section class="hero">
   <div class="hero-grid"></div>
   <div class="hero-content">
-    <img src="assets/logo.png" alt="DarkOS" class="hero-logo" />
-    <div class="hero-badge" id="heroBadge">Loading...</div>
-    <h1 class="hero-title"><span class="glitch" id="heroTitle" data-text="DarkOS">DarkOS</span></h1>
+    <img src="assets/logo_white.png" alt="DarkOS" class="hero-logo" />
+    <div class="hero-badge" id="heroBadge">v0.0.1a · Now Live</div>
+    <h1 class="hero-title" id="heroTitle">DarkOS</h1>
     <p class="hero-sub" id="heroSub"></p>
     <div class="hero-cta">
-      <a id="communityBtn" class="btn-primary" target="_blank" href="#">💬 Community</a>
+      <a id="communityBtn" class="btn-primary" target="_blank" href="https://discord.gg/UsEmqxHEFH">💬 Join Community</a>
     </div>
   </div>
   <div class="hero-stats-strip">
     <div class="stat-chip"><span class="stat-num" id="statMembers">—</span><span class="stat-label" data-key="stat.members">Members</span></div>
     <div class="stat-chip"><span class="stat-num" id="statTickets">—</span><span class="stat-label" data-key="stat.tickets">Tickets</span></div>
     <div class="stat-chip"><span class="stat-num" id="statMessages">—</span><span class="stat-label" data-key="stat.messages">Messages</span></div>
-    <div class="stat-chip"><span class="stat-num" id="statJoins">—</span><span class="stat-label"   data-key="stat.joins">Joins</span></div>
-    <div class="stat-chip"><span class="stat-num" id="statLeaves">—</span><span class="stat-label"  data-key="stat.leaves">Leaves</span></div>
-    <div class="stat-chip"><span class="stat-num" id="statVersion">—</span><span class="stat-label" data-key="stat.version">Version</span></div>
+    <div class="stat-chip"><span class="stat-num" id="statJoins">—</span><span class="stat-label" data-key="stat.joins">Joins</span></div>
+    <div class="stat-chip"><span class="stat-num" id="statLeaves">—</span><span class="stat-label" data-key="stat.leaves">Leaves</span></div>
+    <div class="stat-chip"><span class="stat-num" id="statVersion">0.0.1a</span><span class="stat-label" data-key="stat.version">Version</span></div>
   </div>
 </section>
 
 <section class="stats-section" id="stats">
   <div class="section-header">
-    <h2 id="statsTitle"></h2>
-    <p class="stat-live-badge">● <span id="statsLive"></span></p>
+    <h2 id="statsTitle">Live Statistics</h2>
+    <p class="stat-live-badge"><span id="statsLive">Updated in real time</span></p>
   </div>
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-big" id="s2Members">—</div><div class="stat-name" data-key="stat.members">Members</div></div>
     <div class="stat-card"><div class="stat-big" id="s2Tickets">—</div><div class="stat-name" data-key="stat.tickets">Tickets</div></div>
     <div class="stat-card"><div class="stat-big" id="s2Messages">—</div><div class="stat-name" data-key="stat.messages">Messages</div></div>
-    <div class="stat-card"><div class="stat-big" id="s2Joins">—</div><div class="stat-name"   data-key="stat.joins">Joins</div></div>
-    <div class="stat-card"><div class="stat-big" id="s2Leaves">—</div><div class="stat-name"  data-key="stat.leaves">Leaves</div></div>
+    <div class="stat-card"><div class="stat-big" id="s2Joins">—</div><div class="stat-name" data-key="stat.joins">Joins</div></div>
+    <div class="stat-card"><div class="stat-big" id="s2Leaves">—</div><div class="stat-name" data-key="stat.leaves">Leaves</div></div>
   </div>
 </section>
 
+<section class="twitch-section" id="twitch">
+  <div class="section-header">
+    <h2 id="twitchTitle">Live on Twitch</h2>
+  </div>
+  <a id="twitchCard" class="twitch-card" href="https://twitch.tv/xdarkneko" target="_blank">
+    <div class="twitch-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+    </div>
+    <div class="twitch-info">
+      <div class="twitch-name" id="twitchName">xdarkneko</div>
+      <div class="twitch-status" id="twitchStatus">Click to visit channel</div>
+    </div>
+    <div class="twitch-live" id="twitchBadge" style="display:none">
+      <span></span>LIVE
+    </div>
+  </a>
+</section>
 
 <footer class="footer">
-  <div class="footer-brand" id="footerBrand">⚡ DarkOS</div>
+  <div class="footer-brand">
+    <img src="assets/logo_white.png" alt="DarkOS" class="footer-logo" />
+    <span id="footerBrand">DarkOS</span>
+  </div>
   <div class="footer-links">
     <a href="pages/admin.html">Admin</a>
-    <a id="footerCommunity" href="#" target="_blank">Discord</a>
-    <a id="footerGithub"    href="#" target="_blank">GitHub</a>
+    <a id="footerCommunity" href="https://discord.gg/UsEmqxHEFH" target="_blank">Discord</a>
+    <a id="footerGithub" href="https://github.com/xdarkneko/DarkOS" target="_blank">GitHub</a>
   </div>
-  <div class="footer-copy" id="footerCopy"></div>
+  <div class="footer-copy" id="footerCopy">© 2026 DarkOS</div>
 </footer>
 
 <script src="config.js"></script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/stats.js"></script>
+<script src="assets/js/twitch.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>

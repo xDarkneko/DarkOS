@@ -1,4 +1,6 @@
-/* DarkOS – Dashboard / Team Portal CSS */
+/* DarkOS – Dashboard / Team Portal CSS (Light Mode) */
+/* Variables inherited from page-level :root override */
+
 
 .dash-layout {
   display: grid;

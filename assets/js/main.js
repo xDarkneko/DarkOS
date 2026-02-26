@@ -17,17 +17,17 @@ document.querySelectorAll('.stat-card').forEach(el => {
   observer.observe(el);
 });
 
-// Smooth scroll – only for real page anchors, never external links
+// Smooth scroll – only real anchors
 document.querySelectorAll('a[href^="#"]').forEach(link => {
   const href = link.getAttribute('href');
-  if (href.length <= 1) return; // skip bare "#"
+  if (href.length <= 1) return;
   link.addEventListener('click', e => {
     const target = document.querySelector(href);
     if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
   });
 });
 
-// Badge typing effect – runs after i18n sets the text
+// Badge typing effect after i18n sets the text
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     const badge = document.querySelector('.hero-badge');
@@ -37,5 +37,5 @@ document.addEventListener('DOMContentLoaded', () => {
     let i = 0;
     const type = () => { if (i < text.length) { badge.textContent += text[i++]; setTimeout(type, 35); } };
     type();
-  }, 150);
+  }, 200);
 });
