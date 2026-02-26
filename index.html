@@ -12,7 +12,7 @@
     (function(){
       var t = localStorage.getItem('darkos-theme') ||
               (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      if (t === 'light') document.documentElement.classList.add('preload-light');
+      if (t === 'light') document.documentElement.classList.add('light-mode');
     })();
   </script>
 </head>
