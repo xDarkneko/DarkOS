@@ -30,17 +30,7 @@
   </div>
   <div class="nav-right">
     <button class="lang-toggle"  id="langToggle"  onclick="toggleLang()">ENG</button>
-    <button class="theme-toggle" id="themeToggle" onclick="
-  var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-  var next = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('darkos-theme', next);
-  this.textContent = next === 'light' ? '🌙' : '☀️';
-  var logos = document.querySelectorAll('.nav-logo,.hero-logo,.footer-logo');
-  logos.forEach(function(img){
-    img.src = img.src.replace(/logo(_white)?\.png/, next==='light'?'logo_white.png':'logo.png');
-  });
-">☀️</button>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">☀️</button>
   </div>
 </nav>
 
