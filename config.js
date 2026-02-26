@@ -29,14 +29,14 @@ const DARKOS_CONFIG = {
       communityBtn: '💬 Join Community',
       statsTitle:   'Live Statistics',
       statsLive:    'Updated in real time',
-      footerCopy:   '© 2025 DarkOS. All rights reserved.',
+      footerCopy:   '© 2026 DarkOS.',
     },
     de: {
       heroSub:      'Der ultimative Team Darkness-Bot aus eigener Herstellung!',
       communityBtn: '💬 Community beitreten',
       statsTitle:   'Live Statistiken',
       statsLive:    'Wird in Echtzeit aktualisiert',
-      footerCopy:   '© 2025 DarkOS. Alle Rechte vorbehalten.',
+      footerCopy:   '© 2026 DarkOS.',
     },
   },
 };
