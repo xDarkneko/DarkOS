@@ -40,28 +40,16 @@ const THEMES = {
 };
 
 function applyTheme(theme) {
-  const vars = THEMES[theme] || THEMES.dark;
-  const root = document.documentElement;
+  // Use data-theme attribute - CSS selects [data-theme="light"/"dark"]
+  document.documentElement.setAttribute('data-theme', theme);
 
-  // Set all CSS variables directly - most reliable approach
-  Object.entries(vars).forEach(([k, v]) => root.style.setProperty(k, v));
-
-  // Button icon
   const btn = document.getElementById('themeToggle');
   if (btn) btn.textContent = theme === 'light' ? '🌙' : '☀️';
-
-  // Nav background (can't be a CSS variable easily)
-  const nav = document.querySelector('.nav');
-  if (nav) nav.style.background = theme === 'light'
-    ? 'rgba(240,242,247,0.88)'
-    : 'rgba(8,12,20,0.85)';
 
   // Logo swap
   const logoSrc = theme === 'light' ? 'logo_white.png' : 'logo.png';
   document.querySelectorAll('.nav-logo, .hero-logo, .footer-logo').forEach(img => {
-    img.src = img.src.includes('logo_white')
-      ? img.src.replace('logo_white.png', logoSrc)
-      : img.src.replace('logo.png', logoSrc);
+    img.src = img.src.replace(/logo(_white)?\.png/, logoSrc);
   });
 }
 
