@@ -5,21 +5,20 @@ function toggleTheme() {
   const html = document.documentElement;
   const isDark = html.getAttribute('data-theme') === 'dark';
   const newTheme = isDark ? 'light' : 'dark';
+
   html.setAttribute('data-theme', newTheme);
   localStorage.setItem('darkos-theme', newTheme);
+
   const btn = document.getElementById('themeToggle');
   if (btn) btn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
 }
 
-// Apply saved theme on load
-(function() {
+// Apply theme button state on load
+document.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem('darkos-theme') || 'light';
-  document.documentElement.setAttribute('data-theme', saved);
-  document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('themeToggle');
-    if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
-  });
-})();
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+});
 
 // ── Animate stat cards on scroll ───────────────────────────────
 const observer = new IntersectionObserver((entries) => {
