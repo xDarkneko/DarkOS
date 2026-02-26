@@ -25,14 +25,14 @@ const DARKOS_CONFIG = {
   // ── Landing Page Texte ────────────────────────────────────────
   landing: {
     en: {
-      heroSub:      'The Ultimative Team Darkness homemade Bot!',
+      heroSub:      'The ultimate Discord bot for your community.',
       communityBtn: '💬 Join Community',
       statsTitle:   'Live Statistics',
       statsLive:    'Updated in real time',
       footerCopy:   '© 2026 DarkOS.',
     },
     de: {
-      heroSub:      'Der ultimative Team Darkness-Bot aus eigener Herstellung!',
+      heroSub:      'Der ultimative Discord Bot für deine Community.',
       communityBtn: '💬 Community beitreten',
       statsTitle:   'Live Statistiken',
       statsLive:    'Wird in Echtzeit aktualisiert',

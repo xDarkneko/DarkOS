@@ -1,13 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DarkOS – Admin Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/css/main.css" />
   <style>
-    body { padding-top:0; }
+    :root {
+      --bg:#f0f2f7;--surface:#ffffff;--surface2:#f7f9fc;
+      --border:rgba(0,0,0,0.08);--text:#0d0f1a;--text-dim:#6b7280;
+      --accent:#5b3de8;--accent2:#0ea5a0;--accent3:#e84040;
+      --glow:rgba(91,61,232,0.18);
+      --font-head:'Oxanium',sans-serif;--font-mono:'DM Mono',monospace;
+    }
+    [data-theme="dark"] {
+      --bg:#08090f;--surface:#13151f;--surface2:#1a1d2e;
+      --border:rgba(255,255,255,0.07);--text:#eef0f8;--text-dim:#6b7a99;
+      --accent:#7f5af0;--accent2:#2cb67d;--accent3:#ff4757;
+      --glow:rgba(127,90,240,0.25);
+    }
+    body { padding-top:0; background:var(--bg); color:var(--text); }
     .layout { display:grid; grid-template-columns:230px 1fr; min-height:100vh; }
 
     /* Sidebar */
@@ -124,6 +137,7 @@
   </style>
 </head>
 <body>
+<script>(function(){var t=localStorage.getItem('darkos-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
 <div class="noise"></div>
 
 <!-- ══ Login ═════════════════════════════════════════════════ -->
