@@ -7,21 +7,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/main.css" />
-  <script>
-    // Set data-theme BEFORE paint - no flash, no external deps
-    (function(){
-      var t = localStorage.getItem('darkos-theme') ||
-              (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-theme', t);
-    })();
-  </script>
 </head>
 <body>
 <div class="noise"></div>
 
 <nav class="nav">
   <a href="#" class="nav-brand">
-    <img src="assets/logo_white.png" alt="DarkOS" class="nav-logo" />
+    <img src="assets/logo.png" alt="DarkOS" class="nav-logo" />
     <span id="navBotName">DarkOS</span>
   </a>
   <div class="nav-links">
@@ -37,7 +29,7 @@
 <section class="hero">
   <div class="hero-grid"></div>
   <div class="hero-content">
-    <img src="assets/logo_white.png" alt="DarkOS" class="hero-logo" />
+    <img src="assets/logo.png" alt="DarkOS" class="hero-logo" />
     <div class="hero-badge" id="heroBadge">v0.0.1a · Now Live</div>
     <h1 class="hero-title" id="heroTitle">DarkOS</h1>
     <p class="hero-sub" id="heroSub"></p>
@@ -89,7 +81,7 @@
 
 <footer class="footer">
   <div class="footer-brand">
-    <img src="assets/logo_white.png" alt="DarkOS" class="footer-logo" />
+    <img src="assets/logo.png" alt="DarkOS" class="footer-logo" />
     <span id="footerBrand">DarkOS</span>
   </div>
   <div class="footer-links">
