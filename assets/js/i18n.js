@@ -48,7 +48,7 @@ const TEXTS = {
     statsTitle:   'Live Statistics',
     statsLive:    'Updated in real time',
     twitchTitle:  'Follow us on Twitch',
-    footerCopy:   '© 2026 DarkOS. All rights reserved.',
+    footerCopy:   '© 2026 DarkOS.',
     members: 'Members', tickets: 'Tickets', messages: 'Messages',
     joins: 'Joins', leaves: 'Leaves', version: 'Version',
   },
@@ -58,7 +58,7 @@ const TEXTS = {
     statsTitle:   'Live Statistiken',
     statsLive:    'Wird in Echtzeit aktualisiert',
     twitchTitle:  'Folge uns auf Twitch',
-    footerCopy:   '© 2026 DarkOS. Alle Rechte vorbehalten.',
+    footerCopy:   '© 2026 DarkOS.',
     members: 'Mitglieder', tickets: 'Tickets', messages: 'Nachrichten',
     joins: 'Beitritte', leaves: 'Abgänge', version: 'Version',
   }
