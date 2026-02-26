@@ -72,10 +72,8 @@ function applyPage() {
   const labels = UI_LABELS[currentLang] || UI_LABELS.en;
 
   if (C) {
-    document.documentElement.style.setProperty('--accent',  C.colors.primary);
-    document.documentElement.style.setProperty('--accent2', C.colors.secondary);
-    document.documentElement.style.setProperty('--accent3', C.colors.danger);
-    document.documentElement.style.setProperty('--glow',    C.colors.primary + '40');
+    // Colors are defined in CSS :root / html.light-mode
+    // Do NOT use style.setProperty - it overrides CSS class variables
 
     setText('navBotName',  C.botName);
     setText('heroTitle',   C.botName);
