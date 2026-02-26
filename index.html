@@ -8,11 +8,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/main.css" />
   <script>
-    // Apply saved theme before paint to prevent flash
+    // Set data-theme BEFORE paint - no flash, no external deps
     (function(){
       var t = localStorage.getItem('darkos-theme') ||
               (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      if (t === 'light') document.documentElement.classList.add('light-mode');
+      document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
 </head>
@@ -30,7 +30,17 @@
   </div>
   <div class="nav-right">
     <button class="lang-toggle"  id="langToggle"  onclick="toggleLang()">ENG</button>
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">☀️</button>
+    <button class="theme-toggle" id="themeToggle" onclick="
+  var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+  var next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('darkos-theme', next);
+  this.textContent = next === 'light' ? '🌙' : '☀️';
+  var logos = document.querySelectorAll('.nav-logo,.hero-logo,.footer-logo');
+  logos.forEach(function(img){
+    img.src = img.src.replace(/logo(_white)?\.png/, next==='light'?'logo_white.png':'logo.png');
+  });
+">☀️</button>
   </div>
 </nav>
 
