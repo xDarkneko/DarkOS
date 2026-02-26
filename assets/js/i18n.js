@@ -40,16 +40,55 @@ const THEMES = {
 };
 
 function applyTheme(theme) {
-  // Use data-theme attribute - CSS selects [data-theme="light"/"dark"]
-  document.documentElement.setAttribute('data-theme', theme);
+  const isLight = theme === 'light';
 
+  // Inject a <style> block – overrides everything, no specificity battles
+  var styleId = 'darkos-theme-style';
+  var el = document.getElementById(styleId) || document.createElement('style');
+  el.id = styleId;
+  el.textContent = isLight ? `
+    body, html {
+      background: #f0f2f7 !important;
+      color: #0d0f1a !important;
+    }
+    .nav   { background: rgba(240,242,247,0.88) !important; border-bottom-color: rgba(0,0,0,0.08) !important; }
+    .hero::before { background: radial-gradient(ellipse 60% 50% at 50% 30%, rgba(91,61,232,0.09) 0%, transparent 70%) !important; }
+    .hero-stats-strip, .stat-card, .footer { background: #ffffff !important; border-color: rgba(0,0,0,0.08) !important; }
+    .stat-chip { border-right-color: rgba(0,0,0,0.08) !important; }
+    .stat-big, .stat-num { color: #5b3de8 !important; }
+    .stat-name, .stat-label, .hero-sub, .footer-copy, .footer-links a { color: #6b7280 !important; }
+    .hero-title, .section-header h2, .nav-brand, .footer-brand { color: #0d0f1a !important; }
+    .hero-badge { background: #fff !important; color: #5b3de8 !important; }
+    .btn-nav, .btn-primary { background: #5b3de8 !important; }
+    .hero-logo { filter: drop-shadow(0 8px 32px rgba(91,61,232,0.2)) !important; mix-blend-mode: multiply !important; }
+    .twitch-card { background: #ffffff !important; border-color: rgba(145,70,255,0.2) !important; }
+    .twitch-name { color: #0d0f1a !important; }
+  ` : `
+    body, html {
+      background: #080c14 !important;
+      color: #e8ecf4 !important;
+    }
+    .nav   { background: rgba(8,12,20,0.85) !important; border-bottom-color: rgba(255,255,255,0.07) !important; }
+    .hero-stats-strip, .stat-card, .footer { background: #111827 !important; border-color: rgba(255,255,255,0.07) !important; }
+    .stat-chip { border-right-color: rgba(255,255,255,0.07) !important; }
+    .stat-big, .stat-num { color: #7f5af0 !important; }
+    .stat-name, .stat-label, .hero-sub, .footer-copy, .footer-links a { color: #6b7a99 !important; }
+    .hero-title, .section-header h2, .nav-brand, .footer-brand { color: #e8ecf4 !important; }
+    .hero-badge { background: #111827 !important; color: #7f5af0 !important; }
+    .btn-nav, .btn-primary { background: #7f5af0 !important; }
+    .hero-logo { filter: drop-shadow(0 8px 32px rgba(127,90,240,0.3)) !important; mix-blend-mode: normal !important; }
+    .twitch-card { background: #111827 !important; }
+    .twitch-name { color: #e8ecf4 !important; }
+  `;
+  if (!document.getElementById(styleId)) document.head.appendChild(el);
+
+  // Button + logo
   const btn = document.getElementById('themeToggle');
-  if (btn) btn.textContent = theme === 'light' ? '🌙' : '☀️';
+  if (btn) btn.textContent = isLight ? '🌙' : '☀️';
 
-  // Logo swap
-  const logoSrc = theme === 'light' ? 'logo_white.png' : 'logo.png';
+  const logoSrc = isLight ? 'logo_white.png' : 'logo.png';
   document.querySelectorAll('.nav-logo, .hero-logo, .footer-logo').forEach(img => {
-    img.src = img.src.replace(/logo(_white)?\.png/, logoSrc);
+    img.src = img.src.replace(/logo(_white)?\.png/g, logoSrc);
   });
 }
 
