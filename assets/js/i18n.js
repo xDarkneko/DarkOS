@@ -7,34 +7,17 @@ const systemDark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let currentTheme  = savedTheme || (systemDark ? 'dark' : 'light');
 
 function applyTheme(theme) {
-  // body may not exist yet if called from <head> – defer safely
-  const apply = () => {
-    if (theme === 'light') {
-      document.body.classList.add('light-mode');
-    } else {
-      document.body.classList.remove('light-mode');
-    }
-    const btn = document.getElementById('themeToggle');
-    if (btn) btn.textContent = theme === 'light' ? '🌙' : '☀️';
+  // Direct, no closures
+  document.body.classList.toggle('light-mode', theme === 'light');
 
-    // Swap logo: dark mode = logo.png, light mode = logo_white.png
-    const logos = document.querySelectorAll('.nav-logo, .hero-logo, .footer-logo');
-    logos.forEach(img => {
-      if (theme === 'light') {
-        img.src = img.src.replace('logo.png', 'logo_white.png');
-        if (!img.src.includes('logo_white')) img.src = img.getAttribute('data-src-light') || img.src;
-      } else {
-        img.src = img.src.replace('logo_white.png', 'logo.png');
-        if (img.src.includes('logo_white')) img.src = img.getAttribute('data-src-dark') || img.src.replace('logo_white.png','logo.png');
-      }
-    });
-  };
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = theme === 'light' ? '🌙' : '☀️';
 
-  if (document.body) {
-    apply();
-  } else {
-    document.addEventListener('DOMContentLoaded', apply);
-  }
+  // Logo swap
+  const logoSrc = theme === 'light' ? 'logo_white.png' : 'logo.png';
+  document.querySelectorAll('.nav-logo, .hero-logo, .footer-logo').forEach(img => {
+    img.src = img.src.replace(/logo(_white)?\.png/, logoSrc);
+  });
 }
 
 function toggleTheme() {
@@ -43,7 +26,7 @@ function toggleTheme() {
   applyTheme(currentTheme);
 }
 
-// Listen to system changes (if user hasn't manually overridden)
+// System preference change (only if user never manually toggled)
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
   if (!localStorage.getItem('darkos-theme')) {
     currentTheme = e.matches ? 'dark' : 'light';
