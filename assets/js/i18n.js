@@ -6,17 +6,62 @@ const savedTheme = localStorage.getItem('darkos-theme');
 const systemDark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
 let currentTheme  = savedTheme || (systemDark ? 'dark' : 'light');
 
-function applyTheme(theme) {
-  // Always use <html> element - consistent with preload script
-  document.documentElement.classList.toggle('light-mode', theme === 'light');
+const THEMES = {
+  dark: {
+    '--bg':        '#080c14',
+    '--bg2':       '#0d1220',
+    '--surface':   '#111827',
+    '--surface2':  '#1a2236',
+    '--border':    'rgba(255,255,255,0.07)',
+    '--text':      '#e8ecf4',
+    '--text-dim':  '#6b7a99',
+    '--accent':    '#7f5af0',
+    '--accent2':   '#2cb67d',
+    '--accent3':   '#ff4757',
+    '--glow':      'rgba(127,90,240,0.25)',
+    '--shadow':    '0 4px 24px rgba(0,0,0,0.3)',
+    '--shadow-lg': '0 12px 48px rgba(127,90,240,0.2)',
+  },
+  light: {
+    '--bg':        '#f0f2f7',
+    '--bg2':       '#e4e8f2',
+    '--surface':   '#ffffff',
+    '--surface2':  '#f7f9fc',
+    '--border':    'rgba(0,0,0,0.08)',
+    '--text':      '#0d0f1a',
+    '--text-dim':  '#6b7280',
+    '--accent':    '#5b3de8',
+    '--accent2':   '#0ea5a0',
+    '--accent3':   '#e84040',
+    '--glow':      'rgba(91,61,232,0.15)',
+    '--shadow':    '0 4px 24px rgba(0,0,0,0.07)',
+    '--shadow-lg': '0 12px 48px rgba(91,61,232,0.12)',
+  }
+};
 
+function applyTheme(theme) {
+  const vars = THEMES[theme] || THEMES.dark;
+  const root = document.documentElement;
+
+  // Set all CSS variables directly - most reliable approach
+  Object.entries(vars).forEach(([k, v]) => root.style.setProperty(k, v));
+
+  // Button icon
   const btn = document.getElementById('themeToggle');
   if (btn) btn.textContent = theme === 'light' ? '🌙' : '☀️';
+
+  // Nav background (can't be a CSS variable easily)
+  const nav = document.querySelector('.nav');
+  if (nav) nav.style.background = theme === 'light'
+    ? 'rgba(240,242,247,0.88)'
+    : 'rgba(8,12,20,0.85)';
 
   // Logo swap
   const logoSrc = theme === 'light' ? 'logo_white.png' : 'logo.png';
   document.querySelectorAll('.nav-logo, .hero-logo, .footer-logo').forEach(img => {
-    img.src = img.src.replace(/logo(_white)?\.png/, logoSrc);
+    img.src = img.src.includes('logo_white')
+      ? img.src.replace('logo_white.png', logoSrc)
+      : img.src.replace('logo.png', logoSrc);
   });
 }
 
