@@ -7,6 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/main.css" />
+  <!-- Load config + i18n first so theme applies before paint -->
+  <script src="config.js"></script>
+  <script src="assets/js/i18n.js"></script>
 </head>
 <body>
 <div class="noise"></div>
@@ -21,8 +24,8 @@
     <a href="pages/admin.html" class="btn-nav">Dashboard</a>
   </div>
   <div class="nav-right">
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
-    <button class="lang-toggle" id="langToggle" onclick="toggleLang()">🇺🇸</button>
+    <button class="lang-toggle"  id="langToggle"  onclick="toggleLang()">ENG</button>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">☀️</button>
   </div>
 </nav>
 
@@ -65,16 +68,16 @@
   <div class="section-header">
     <h2 id="twitchTitle">Live on Twitch</h2>
   </div>
-  <a id="twitchCard" class="twitch-card" href="https://twitch.tv/xdarkneko" target="_blank">
+  <a id="twitchCard" class="twitch-card" href="https://twitch.tv/xDarkNeko_" target="_blank">
     <div class="twitch-icon">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
     </div>
     <div class="twitch-info">
-      <div class="twitch-name" id="twitchName">xdarkneko</div>
-      <div class="twitch-status" id="twitchStatus">Click to visit channel</div>
-    </div>
-    <div class="twitch-live" id="twitchBadge" style="display:none">
-      <span></span>LIVE
+      <div class="twitch-name" id="twitchName">xDarkNeko_</div>
+      <div class="twitch-meta" id="twitchMeta">
+        <span class="twitch-stat" id="twitchFollowers">— Followers</span>
+        <span id="twitchLiveStatus" class="twitch-offline">Offline</span>
+      </div>
     </div>
   </a>
 </section>
@@ -92,8 +95,6 @@
   <div class="footer-copy" id="footerCopy">© 2026 DarkOS</div>
 </footer>
 
-<script src="config.js"></script>
-<script src="assets/js/i18n.js"></script>
 <script src="assets/js/stats.js"></script>
 <script src="assets/js/twitch.js"></script>
 <script src="assets/js/main.js"></script>

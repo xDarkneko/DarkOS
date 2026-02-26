@@ -1,18 +1,19 @@
-// DarkOS – i18n
-let currentLang = localStorage.getItem('darkos-lang') || 'en';
-// ── Theme (Dark/Light) ────────────────────────────────────────
-let currentTheme = localStorage.getItem('darkos-theme') || 'dark';
+// DarkOS – i18n + Theme
+
+// ── Theme ────────────────────────────────────────────────────
+// Default: system preference, override saved in localStorage
+const savedTheme = localStorage.getItem('darkos-theme');
+const systemDark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
+let currentTheme  = savedTheme || (systemDark ? 'dark' : 'light');
 
 function applyTheme(theme) {
   if (theme === 'light') {
     document.body.classList.add('light-mode');
-    const btn = document.getElementById('themeToggle');
-    if (btn) btn.textContent = '☀️';
   } else {
     document.body.classList.remove('light-mode');
-    const btn = document.getElementById('themeToggle');
-    if (btn) btn.textContent = '🌙';
   }
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = theme === 'light' ? '🌙' : '☀️';
 }
 
 function toggleTheme() {
@@ -21,7 +22,16 @@ function toggleTheme() {
   applyTheme(currentTheme);
 }
 
+// Listen to system changes (if user hasn't manually overridden)
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+  if (!localStorage.getItem('darkos-theme')) {
+    currentTheme = e.matches ? 'dark' : 'light';
+    applyTheme(currentTheme);
+  }
+});
 
+// ── Language ─────────────────────────────────────────────────
+let currentLang = localStorage.getItem('darkos-lang') || 'en';
 
 const UI_LABELS = {
   en: { 'stat.members':'Members','stat.tickets':'Tickets','stat.messages':'Messages','stat.joins':'Joins','stat.leaves':'Leaves','stat.version':'Version' },
@@ -38,7 +48,7 @@ const TEXTS = {
     footerCopy:   '© 2026 DarkOS. All rights reserved.',
   },
   de: {
-    heroSub:      'Gemacht mit Liebe für die Team Darkness Community.',
+    heroSub:      'Gemacht mit Liebe für die Team Darkness community.',
     communityBtn: '💬 Community beitreten',
     statsTitle:   'Live Statistiken',
     statsLive:    'Wird in Echtzeit aktualisiert',
@@ -52,22 +62,16 @@ function setText(id, val) {
   if (el && val !== undefined) el.textContent = val;
 }
 
-function updateLangBtn() {
-  const btn = document.getElementById('langToggle');
-  if (btn) btn.textContent = currentLang === 'en' ? 'ENG' : 'DEU';
-}
-
 function applyPage() {
   const C = window.DARKOS;
   const t = TEXTS[currentLang] || TEXTS.en;
   const labels = UI_LABELS[currentLang] || UI_LABELS.en;
 
   if (C) {
-    // CSS vars
     document.documentElement.style.setProperty('--accent',  C.colors.primary);
     document.documentElement.style.setProperty('--accent2', C.colors.secondary);
     document.documentElement.style.setProperty('--accent3', C.colors.danger);
-    document.documentElement.style.setProperty('--glow',    C.colors.primary + '30');
+    document.documentElement.style.setProperty('--glow',    C.colors.primary + '40');
 
     setText('navBotName',  C.botName);
     setText('heroTitle',   C.botName);
@@ -84,7 +88,6 @@ function applyPage() {
     if (fg) fg.href = C.links.github;
   }
 
-  // data-key labels
   document.querySelectorAll('[data-key]').forEach(el => {
     const k = el.getAttribute('data-key');
     if (labels[k]) el.textContent = labels[k];
@@ -96,7 +99,8 @@ function applyPage() {
   setText('twitchTitle', t.twitchTitle);
   setText('footerCopy',  t.footerCopy);
 
-  updateLangBtn();
+  const langBtn = document.getElementById('langToggle');
+  if (langBtn) langBtn.textContent = currentLang === 'en' ? 'ENG' : 'DEU';
 }
 
 function toggleLang() {
@@ -104,5 +108,9 @@ function toggleLang() {
   localStorage.setItem('darkos-lang', currentLang);
   applyPage();
 }
+
+// ── Init ─────────────────────────────────────────────────────
+// Apply theme BEFORE DOMContentLoaded to avoid flash
+applyTheme(currentTheme);
 
 document.addEventListener('DOMContentLoaded', applyPage);

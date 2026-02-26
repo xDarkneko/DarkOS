@@ -1,6 +1,27 @@
 // DarkOS – Main JS
 
-// Animate stat cards on scroll
+// ── Theme toggle ───────────────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const newTheme = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('darkos-theme', newTheme);
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+}
+
+// Apply saved theme on load
+(function() {
+  const saved = localStorage.getItem('darkos-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  });
+})();
+
+// ── Animate stat cards on scroll ───────────────────────────────
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) {
@@ -17,7 +38,7 @@ document.querySelectorAll('.stat-card').forEach(el => {
   observer.observe(el);
 });
 
-// Smooth scroll – only real anchors
+// ── Smooth scroll ──────────────────────────────────────────────
 document.querySelectorAll('a[href^="#"]').forEach(link => {
   const href = link.getAttribute('href');
   if (href.length <= 1) return;
@@ -27,11 +48,11 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
   });
 });
 
-// Badge typing effect after i18n sets the text
+// ── Badge typing effect ────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     const badge = document.querySelector('.hero-badge');
-    if (!badge || badge.textContent === 'Loading...') return;
+    if (!badge) return;
     const text = badge.textContent;
     badge.textContent = '';
     let i = 0;

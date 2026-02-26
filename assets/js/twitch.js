@@ -1,32 +1,51 @@
-// DarkOS – Twitch Integration
-// Checks if streamer is live via public Twitch API (no auth needed via proxy trick)
-async function checkTwitchLive() {
-  const card   = document.getElementById('twitchCard');
-  const badge  = document.getElementById('twitchBadge');
-  const status = document.getElementById('twitchStatus');
-  if (!card) return;
+// DarkOS – Twitch Integration (decapi.me – no auth needed)
+const TWITCH_USER = 'xDarkNeko_';
+
+async function loadTwitchData() {
+  const nameEl     = document.getElementById('twitchName');
+  const metaEl     = document.getElementById('twitchMeta');
+  const liveEl     = document.getElementById('twitchLiveStatus');
+  const cardEl     = document.getElementById('twitchCard');
+
+  if (nameEl) nameEl.textContent = TWITCH_USER;
 
   try {
-    // Use Twitch's public API via a no-auth endpoint
-    const res  = await fetch('https://decapi.me/twitch/uptime/xdarkneko');
-    const text = await res.text();
-    const isLive = !text.toLowerCase().includes('offline') && !text.toLowerCase().includes('error');
+    // Follower count
+    const followRes  = await fetch(`https://decapi.me/twitch/followcount/${TWITCH_USER}`);
+    const followText = await followRes.text();
+    const followers  = followText.trim();
 
-    if (isLive) {
-      if (badge)  badge.style.display  = 'inline-flex';
-      if (status) status.textContent   = `Live for ${text.trim()}`;
-      card.style.borderColor = 'rgba(145,70,255,0.4)';
-      card.style.boxShadow   = '0 8px 40px rgba(145,70,255,0.2)';
-    } else {
-      if (badge)  badge.style.display  = 'none';
-      if (status) status.textContent   = 'Click to visit channel';
+    // Live status
+    const uptimeRes  = await fetch(`https://decapi.me/twitch/uptime/${TWITCH_USER}`);
+    const uptimeText = await uptimeRes.text();
+    const isLive     = !uptimeText.toLowerCase().includes('offline') && !uptimeText.toLowerCase().includes('error') && uptimeText.trim().length > 0;
+
+    // Update followers
+    const followerEl = document.getElementById('twitchFollowers');
+    if (followerEl) followerEl.innerHTML = `<strong>${Number(followers).toLocaleString()}</strong> Followers`;
+
+    // Update live badge
+    if (liveEl) {
+      if (isLive) {
+        liveEl.innerHTML = `<span class="live-dot"></span>LIVE · ${uptimeText.trim()}`;
+        liveEl.className = 'twitch-live';
+        if (cardEl) {
+          cardEl.style.borderColor = 'rgba(145,70,255,0.45)';
+          cardEl.style.boxShadow   = '0 8px 48px rgba(145,70,255,0.22)';
+        }
+      } else {
+        liveEl.textContent = 'Offline';
+        liveEl.className   = 'twitch-offline';
+      }
     }
   } catch {
-    if (status) status.textContent = 'Click to visit channel';
+    const followerEl = document.getElementById('twitchFollowers');
+    if (followerEl) followerEl.textContent = '— Followers';
+    if (liveEl) { liveEl.textContent = 'Offline'; liveEl.className = 'twitch-offline'; }
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  checkTwitchLive();
-  setInterval(checkTwitchLive, 60_000);
+  loadTwitchData();
+  setInterval(loadTwitchData, 60_000);
 });
