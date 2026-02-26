@@ -1,7 +1,24 @@
 /* DarkOS – Main CSS */
 @import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
 
-/* ── Variables: Dark (default) ──────────────────────────────── */
+/* ── Variables: Pre-light ──────────────────────────────── */
+html.pre-light body {
+  --bg: #f0f2f7;
+  --surface: #ffffff;
+  --surface2: #f7f9fc;
+  --border: rgba(0,0,0,0.08);
+  --text: #0d0f1a;
+  --text-dim: #6b7280;
+  --accent: #5b3de8;
+  --accent2: #0ea5a0;
+  --accent3: #e84040;
+  --glow: rgba(91,61,232,0.15);
+  --shadow: 0 4px 24px rgba(0,0,0,0.07);
+  --shadow-lg: 0 12px 48px rgba(91,61,232,0.12);
+  --nav-bg: rgba(240,242,247,0.88);
+}
+
+/* ── Variables: Dark ──────────────────────────────── */
 body {
   --bg:        #080c14;
   --surface:   #111827;
