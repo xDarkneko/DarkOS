@@ -10,6 +10,8 @@ function toggleTheme() {
 
   const btn = document.getElementById('themeToggle');
   if (btn) btn.textContent = isLight ? '🌙' : '☀️';
+
+  updateLogos(!isLight);
 }
 
 // Apply saved theme on load
