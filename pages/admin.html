@@ -1,196 +1,198 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DarkOS – Admin Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800;900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg:#f0f2f7;--surface:#ffffff;--surface2:#f7f9fc;
-      --border:rgba(0,0,0,0.08);--text:#0d0f1a;--text-dim:#6b7280;
-      --accent:#5b3de8;--accent2:#0ea5a0;--accent3:#e84040;
-      --glow:rgba(91,61,232,0.18);
-      --font-head:'Oxanium',sans-serif;--font-mono:'DM Mono',monospace;
-    }
-    [data-theme="dark"] {
-      --bg:#08090f;--surface:#13151f;--surface2:#1a1d2e;
-      --border:rgba(255,255,255,0.07);--text:#eef0f8;--text-dim:#6b7a99;
-      --accent:#7f5af0;--accent2:#2cb67d;--accent3:#ff4757;
+      --bg:#08090f; --surface:#13151f; --surface2:#1a1d2e; --surface3:#20243a;
+      --border:rgba(255,255,255,0.07); --text:#eef0f8; --text-dim:#6b7a99;
+      --accent:#7f5af0; --accent2:#2cb67d; --accent3:#ff4757; --accent4:#f4a229;
       --glow:rgba(127,90,240,0.25);
+      --font-head:'Oxanium',sans-serif; --font-mono:'DM Mono',monospace;
     }
-    body { padding-top:0; background:var(--bg); color:var(--text); }
-    .layout { display:grid; grid-template-columns:230px 1fr; min-height:100vh; }
+    [data-theme="light"] {
+      --bg:#f0f2f7; --surface:#ffffff; --surface2:#f7f9fc; --surface3:#edf0f7;
+      --border:rgba(0,0,0,0.08); --text:#0d0f1a; --text-dim:#6b7280;
+      --accent:#5b3de8; --accent2:#0ea5a0; --accent3:#e84040; --accent4:#d08a10;
+      --glow:rgba(91,61,232,0.15);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-mono);font-size:14px;line-height:1.6;min-height:100vh}
+    .layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
 
     /* Sidebar */
-    .sidebar {
-      background:var(--surface); border-right:1px solid var(--border);
-      padding:1.5rem 1rem; display:flex; flex-direction:column; gap:0.3rem;
-    }
-    .sidebar-logo {
-      font-family:var(--font-head); font-weight:900; font-size:1.1rem;
-      color:var(--text); padding-bottom:1rem; margin-bottom:0.5rem;
-      border-bottom:1px solid var(--border);
-    }
-    .sidebar-logo em { color:var(--accent); font-style:normal; }
-    .sidebar-section {
-      font-size:0.68rem; color:var(--text-dim);
-      text-transform:uppercase; letter-spacing:0.12em;
-      padding:0.8rem 0.6rem 0.3rem;
-    }
-    .nav-btn {
-      display:flex; align-items:center; gap:0.7rem;
-      padding:0.55rem 0.8rem; border-radius:6px;
-      cursor:pointer; font-size:0.86rem; color:var(--text-dim);
-      transition:all 0.15s; border:none; background:none; width:100%; text-align:left;
-    }
-    .nav-btn:hover  { background:var(--surface2); color:var(--text); }
-    .nav-btn.active { background:rgba(127,90,240,0.15); color:var(--accent); }
-    .sidebar-bottom { margin-top:auto; display:flex; flex-direction:column; gap:0.3rem; }
-    .user-row {
-      display:flex; align-items:center; gap:0.6rem;
-      padding:0.5rem; border-radius:8px; background:var(--surface2);
-    }
-    .user-row img { width:30px; height:30px; border-radius:50%; }
-    .user-row span { font-size:0.82rem; }
-    .badge-admin { background:rgba(127,90,240,0.2); color:var(--accent); font-size:0.65rem; padding:0.1rem 0.4rem; border-radius:999px; }
+    .sidebar{background:var(--surface);border-right:1px solid var(--border);padding:1.2rem 0.8rem;display:flex;flex-direction:column;gap:0.15rem;position:sticky;top:0;height:100vh;overflow-y:auto}
+    .sidebar-logo{font-family:var(--font-head);font-weight:900;font-size:1.1rem;color:var(--text);padding:0.4rem 0.6rem 1rem;margin-bottom:0.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .sidebar-logo em{color:var(--accent);font-style:normal}
+    .theme-btn{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.28rem 0.4rem;cursor:pointer;font-size:0.82rem;color:var(--text-dim);transition:all 0.2s}
+    .theme-btn:hover{color:var(--text);border-color:var(--accent)}
+    .sidebar-section{font-size:0.62rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.12em;padding:0.9rem 0.6rem 0.25rem}
+    .nav-btn{display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0.75rem;border-radius:6px;cursor:pointer;font-family:var(--font-mono);font-size:0.82rem;color:var(--text-dim);transition:all 0.15s;border:none;background:none;width:100%;text-align:left}
+    .nav-btn:hover{background:var(--surface2);color:var(--text)}
+    .nav-btn.active{background:rgba(127,90,240,0.15);color:var(--accent)}
+    [data-theme="light"] .nav-btn.active{background:rgba(91,61,232,0.1)}
+    .sidebar-bottom{margin-top:auto;display:flex;flex-direction:column;gap:0.4rem;padding-top:0.8rem;border-top:1px solid var(--border)}
+    .user-row{display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0.6rem;border-radius:8px;background:var(--surface2)}
+    .user-row img{width:28px;height:28px;border-radius:50%;object-fit:cover}
+    .user-row span{font-size:0.8rem}
+    .badge-admin{background:rgba(127,90,240,0.2);color:var(--accent);font-size:0.6rem;padding:0.1rem 0.4rem;border-radius:999px;display:block;width:fit-content}
+    .btn-logout{display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.75rem;border-radius:6px;cursor:pointer;font-family:var(--font-mono);font-size:0.8rem;color:var(--accent3);border:1px solid rgba(255,71,87,0.2);background:rgba(255,71,87,0.05);width:100%;transition:all 0.15s}
+    .btn-logout:hover{background:rgba(255,71,87,0.12);border-color:var(--accent3)}
 
     /* Main */
-    .main { padding:2.5rem; overflow-y:auto; }
-    .page-title { font-family:var(--font-head); font-size:1.3rem; margin-bottom:0.4rem; }
-    .page-sub   { font-size:0.85rem; color:var(--text-dim); margin-bottom:2rem; }
-    .page       { display:none; }
-    .page.active{ display:block; }
+    .main{padding:2rem 2.5rem;overflow-y:auto;max-height:100vh}
+    .page{display:none} .page.active{display:block}
+    .page-header{margin-bottom:1.8rem}
+    .page-title{font-family:var(--font-head);font-size:1.4rem;font-weight:800;margin-bottom:0.3rem}
+    .page-sub{font-size:0.82rem;color:var(--text-dim)}
 
     /* Cards */
-    .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.6rem; margin-bottom:1.2rem; }
-    .card-title { font-size:0.9rem; font-weight:500; margin-bottom:1.2rem; display:flex; align-items:center; gap:0.5rem; }
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.4rem;margin-bottom:1.2rem}
+    .card-title{font-family:var(--font-head);font-size:0.88rem;font-weight:600;margin-bottom:1.1rem;display:flex;align-items:center;gap:0.5rem}
+    .card-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem}
+
+    /* Stats */
+    .stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:1rem;margin-bottom:1.5rem}
+    .stat-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.1rem;text-align:center;position:relative;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s}
+    .stat-box:hover{transform:translateY(-2px);box-shadow:0 4px 20px var(--glow)}
+    .stat-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent)}
+    .stat-box-num{font-family:var(--font-head);font-size:1.9rem;font-weight:800;color:var(--accent)}
+    .stat-box-lbl{font-size:0.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.2rem}
 
     /* Forms */
-    .form-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; }
-    .field label { display:block; font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.3rem; }
-    .field input, .field select {
-      width:100%; padding:0.55rem 0.8rem;
-      background:var(--bg); border:1px solid var(--border); border-radius:6px;
-      color:var(--text); font-family:var(--font-mono); font-size:0.84rem;
-      outline:none; transition:border-color 0.2s;
-    }
-    .field input:focus, .field select:focus { border-color:var(--accent); }
-    .field .hint { font-size:0.68rem; color:var(--text-dim); margin-top:0.3rem; }
-    .field-full { grid-column:1/-1; }
+    .form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
+    .field label{display:block;font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.35rem}
+    .field input,.field select,.field textarea{width:100%;padding:0.5rem 0.75rem;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--font-mono);font-size:0.82rem;outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+    .field textarea{resize:vertical;min-height:80px}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(127,90,240,0.12)}
+    .field select option{background:var(--surface)}
+    .field .hint{font-size:0.67rem;color:var(--text-dim);margin-top:0.3rem}
+    .field-full{grid-column:1/-1}
 
     /* Buttons */
-    .btn { padding:0.55rem 1.2rem; background:var(--accent); color:#fff; border:none; border-radius:6px; font-family:var(--font-head); font-size:0.8rem; cursor:pointer; transition:all 0.2s; }
-    .btn:hover { background:#6a47e0; box-shadow:0 0 16px var(--glow); }
-    .btn-green  { background:var(--accent2); }
-    .btn-green:hover  { background:#239e69; }
-    .btn-danger { background:var(--accent3); }
-    .btn-danger:hover { background:#cc3245; }
-    .btn-ghost  { background:transparent; border:1px solid var(--border); color:var(--text-dim); }
-    .btn-ghost:hover  { border-color:var(--accent); color:var(--text); background:transparent; }
-    .btn-sm { padding:0.3rem 0.7rem; font-size:0.72rem; }
-
-    /* Stats row */
-    .stat-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:1rem; margin-bottom:1.5rem; }
-    .stat-box { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.1rem; text-align:center; }
-    .stat-box-num { font-family:var(--font-head); font-size:2rem; color:var(--accent); }
-    .stat-box-lbl { font-size:0.7rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; }
+    .btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1.1rem;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:var(--font-head);font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+    .btn:hover{filter:brightness(1.15);box-shadow:0 0 18px var(--glow)}
+    .btn-green{background:var(--accent2)} .btn-green:hover{box-shadow:0 0 18px rgba(44,182,125,0.3)}
+    .btn-danger{background:var(--accent3)} .btn-danger:hover{box-shadow:0 0 18px rgba(255,71,87,0.3)}
+    .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text-dim)} .btn-ghost:hover{border-color:var(--accent);color:var(--text);box-shadow:none;filter:none}
+    .btn-sm{padding:0.28rem 0.65rem;font-size:0.7rem}
+    .btn-row{display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin-top:1.2rem}
 
     /* Table */
-    .tbl { width:100%; border-collapse:collapse; font-size:0.84rem; }
-    .tbl th { padding:0.5rem 0.8rem; text-align:left; color:var(--text-dim); font-weight:400; font-size:0.72rem; text-transform:uppercase; border-bottom:1px solid var(--border); }
-    .tbl td { padding:0.6rem 0.8rem; border-bottom:1px solid rgba(255,255,255,0.04); }
-    .tbl tr:hover td { background:rgba(127,90,240,0.04); }
-    .pill { padding:0.2rem 0.55rem; border-radius:999px; font-size:0.68rem; white-space:nowrap; }
-    .pill-purple { background:rgba(127,90,240,0.15); color:var(--accent); }
-    .pill-green  { background:rgba(44,182,125,0.15);  color:var(--accent2); }
-    .pill-red    { background:rgba(255,71,87,0.15);   color:var(--accent3); }
+    .tbl{width:100%;border-collapse:collapse;font-size:0.82rem}
+    .tbl th{padding:0.45rem 0.75rem;text-align:left;color:var(--text-dim);font-weight:400;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border)}
+    .tbl td{padding:0.55rem 0.75rem;border-bottom:1px solid var(--border);vertical-align:middle}
+    .tbl tr:last-child td{border-bottom:none}
+    .tbl tr:hover td{background:rgba(127,90,240,0.04)}
+    .tbl-empty{color:var(--text-dim);padding:1.5rem 0.75rem!important}
 
-    /* Login overlay */
-    .login-overlay {
-      position:fixed; inset:0; z-index:500; background:var(--bg);
-      display:flex; align-items:center; justify-content:center;
-    }
-    .login-card {
-      background:var(--surface); border:1px solid var(--border);
-      border-radius:16px; padding:3rem 2.5rem;
-      max-width:420px; width:100%; text-align:center;
-    }
-    .login-card h2 { font-size:1.4rem; margin-bottom:0.5rem; }
-    .login-card p  { color:var(--text-dim); font-size:0.85rem; margin-bottom:2rem; line-height:1.6; }
-    .btn-discord {
-      display:inline-flex; align-items:center; justify-content:center; gap:0.75rem;
-      width:100%; padding:0.85rem 2rem;
-      background:#5865F2; color:#fff; border:none; border-radius:8px;
-      font-family:var(--font-head); font-size:0.9rem; cursor:pointer; transition:all 0.2s;
-    }
-    .btn-discord:hover { background:#4752c4; box-shadow:0 0 24px rgba(88,101,242,0.4); }
+    /* Pills */
+    .pill{padding:0.18rem 0.5rem;border-radius:999px;font-size:0.66rem;white-space:nowrap;display:inline-block}
+    .pill-purple{background:rgba(127,90,240,0.15);color:var(--accent)}
+    .pill-green{background:rgba(44,182,125,0.15);color:var(--accent2)}
+    .pill-red{background:rgba(255,71,87,0.15);color:var(--accent3)}
+    .pill-yellow{background:rgba(244,162,41,0.15);color:var(--accent4)}
 
-    /* Warning box */
-    .warn { background:rgba(255,71,87,0.08); border:1px solid rgba(255,71,87,0.25); border-radius:8px; padding:0.8rem 1rem; font-size:0.82rem; color:var(--accent3); margin-bottom:1rem; }
-    .info { background:rgba(127,90,240,0.08); border:1px solid rgba(127,90,240,0.25); border-radius:8px; padding:0.8rem 1rem; font-size:0.82rem; color:var(--accent); margin-bottom:1rem; }
+    /* Alerts */
+    .alert{border-radius:8px;padding:0.75rem 1rem;font-size:0.81rem;margin-bottom:1rem;display:flex;align-items:flex-start;gap:0.5rem}
+    .alert-info{background:rgba(127,90,240,0.08);border:1px solid rgba(127,90,240,0.2);color:var(--accent)}
+    .alert-warn{background:rgba(244,162,41,0.08);border:1px solid rgba(244,162,41,0.2);color:var(--accent4)}
+    .alert-danger{background:rgba(255,71,87,0.08);border:1px solid rgba(255,71,87,0.2);color:var(--accent3)}
+    .alert-ok{background:rgba(44,182,125,0.08);border:1px solid rgba(44,182,125,0.2);color:var(--accent2)}
 
     /* Toast */
-    .toast { position:fixed; bottom:2rem; right:2rem; background:var(--surface2); border:1px solid var(--accent2); color:var(--accent2); padding:0.75rem 1.4rem; border-radius:8px; font-family:var(--font-mono); font-size:0.83rem; opacity:0; transition:opacity 0.3s; pointer-events:none; z-index:999; }
-    .toast.show { opacity:1; }
+    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:0.7rem 1.2rem;border-radius:8px;font-size:0.82rem;opacity:0;transform:translateY(10px);transition:opacity 0.25s,transform 0.25s;pointer-events:none;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.4);max-width:320px}
+    .toast.show{opacity:1;transform:translateY(0)}
+
+    /* Login */
+    .login-overlay{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;align-items:center;justify-content:center}
+    .login-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2.8rem 2.4rem;max-width:400px;width:90%;text-align:center}
+    .login-logo{font-family:var(--font-head);font-size:2rem;font-weight:900;margin-bottom:0.5rem}
+    .login-logo em{color:var(--accent);font-style:normal}
+    .login-card p{color:var(--text-dim);font-size:0.83rem;margin-bottom:2rem;line-height:1.7}
+    .btn-discord{display:inline-flex;align-items:center;justify-content:center;gap:0.7rem;width:100%;padding:0.8rem 2rem;background:#5865F2;color:#fff;border:none;border-radius:8px;font-family:var(--font-head);font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+    .btn-discord:hover{background:#4752c4;box-shadow:0 0 28px rgba(88,101,242,0.4)}
+    .login-err{color:var(--accent3);font-size:0.78rem;margin-top:1rem;min-height:1.2rem}
+
+    /* War Feed */
+    .conflict-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:0.8rem}
+    .conflict-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;flex-direction:column;gap:0.6rem}
+    .conflict-card-top{display:flex;align-items:center;justify-content:space-between}
+    .conflict-name{font-family:var(--font-head);font-size:0.85rem;font-weight:600}
+    .toggle{position:relative;width:36px;height:20px}
+    .toggle input{opacity:0;width:0;height:0}
+    .toggle-slider{position:absolute;inset:0;background:var(--surface3);border-radius:999px;cursor:pointer;transition:0.2s;border:1px solid var(--border)}
+    .toggle-slider::before{content:'';position:absolute;width:14px;height:14px;left:2px;top:2px;background:var(--text-dim);border-radius:50%;transition:0.2s}
+    .toggle input:checked+.toggle-slider{background:var(--accent);border-color:var(--accent)}
+    .toggle input:checked+.toggle-slider::before{transform:translateX(16px);background:#fff}
+    .conflict-status{font-size:0.7rem;color:var(--text-dim)}
+
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px}
   </style>
 </head>
 <body>
-<script>(function(){var t=localStorage.getItem('darkos-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
-<div class="noise"></div>
+<script>(function(){var t=localStorage.getItem('dkos-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
 
-<!-- ══ Login ═════════════════════════════════════════════════ -->
+<!-- Login -->
 <div class="login-overlay" id="loginOverlay">
   <div class="login-card">
-    <div style="font-size:3.5rem;margin-bottom:1rem">⚡</div>
-    <h2>Admin Dashboard</h2>
-    <p>Login with Discord. You need the <strong>Admin role</strong> on the community server to access this area.</p>
+    <div class="login-logo">⚡ <em>Dark</em>OS</div>
+    <p>Melde dich mit Discord an.<br>Du benötigst die <strong>Admin-Rolle</strong> auf dem Community Server.</p>
     <button class="btn-discord" onclick="doLogin()">
-      <svg width="20" height="20" viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+      <svg width="18" height="14" viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
       Login with Discord
     </button>
-    <div id="loginError" style="color:var(--accent3);font-size:0.8rem;margin-top:1rem;display:none"></div>
+    <div class="login-err" id="loginErr"></div>
   </div>
 </div>
 
-<!-- ══ Dashboard ══════════════════════════════════════════════ -->
+<!-- Dashboard -->
 <div class="layout" id="dashboard" style="display:none">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      ⚡ <em>Dark</em>OS
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-logo">⚡ <em>Dark</em>OS</div>
-
-    <div class="sidebar-section">Overview</div>
+    <div class="sidebar-section">Übersicht</div>
     <button class="nav-btn active" onclick="show('overview',this)">📊 Statistics</button>
 
-    <div class="sidebar-section">Configuration</div>
+    <div class="sidebar-section">Konfiguration</div>
     <button class="nav-btn" onclick="show('bot-setup',this)">⚙️ Bot Setup</button>
     <button class="nav-btn" onclick="show('logs',this)">📋 Log Channels</button>
     <button class="nav-btn" onclick="show('subscriptions',this)">🔔 Subscriptions</button>
+    <button class="nav-btn" onclick="show('warfeed',this)">🌍 War Feed</button>
+    <button class="nav-btn" onclick="show('customcmds',this)">💬 Custom Commands</button>
 
     <div class="sidebar-section">Tools</div>
     <button class="nav-btn" onclick="show('giveaway',this)">🎉 Giveaways</button>
+    <button class="nav-btn" onclick="show('tickets',this)">🎫 Tickets</button>
 
     <div class="sidebar-bottom">
       <div class="user-row">
-        <img id="uAvatar" src="" alt="" />
+        <img id="uAvatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Avatar" />
         <div>
-          <div id="uName" style="font-size:0.82rem"></div>
+          <span id="uName">—</span>
           <span class="badge-admin">Admin</span>
         </div>
       </div>
-      <button class="nav-btn btn-danger" onclick="logout()">🚪 Logout</button>
+      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
     </div>
-  </div>
+  </aside>
 
-  <!-- Main -->
-  <div class="main">
+  <main class="main">
 
-    <!-- ── Overview ──────────────────────────────────────────── -->
+    <!-- Overview -->
     <div class="page active" id="page-overview">
-      <div class="page-title">📊 Statistics</div>
-      <div class="page-sub">Live data from your community server.</div>
+      <div class="page-header">
+        <div class="page-title">📊 Statistics</div>
+        <div class="page-sub">Live-Daten deines Servers. <a href="#" onclick="loadStats();return false" style="color:var(--accent)">↻ Refresh</a></div>
+      </div>
       <div class="stat-row">
         <div class="stat-box"><div class="stat-box-num" id="dMembers">—</div><div class="stat-box-lbl">Members</div></div>
         <div class="stat-box"><div class="stat-box-num" id="dTickets">—</div><div class="stat-box-lbl">Tickets</div></div>
@@ -199,146 +201,104 @@
         <div class="stat-box"><div class="stat-box-num" id="dLeaves">—</div><div class="stat-box-lbl">Leaves</div></div>
         <div class="stat-box"><div class="stat-box-num" id="dUptime">—</div><div class="stat-box-lbl">Uptime</div></div>
       </div>
+      <div class="card">
+        <div class="card-title">🤖 Bot Status</div>
+        <div style="display:flex;gap:2.5rem;flex-wrap:wrap">
+          <div><div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.3rem">VERSION</div><div id="sBotVersion" style="font-family:var(--font-head);color:var(--accent)">—</div></div>
+          <div><div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.3rem">NAME</div><div id="sBotName" style="font-family:var(--font-head)">—</div></div>
+          <div><div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.3rem">API</div><div id="sApiStatus">—</div></div>
+        </div>
+      </div>
     </div>
 
-    <!-- ── Bot Setup (replaces .env IDs) ─────────────────────── -->
+    <!-- Bot Setup -->
     <div class="page" id="page-bot-setup">
-      <div class="page-title">⚙️ Bot Setup</div>
-      <div class="page-sub">Configure all Server IDs, Channel IDs and Role IDs here. No need to edit .env!</div>
-
-      <div class="info">💡 Changes are saved to the database and applied immediately. The bot restarts are NOT needed.</div>
-
+      <div class="page-header">
+        <div class="page-title">⚙️ Bot Setup</div>
+        <div class="page-sub">IDs hier eintragen — kein .env Edit nötig!</div>
+      </div>
+      <div class="alert alert-info">💡 Änderungen werden sofort gespeichert. Kein Neustart nötig.</div>
       <div class="card">
         <div class="card-title">🖥️ Server IDs</div>
         <div class="form-grid">
-          <div class="field">
-            <label>Community Server ID</label>
-            <input type="text" id="s_community_server_id" placeholder="Rechtsklick auf Server → ID kopieren" />
-            <div class="hint">Your public Discord server</div>
-          </div>
-          <div class="field">
-            <label>Team Server ID</label>
-            <input type="text" id="s_team_server_id" placeholder="Private team server ID" />
-            <div class="hint">Where staff reply anonymously</div>
-          </div>
+          <div class="field"><label>Community Server ID</label><input type="text" id="s_community_server_id" placeholder="Rechtsklick Server → ID kopieren" /><div class="hint">Dein öffentlicher Server</div></div>
+          <div class="field"><label>Team Server ID</label><input type="text" id="s_team_server_id" placeholder="Privater Team-Server ID" /><div class="hint">Für anonyme Ticket-Antworten</div></div>
         </div>
       </div>
-
       <div class="card">
-        <div class="card-title">👥 Role IDs</div>
+        <div class="card-title">👥 Rollen IDs</div>
         <div class="form-grid">
-          <div class="field">
-            <label>Admin Role ID</label>
-            <input type="text" id="s_admin_role_id" placeholder="Admin role ID" />
-            <div class="hint">Can access this dashboard</div>
-          </div>
-          <div class="field">
-            <label>Team / Moderator Role ID</label>
-            <input type="text" id="s_team_role_id" placeholder="Team role ID" />
-            <div class="hint">Can use team portal & reply to tickets</div>
-          </div>
-          <div class="field">
-            <label>Moderator Role ID</label>
-            <input type="text" id="s_moderator_role_id" placeholder="Moderator role ID" />
-          </div>
+          <div class="field"><label>Admin Rolle ID</label><input type="text" id="s_admin_role_id" placeholder="Admin Rolle" /><div class="hint">Dashboard-Zugang</div></div>
+          <div class="field"><label>Team Rolle ID</label><input type="text" id="s_team_role_id" placeholder="Team Rolle" /><div class="hint">Ticket-Portal</div></div>
+          <div class="field"><label>Moderator Rolle ID</label><input type="text" id="s_moderator_role_id" placeholder="Moderator Rolle" /></div>
         </div>
       </div>
-
       <div class="card">
-        <div class="card-title">📁 Ticket Settings</div>
+        <div class="card-title">🎫 Ticket Einstellungen</div>
         <div class="form-grid">
-          <div class="field">
-            <label>Ticket Category ID</label>
-            <input type="text" id="s_ticket_category_id" placeholder="Category where tickets are created" />
-          </div>
+          <div class="field"><label>Ticket Kategorie ID</label><input type="text" id="s_ticket_category_id" placeholder="Kategorie für Ticket-Kanäle" /></div>
+          <div class="field"><label>Ticket Log Channel ID</label><input type="text" id="s_ticket_log_channel_id" placeholder="Wo Admin-Transkripte landen" /></div>
         </div>
       </div>
-
       <div class="card">
-        <div class="card-title">📢 Notification Channels</div>
+        <div class="card-title">📢 Benachrichtigungs-Channels</div>
         <div class="form-grid">
-          <div class="field">
-            <label>Giveaway Channel</label>
-            <input type="text" id="s_giveaway_channel_id" placeholder="Channel ID" />
-          </div>
-          <div class="field">
-            <label>War Feed Channel</label>
-            <input type="text" id="s_war_feed_channel_id" placeholder="Channel ID" />
-          </div>
-          <div class="field">
-            <label>Anime News Channel</label>
-            <input type="text" id="s_anime_channel_id" placeholder="Channel ID" />
-          </div>
-          <div class="field">
-            <label>Counting Channel</label>
-            <input type="text" id="s_counting_channel_id" placeholder="Channel ID" />
-          </div>
-          <div class="field">
-            <label>Driver Updates Channel</label>
-            <input type="text" id="s_driver_channel_id" placeholder="Channel ID" />
-          </div>
-          <div class="field">
-            <label>Twitch Announcements Channel</label>
-            <input type="text" id="s_twitch_channel_id" placeholder="Channel ID" />
-          </div>
-          <div class="field">
-            <label>YouTube Announcements Channel</label>
-            <input type="text" id="s_youtube_channel_id" placeholder="Channel ID" />
-          </div>
-          <div class="field">
-            <label>General Announce Channel</label>
-            <input type="text" id="s_announce_channel_id" placeholder="Channel ID" />
-          </div>
+          <div class="field"><label>Giveaway</label><input type="text" id="s_giveaway_channel_id" placeholder="Channel ID" /></div>
+          <div class="field"><label>War Feed</label><input type="text" id="s_war_feed_channel_id" placeholder="Channel ID" /></div>
+          <div class="field"><label>Anime News</label><input type="text" id="s_anime_channel_id" placeholder="Channel ID" /></div>
+          <div class="field"><label>Counting</label><input type="text" id="s_counting_channel_id" placeholder="Channel ID" /></div>
+          <div class="field"><label>Driver Updates</label><input type="text" id="s_driver_channel_id" placeholder="Channel ID" /></div>
+          <div class="field"><label>Twitch Announcements</label><input type="text" id="s_twitch_channel_id" placeholder="Channel ID" /></div>
+          <div class="field"><label>YouTube Announcements</label><input type="text" id="s_youtube_channel_id" placeholder="Channel ID" /></div>
+          <div class="field"><label>Announce Channel</label><input type="text" id="s_announce_channel_id" placeholder="Channel ID" /></div>
         </div>
       </div>
-
       <div class="card">
-        <div class="card-title">🎨 Bot Appearance</div>
+        <div class="card-title">🎨 Erscheinungsbild</div>
         <div class="form-grid">
-          <div class="field">
-            <label>Bot Name</label>
-            <input type="text" id="s_bot_name" placeholder="DarkOS" />
-          </div>
-          <div class="field">
-            <label>Embed Color (Hex)</label>
-            <input type="text" id="s_bot_color" placeholder="#7f5af0" />
-          </div>
-          <div class="field field-full">
-            <label>Welcome Message</label>
-            <input type="text" id="s_welcome_message" placeholder="Welcome to the server!" />
-          </div>
+          <div class="field"><label>Bot Name</label><input type="text" id="s_bot_name" placeholder="DarkOS" /></div>
+          <div class="field"><label>Embed Farbe (Hex)</label><input type="text" id="s_bot_color" placeholder="#7f5af0" /></div>
+          <div class="field field-full"><label>Willkommensnachricht</label><input type="text" id="s_welcome_message" placeholder="Willkommen {user} auf {server}! — Platzhalter: {user} {username} {server} {count}" /></div>
         </div>
       </div>
-
-      <button class="btn btn-green" onclick="saveSettings()">💾 Save All Settings</button>
+      <div class="btn-row">
+        <button class="btn btn-green" onclick="saveSettings()">💾 Speichern</button>
+        <button class="btn btn-ghost" onclick="loadSettings()">↺ Neu laden</button>
+      </div>
     </div>
 
-    <!-- ── Log Channels ───────────────────────────────────────── -->
+    <!-- Log Channels -->
     <div class="page" id="page-logs">
-      <div class="page-title">📋 Log Channels</div>
-      <div class="page-sub">Configure where each type of log gets posted.</div>
+      <div class="page-header">
+        <div class="page-title">📋 Log Channels</div>
+        <div class="page-sub">Konfiguriere wo welche Logs landen.</div>
+      </div>
       <div class="card">
         <div class="form-grid">
           <div class="field"><label>🔴 Reports (Bans/Mutes/Timeouts)</label><input type="text" id="l_reports" placeholder="Channel ID" /></div>
-          <div class="field"><label>🔵 Server Logs (Channels/Roles)</label><input type="text" id="l_server"  placeholder="Channel ID" /></div>
-          <div class="field"><label>🎤 Voice Logs</label><input type="text" id="l_voice"   placeholder="Channel ID" /></div>
-          <div class="field"><label>👥 Member Logs (Join/Leave/Nick)</label><input type="text" id="l_member"  placeholder="Channel ID" /></div>
-          <div class="field"><label>💬 Message Logs (Edit/Delete)</label><input type="text" id="l_message" placeholder="Channel ID" /></div>
-          <div class="field"><label>🔗 Invite Logger</label><input type="text" id="l_invite"  placeholder="Channel ID" /></div>
+          <div class="field"><label>🔵 Server Logs</label><input type="text" id="l_server" placeholder="Channel ID" /></div>
+          <div class="field"><label>🎤 Voice Logs</label><input type="text" id="l_voice" placeholder="Channel ID" /></div>
+          <div class="field"><label>👥 Member Logs</label><input type="text" id="l_member" placeholder="Channel ID" /></div>
+          <div class="field"><label>💬 Message Logs</label><input type="text" id="l_message" placeholder="Channel ID" /></div>
+          <div class="field"><label>🔗 Invite Logger</label><input type="text" id="l_invite" placeholder="Channel ID" /></div>
         </div>
-        <div style="margin-top:1.2rem"><button class="btn" onclick="saveLogs()">💾 Save Log Config</button></div>
+        <div class="btn-row">
+          <button class="btn" onclick="saveLogs()">💾 Log Config speichern</button>
+          <button class="btn btn-ghost" onclick="loadSettings()">↺ Neu laden</button>
+        </div>
       </div>
     </div>
 
-    <!-- ── Subscriptions ──────────────────────────────────────── -->
+    <!-- Subscriptions -->
     <div class="page" id="page-subscriptions">
-      <div class="page-title">🔔 Subscriptions</div>
-      <div class="page-sub">Manage anime, driver, stream and other notifications.</div>
+      <div class="page-header">
+        <div class="page-title">🔔 Subscriptions</div>
+        <div class="page-sub">Anime, Twitch, YouTube und Driver Alerts.</div>
+      </div>
       <div class="card">
-        <div class="card-title">➕ Add Subscription</div>
+        <div class="card-title">➕ Subscription hinzufügen</div>
         <div class="form-grid">
-          <div class="field">
-            <label>Type</label>
+          <div class="field"><label>Typ</label>
             <select id="sub_type">
               <option value="anime">📺 Anime Episode</option>
               <option value="driver_nvidia">🟢 NVIDIA Driver</option>
@@ -348,160 +308,191 @@
               <option value="youtube">🔴 YouTube Channel</option>
             </select>
           </div>
-          <div class="field">
-            <label>Target</label>
-            <input type="text" id="sub_target" placeholder="Anime name / streamer / channel ID" />
-          </div>
-          <div class="field">
-            <label>Notification Channel ID</label>
-            <input type="text" id="sub_channel" placeholder="Where to post notifications" />
-          </div>
+          <div class="field"><label>Target</label><input type="text" id="sub_target" placeholder="Anime-Titel / Streamer / YouTube-ID" /></div>
+          <div class="field"><label>Benachrichtigungs-Channel ID</label><input type="text" id="sub_channel" placeholder="Wohin soll der Alert?" /></div>
         </div>
-        <div style="margin-top:1rem"><button class="btn btn-green" onclick="addSub()">➕ Add</button></div>
+        <div class="btn-row"><button class="btn btn-green" onclick="addSub()">➕ Hinzufügen</button></div>
       </div>
       <div class="card">
-        <div class="card-title">📋 Current Subscriptions</div>
+        <div class="card-title-row">
+          <div class="card-title" style="margin:0">Aktive Subscriptions</div>
+          <button class="btn btn-ghost btn-sm" onclick="loadSubs()">↺ Refresh</button>
+        </div>
         <table class="tbl">
-          <thead><tr><th>Type</th><th>Target</th><th>Channel</th><th></th></tr></thead>
-          <tbody id="subsTbl"><tr><td colspan="4" style="color:var(--text-dim);padding:1rem">Loading...</td></tr></tbody>
+          <thead><tr><th>Typ</th><th>Target</th><th>Channel ID</th><th></th></tr></thead>
+          <tbody id="subsTbl"><tr><td class="tbl-empty" colspan="4">Laden...</td></tr></tbody>
         </table>
       </div>
     </div>
 
-    <!-- ── Giveaways ──────────────────────────────────────────── -->
-    <div class="page" id="page-giveaway">
-      <div class="page-title">🎉 Giveaways</div>
-      <div class="page-sub">Create and manage giveaways directly from here.</div>
+    <!-- War Feed -->
+    <div class="page" id="page-warfeed">
+      <div class="page-header">
+        <div class="page-title">🌍 War Feed</div>
+        <div class="page-sub">Automatische Konflikt-News in Discord Threads.</div>
+      </div>
       <div class="card">
-        <div class="card-title">🆕 New Giveaway</div>
+        <div class="card-title">📡 Parent Channel</div>
         <div class="form-grid">
-          <div class="field">
-            <label>Prize</label>
-            <input type="text" id="g_prize" placeholder="e.g. Discord Nitro 1 Month" />
-          </div>
-          <div class="field">
-            <label>Channel ID</label>
-            <input type="text" id="g_channel" placeholder="Where to post the giveaway" />
-          </div>
-          <div class="field">
-            <label>Duration (minutes)</label>
-            <input type="number" id="g_duration" value="60" min="1" />
-          </div>
-          <div class="field">
-            <label>Number of Winners</label>
-            <input type="number" id="g_winners" value="1" min="1" max="20" />
-          </div>
+          <div class="field"><label>Channel ID</label><input type="text" id="wf_channel" placeholder="Channel wo Threads erstellt werden" /><div class="hint">Threads werden automatisch pro Konflikt erstellt</div></div>
         </div>
-        <div style="margin-top:1rem"><button class="btn btn-green" onclick="createGiveaway()">🎉 Start Giveaway</button></div>
+        <div class="btn-row"><button class="btn btn-green" onclick="saveWarFeedChannel()">💾 Channel speichern</button></div>
       </div>
       <div class="card">
-        <div class="card-title">Active Giveaways</div>
+        <div class="card-title">⚔️ Konflikte aktivieren</div>
+        <div class="conflict-grid" id="conflictGrid"></div>
+      </div>
+    </div>
+
+    <!-- Custom Commands -->
+    <div class="page" id="page-customcmds">
+      <div class="page-header">
+        <div class="page-title">💬 Custom Commands</div>
+        <div class="page-sub">Eigene Trigger und Antworten.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">➕ Command hinzufügen</div>
+        <div class="form-grid">
+          <div class="field"><label>Trigger</label><input type="text" id="cc_trigger" placeholder="z.B. !discord oder hallo" /></div>
+          <div class="field"><label>Match-Typ</label>
+            <select id="cc_match">
+              <option value="exact">Exakt</option>
+              <option value="contains">Enthält</option>
+              <option value="startswith">Beginnt mit</option>
+            </select>
+          </div>
+          <div class="field field-full"><label>Antwort</label><textarea id="cc_response" placeholder="Antwort. Platzhalter: {user} {username} {server}"></textarea></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-green" onclick="addCustomCmd()">➕ Hinzufügen</button></div>
+      </div>
+      <div class="card">
+        <div class="card-title-row">
+          <div class="card-title" style="margin:0">Aktive Commands</div>
+          <button class="btn btn-ghost btn-sm" onclick="loadCustomCmds()">↺ Refresh</button>
+        </div>
         <table class="tbl">
-          <thead><tr><th>Prize</th><th>Ends</th><th>Entries</th><th>Winners</th><th></th></tr></thead>
-          <tbody id="gaTbl"><tr><td colspan="5" style="color:var(--text-dim)">Loading...</td></tr></tbody>
+          <thead><tr><th>Trigger</th><th>Match</th><th>Antwort</th><th></th></tr></thead>
+          <tbody id="ccTbl"><tr><td class="tbl-empty" colspan="4">Laden...</td></tr></tbody>
         </table>
       </div>
     </div>
 
-  </div><!-- /main -->
-</div><!-- /layout -->
+    <!-- Giveaways -->
+    <div class="page" id="page-giveaway">
+      <div class="page-header">
+        <div class="page-title">🎉 Giveaways</div>
+        <div class="page-sub">Giveaways starten und verwalten.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">➕ Neues Giveaway</div>
+        <div class="form-grid">
+          <div class="field"><label>Preis</label><input type="text" id="g_prize" placeholder="Was wird verlost?" /></div>
+          <div class="field"><label>Channel ID</label><input type="text" id="g_channel" placeholder="Wo posten?" /></div>
+          <div class="field"><label>Dauer (Minuten)</label><input type="number" id="g_duration" value="60" min="1" /></div>
+          <div class="field"><label>Anzahl Gewinner</label><input type="number" id="g_winners" value="1" min="1" max="20" /></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-green" onclick="createGiveaway()">🎉 Starten</button></div>
+      </div>
+      <div class="card">
+        <div class="card-title-row">
+          <div class="card-title" style="margin:0">🟢 Aktive Giveaways</div>
+          <button class="btn btn-ghost btn-sm" onclick="loadGiveaways()">↺ Refresh</button>
+        </div>
+        <table class="tbl">
+          <thead><tr><th>Preis</th><th>Endet</th><th>Einträge</th><th>Gewinner</th><th></th></tr></thead>
+          <tbody id="gaTbl"><tr><td class="tbl-empty" colspan="5">Laden...</td></tr></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">📜 Vergangene Giveaways</div>
+        <table class="tbl">
+          <thead><tr><th>Preis</th><th>Beendet</th><th>Einträge</th><th>Gewinner</th></tr></thead>
+          <tbody id="gaPastTbl"><tr><td class="tbl-empty" colspan="4">Laden...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tickets -->
+    <div class="page" id="page-tickets">
+      <div class="page-header">
+        <div class="page-title">🎫 Tickets</div>
+        <div class="page-sub">Übersicht aller Support-Tickets.</div>
+      </div>
+      <div class="alert alert-info">ℹ️ Tickets werden auf Discord verwaltet. Hier siehst du die Übersicht.</div>
+      <div class="stat-row" style="grid-template-columns:repeat(3,1fr);max-width:380px">
+        <div class="stat-box"><div class="stat-box-num" id="tOpen">—</div><div class="stat-box-lbl">Offen</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="tClosed">—</div><div class="stat-box-lbl">Geschlossen</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="tTotal">—</div><div class="stat-box-lbl">Gesamt</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title-row">
+          <div class="card-title" style="margin:0">Offene Tickets</div>
+          <button class="btn btn-ghost btn-sm" onclick="loadTickets()">↺ Refresh</button>
+        </div>
+        <table class="tbl">
+          <thead><tr><th>#</th><th>User ID</th><th>Channel ID</th><th>Erstellt</th><th>Status</th></tr></thead>
+          <tbody id="ticketTbl"><tr><td class="tbl-empty" colspan="5">Laden...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
 
 <div class="toast" id="toast"></div>
 
-<script src="../config.js"></script>
 <script>
-// ── Config ─────────────────────────────────────────────────────
-// Fallback values if config.js doesn't load in time
-const C       = window.DARKOS || {};
-const API_URL = C.apiUrl   || 'https://your-api-host.example.com';
-const GUILD   = C.guildId  || '1023175719209144380';
-const CLIENT  = C.clientId || '1425314501057839174'; // fallback hardcoded
+// ══ CONFIG ═══════════════════════════════════════════════════
+// Diese 3 Werte eintragen:
+const CONFIG = {
+  apiUrl:   '',   // z.B. 'http://localhost:3000'
+  clientId: '',   // Discord Application (Client) ID
+  guildId:  '',   // Community Server ID
+};
 
-// ── OAuth2 Implicit Flow (kein Backend nötig!) ────────────────
-// Redirect URI = diese Seite selbst
-const REDIRECT_URI = window.location.href.split('?')[0].split('#')[0];
-
-// Implicit flow: response_type=token → Token kommt direkt im URL-Hash zurück
-const OAUTH_URL = 'https://discord.com/oauth2/authorize' +
-  '?client_id=' + encodeURIComponent(CLIENT) +
-  '&response_type=token' +
-  '&redirect_uri=' + encodeURIComponent(REDIRECT_URI) +
-  '&scope=identify+guilds';
+// ══ OAUTH2 ════════════════════════════════════════════════════
+const REDIRECT = window.location.href.split('?')[0].split('#')[0];
+const OAUTH_URL = 'https://discord.com/oauth2/authorize'
+  + '?client_id=' + encodeURIComponent(CONFIG.clientId)
+  + '&response_type=token'
+  + '&redirect_uri=' + encodeURIComponent(REDIRECT)
+  + '&scope=identify+guilds';
 
 let accessToken = null;
 
 function doLogin() {
-  if (!CLIENT) {
-    showErr('❌ clientId fehlt in config.js!');
-    return;
-  }
+  if (!CONFIG.clientId) { showErr('❌ clientId fehlt in CONFIG!'); return; }
   window.location.href = OAUTH_URL;
 }
 
 async function handleToken(token) {
   try {
-    // Get user info directly from Discord API
-    const userRes = await fetch('https://discord.com/api/users/@me', {
-      headers: { Authorization: 'Bearer ' + token }
-    });
-    const user = await userRes.json();
-    if (!user.id) { showErr('❌ Discord Login fehlgeschlagen.'); return; }
-
-    // Check guild membership & roles
-    const guildsRes = await fetch('https://discord.com/api/users/@me/guilds', {
-      headers: { Authorization: 'Bearer ' + token }
-    });
-    const guilds = await guildsRes.json();
-    const inGuild = Array.isArray(guilds) && guilds.some(g => g.id === (C.guildId || ''));
-    if (!inGuild) {
-      showErr('❌ Du bist nicht im Community Server oder hast kein Admin-Recht.');
-      return;
-    }
-
-    // Check if user is admin (permissions bit 0x8 = Administrator, or owner)
-    const guild = guilds.find(g => g.id === C.guildId);
-    const isAdmin = guild && (guild.owner || (BigInt(guild.permissions) & BigInt(0x8)) !== BigInt(0));
-    if (!isAdmin) {
-      showErr('❌ Du benötigst Administrator-Rechte auf dem Community Server.');
-      return;
-    }
-
+    const user = await (await fetch('https://discord.com/api/users/@me', { headers:{Authorization:'Bearer '+token} })).json();
+    if (!user.id) { showErr('❌ Login fehlgeschlagen.'); return; }
+    const guilds = await (await fetch('https://discord.com/api/users/@me/guilds', { headers:{Authorization:'Bearer '+token} })).json();
+    const guild  = Array.isArray(guilds) && guilds.find(g => g.id === CONFIG.guildId);
+    if (!guild) { showErr('❌ Du bist nicht im Community Server.'); return; }
+    if (!guild.owner && (BigInt(guild.permissions) & BigInt(0x8)) === BigInt(0)) { showErr('❌ Keine Administrator-Rechte.'); return; }
     accessToken = token;
     sessionStorage.setItem('dkos_token', token);
     sessionStorage.setItem('dkos_user', JSON.stringify(user));
     showDash(user);
-    // Clean URL hash
     window.history.replaceState({}, '', window.location.pathname);
-  } catch (e) {
-    showErr('❌ Fehler: ' + e.message);
-  }
+  } catch(e) { showErr('❌ ' + e.message); }
 }
 
-function logout() {
-  sessionStorage.clear();
-  location.reload();
-}
+function logout() { sessionStorage.clear(); location.reload(); }
+function showErr(m) { document.getElementById('loginErr').textContent = m; }
 
 function showDash(user) {
   document.getElementById('loginOverlay').style.display = 'none';
-  document.getElementById('dashboard').style.display = 'grid';
-  document.getElementById('uName').textContent = user.username || user.global_name || '?';
-  if (user.avatar) {
-    document.getElementById('uAvatar').src =
-      'https://cdn.discordapp.com/avatars/' + user.id + '/' + user.avatar + '.png?size=64';
-  }
-  loadStats();
-  loadSettings();
+  document.getElementById('dashboard').style.display   = 'grid';
+  document.getElementById('uName').textContent = user.global_name || user.username || '?';
+  if (user.avatar) document.getElementById('uAvatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64`;
+  loadStats(); loadSettings(); renderConflictGrid();
 }
 
-function showErr(msg) {
-  const el = document.getElementById('loginError');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-// Check URL hash for token (implicit flow) or session
-window.addEventListener('load', function() {
+window.addEventListener('load', () => {
   const hash  = new URLSearchParams(window.location.hash.slice(1));
   const token = hash.get('access_token') || sessionStorage.getItem('dkos_token');
   const user  = sessionStorage.getItem('dkos_user');
@@ -509,240 +500,225 @@ window.addEventListener('load', function() {
   if (token && user) { accessToken = token; showDash(JSON.parse(user)); }
 });
 
-// ── Navigation ─────────────────────────────────────────────────
+// ══ THEME ═════════════════════════════════════════════════════
+function toggleTheme() {
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('dkos-theme', next);
+  document.getElementById('themeBtn').textContent = next === 'dark' ? '🌙' : '☀️';
+}
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('themeBtn').textContent = (localStorage.getItem('dkos-theme')||'dark') === 'dark' ? '🌙' : '☀️';
+});
+
+// ══ NAV ═══════════════════════════════════════════════════════
 function show(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
+  document.getElementById('page-'+id).classList.add('active');
   if (btn) btn.classList.add('active');
-  if (id === 'giveaway')      loadGiveaways();
-  if (id === 'subscriptions') loadSubs();
-  if (id === 'logs')          loadLogSettings();
+  if (id==='giveaway')      loadGiveaways();
+  if (id==='subscriptions') loadSubs();
+  if (id==='logs')          loadSettings();
+  if (id==='tickets')       loadTickets();
+  if (id==='customcmds')    loadCustomCmds();
+  if (id==='overview')      loadStats();
 }
 
-// ── Stats ──────────────────────────────────────────────────────
+// ══ API HELPER ════════════════════════════════════════════════
+async function api(method, path, body) {
+  const opts = { method, headers: {'Content-Type':'application/json', Authorization:'Bearer '+accessToken} };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(CONFIG.apiUrl + path, opts);
+  return res.json();
+}
+
+// ══ STATS ═════════════════════════════════════════════════════
 async function loadStats() {
   try {
-    const res  = await fetch(API_URL + '/api/stats?guild=' + GUILD);
-    const d    = await res.json();
-    const s    = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v ?? '—'; };
-    s('dMembers',  d.members);
-    s('dTickets',  d.ticketCount);
-    s('dMessages', d.msgCount);
-    s('dJoins',    d.joins);
-    s('dLeaves',   d.leaves);
-    s('dUptime',   fmtUptime(d.uptime));
-  } catch {}
+    const d = await api('GET', '/api/stats?guild='+CONFIG.guildId);
+    const s = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v??'—'; };
+    s('dMembers',d.members); s('dTickets',d.ticketCount); s('dMessages',d.msgCount);
+    s('dJoins',d.joins); s('dLeaves',d.leaves); s('dUptime',fmtUptime(d.uptime));
+    s('sBotVersion',d.botVersion||'—'); s('sBotName',d.botName||'—');
+    document.getElementById('sApiStatus').innerHTML = '<span class="pill pill-green">🟢 Online</span>';
+  } catch {
+    document.getElementById('sApiStatus').innerHTML = '<span class="pill pill-red">🔴 Offline</span>';
+  }
 }
-
 function fmtUptime(s) {
   if (!s) return '—';
-  const d = Math.floor(s/86400), h = Math.floor((s%86400)/3600), m = Math.floor((s%3600)/60);
-  return d + 'd ' + h + 'h ' + m + 'm';
+  return Math.floor(s/86400)+'d '+Math.floor((s%86400)/3600)+'h '+Math.floor((s%3600)/60)+'m';
 }
 
-// ── Bot Settings ───────────────────────────────────────────────
+// ══ SETTINGS ══════════════════════════════════════════════════
+const SFIELDS = ['community_server_id','team_server_id','admin_role_id','team_role_id','moderator_role_id',
+  'ticket_category_id','ticket_log_channel_id','giveaway_channel_id','war_feed_channel_id','anime_channel_id',
+  'counting_channel_id','driver_channel_id','twitch_channel_id','youtube_channel_id','announce_channel_id',
+  'bot_name','bot_color','welcome_message'];
+const LFIELDS = {reports:'l_reports',server:'l_server',voice:'l_voice',member:'l_member',message:'l_message',invite:'l_invite'};
+
 async function loadSettings() {
-  // Load from localStorage first
-  const saved = localStorage.getItem('darkos_settings');
-  if (saved) {
-    try {
-      const d = JSON.parse(saved);
-      const fields = [
-        'community_server_id','team_server_id',
-        'admin_role_id','team_role_id','moderator_role_id',
-        'ticket_category_id',
-        'giveaway_channel_id','war_feed_channel_id','anime_channel_id',
-        'counting_channel_id','driver_channel_id','twitch_channel_id',
-        'youtube_channel_id','announce_channel_id',
-        'bot_name','bot_color','welcome_message',
-      ];
-      fields.forEach(f => {
-        const el = document.getElementById('s_' + f);
-        if (el && d[f]) el.value = d[f];
-      });
-    } catch {}
-  }
-  // Also try API
-  try {
-    const res  = await fetch(API_URL + '/api/settings');
-    const d    = await res.json();
-    const fields = [
-      'community_server_id','team_server_id',
-      'admin_role_id','team_role_id','moderator_role_id',
-      'ticket_category_id',
-      'giveaway_channel_id','war_feed_channel_id','anime_channel_id',
-      'counting_channel_id','driver_channel_id','twitch_channel_id',
-      'youtube_channel_id','announce_channel_id',
-      'bot_name','bot_color','welcome_message',
-    ];
-    fields.forEach(f => {
-      const el = document.getElementById('s_' + f);
-      if (el && d[f]) el.value = d[f];
-    });
-    // Also fill log channel fields
-    const logMap = { reports:'l_reports', server:'l_server', voice:'l_voice', member:'l_member', message:'l_message', invite:'l_invite' };
-    Object.entries(logMap).forEach(([key, id]) => {
-      const el = document.getElementById(id);
-      if (el && d['log_' + key + '_ch']) el.value = d['log_' + key + '_ch'];
-    });
-  } catch {}
+  const saved = localStorage.getItem('dkos_settings');
+  if (saved) { try { const d=JSON.parse(saved); applyFields(d); } catch {} }
+  try { const d = await api('GET','/api/settings'); applyFields(d); } catch {}
 }
-
+function applyFields(d) {
+  SFIELDS.forEach(f => { const el=document.getElementById('s_'+f); if(el&&d[f]) el.value=d[f]; });
+  Object.entries(LFIELDS).forEach(([k,id]) => { const el=document.getElementById(id); if(el&&d['log_'+k+'_ch']) el.value=d['log_'+k+'_ch']; });
+}
 async function saveSettings() {
-  const fields = [
-    'community_server_id','team_server_id',
-    'admin_role_id','team_role_id','moderator_role_id',
-    'ticket_category_id',
-    'giveaway_channel_id','war_feed_channel_id','anime_channel_id',
-    'counting_channel_id','driver_channel_id','twitch_channel_id',
-    'youtube_channel_id','announce_channel_id',
-    'bot_name','bot_color','welcome_message',
-  ];
   const body = {};
-  fields.forEach(f => { const el = document.getElementById('s_' + f); if (el) body[f] = el.value; });
-
-  // Save to localStorage (works without API)
-  localStorage.setItem('darkos_settings', JSON.stringify(body));
-
-  // Also try API if configured
-  if (API_URL && !API_URL.includes('your-api-host')) {
-    try {
-      const res = await fetch(API_URL + '/api/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + accessToken },
-        body: JSON.stringify(body),
-      });
-      const data = await res.json();
-      toast(data.success ? '✅ Saved & synced to bot!' : '✅ Saved locally. (API: ' + data.error + ')');
-      return;
-    } catch {}
-  }
-  toast('✅ Saved locally! (Läuft dein Bot? Dann trage die API URL in config.js ein)');
+  SFIELDS.forEach(f => { const el=document.getElementById('s_'+f); if(el) body[f]=el.value; });
+  localStorage.setItem('dkos_settings', JSON.stringify(body));
+  try { const d=await api('POST','/api/settings',body); toast(d.success?'✅ Gespeichert & synchronisiert!':'✅ Lokal. API: '+d.error); }
+  catch { toast('✅ Lokal gespeichert.'); }
 }
-
-// ── Log Channels ───────────────────────────────────────────────
-function loadLogSettings() { loadSettings(); } // same endpoint
-
 async function saveLogs() {
-  const body = {
-    log_reports_ch: document.getElementById('l_reports').value,
-    log_server_ch:  document.getElementById('l_server').value,
-    log_voice_ch:   document.getElementById('l_voice').value,
-    log_member_ch:  document.getElementById('l_member').value,
-    log_message_ch: document.getElementById('l_message').value,
-    log_invite_ch:  document.getElementById('l_invite').value,
-  };
-  const res  = await fetch(API_URL + '/api/settings', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + accessToken },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json();
-  toast(data.success ? '✅ Log channels saved!' : '❌ ' + data.error);
+  const body = {};
+  Object.entries(LFIELDS).forEach(([k,id])=>{ const el=document.getElementById(id); if(el) body['log_'+k+'_ch']=el.value; });
+  try { const d=await api('POST','/api/settings',body); toast(d.success?'✅ Log Channels gespeichert!':'❌ '+d.error); }
+  catch { toast('❌ API nicht erreichbar.'); }
 }
 
-// ── Subscriptions ──────────────────────────────────────────────
+// ══ SUBSCRIPTIONS ════════════════════════════════════════════
 async function loadSubs() {
+  const tbody = document.getElementById('subsTbl');
   try {
-    const res  = await fetch(API_URL + '/api/subscriptions?guild=' + GUILD, {
-      headers: { Authorization: 'Bearer ' + accessToken }
-    });
-    const data = await res.json();
-    const tbody = document.getElementById('subsTbl');
-    if (!data.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text-dim);padding:1rem">No subscriptions yet.</td></tr>';
-      return;
-    }
-    tbody.innerHTML = data.map(s =>
-      '<tr><td><span class="pill pill-purple">' + s.type + '</span></td>' +
-      '<td>' + s.target + '</td>' +
-      '<td><code>' + s.channel_id + '</code></td>' +
-      '<td><button class="btn btn-danger btn-sm" onclick="delSub(' + s.id + ')">Remove</button></td></tr>'
-    ).join('');
-  } catch { }
+    const data = await api('GET','/api/subscriptions?guild='+CONFIG.guildId);
+    if (!data.length) { tbody.innerHTML='<tr><td class="tbl-empty" colspan="4">Keine Subscriptions.</td></tr>'; return; }
+    tbody.innerHTML = data.map(s=>`<tr>
+      <td><span class="pill pill-purple">${esc(s.type)}</span></td>
+      <td>${esc(s.target)}</td>
+      <td><code style="font-size:0.75rem;color:var(--text-dim)">${esc(s.channel_id)}</code></td>
+      <td><button class="btn btn-danger btn-sm" onclick="delSub(${s.id})">Entfernen</button></td>
+    </tr>`).join('');
+  } catch { tbody.innerHTML='<tr><td class="tbl-empty" colspan="4">❌ API nicht erreichbar.</td></tr>'; }
 }
-
 async function addSub() {
-  const body = {
-    guildId:   GUILD,
-    type:      document.getElementById('sub_type').value,
-    target:    document.getElementById('sub_target').value.trim(),
-    channelId: document.getElementById('sub_channel').value.trim(),
-  };
-  if (!body.target || !body.channelId) return toast('❌ Fill in all fields.');
-  const res  = await fetch(API_URL + '/api/subscriptions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + accessToken },
-    body: JSON.stringify(body),
-  });
-  const data = await res.json();
-  toast(data.success ? '✅ Subscription added!' : '❌ ' + (data.error || 'Error'));
-  if (data.success) loadSubs();
+  const body = { guildId:CONFIG.guildId, type:document.getElementById('sub_type').value, target:document.getElementById('sub_target').value.trim(), channelId:document.getElementById('sub_channel').value.trim() };
+  if (!body.target||!body.channelId) { toast('❌ Alle Felder ausfüllen!'); return; }
+  try { const d=await api('POST','/api/subscriptions',body); toast(d.success?'✅ Hinzugefügt!':'❌ '+(d.error||'Fehler')); if(d.success) loadSubs(); }
+  catch { toast('❌ API nicht erreichbar.'); }
 }
-
 async function delSub(id) {
-  await fetch(API_URL + '/api/subscriptions/' + id, {
-    method: 'DELETE', headers: { Authorization: 'Bearer ' + accessToken }
-  });
-  toast('✅ Removed');
-  loadSubs();
+  try { await api('DELETE','/api/subscriptions/'+id); toast('✅ Entfernt.'); loadSubs(); }
+  catch { toast('❌ Fehler.'); }
 }
 
-// ── Giveaways ──────────────────────────────────────────────────
+// ══ GIVEAWAYS ════════════════════════════════════════════════
 async function loadGiveaways() {
+  const tbody=document.getElementById('gaTbl'), pastTbody=document.getElementById('gaPastTbl');
   try {
-    const res  = await fetch(API_URL + '/api/giveaways?guild=' + GUILD);
-    const data = await res.json();
-    const tbody = document.getElementById('gaTbl');
-    if (!data.active?.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="color:var(--text-dim)">No active giveaways.</td></tr>';
-      return;
-    }
-    tbody.innerHTML = data.active.map(g =>
-      '<tr><td>' + g.prize + '</td>' +
-      '<td>' + new Date(g.ends_at * 1000).toLocaleString() + '</td>' +
-      '<td>' + JSON.parse(g.entries || '[]').length + '</td>' +
-      '<td>' + g.winners + '</td>' +
-      '<td><button class="btn btn-danger btn-sm" onclick="endGiveaway(\'' + g.message_id + '\')">End</button></td></tr>'
-    ).join('');
-  } catch {}
+    const data = await api('GET','/api/giveaways?guild='+CONFIG.guildId);
+    tbody.innerHTML = !data.active?.length
+      ? '<tr><td class="tbl-empty" colspan="5">Keine aktiven Giveaways.</td></tr>'
+      : data.active.map(g=>`<tr><td><strong>${esc(g.prize)}</strong></td><td>${new Date(g.ends_at*1000).toLocaleString('de-DE')}</td><td>${tryParse(g.entries)}</td><td>${g.winners}</td><td><button class="btn btn-danger btn-sm" onclick="endGiveaway('${esc(g.message_id)}')">Beenden</button></td></tr>`).join('');
+    pastTbody.innerHTML = !data.past?.length
+      ? '<tr><td class="tbl-empty" colspan="4">Keine vergangenen Giveaways.</td></tr>'
+      : data.past.map(g=>`<tr><td>${esc(g.prize)}</td><td>${new Date(g.ends_at*1000).toLocaleString('de-DE')}</td><td>${tryParse(g.entries)}</td><td>${g.winners}</td></tr>`).join('');
+  } catch { tbody.innerHTML='<tr><td class="tbl-empty" colspan="5">❌ API nicht erreichbar.</td></tr>'; }
 }
-
 async function createGiveaway() {
-  const prize    = document.getElementById('g_prize').value.trim();
-  const channel  = document.getElementById('g_channel').value.trim();
-  const duration = parseInt(document.getElementById('g_duration').value);
-  const winners  = parseInt(document.getElementById('g_winners').value);
-  if (!prize || !channel) return toast('❌ Fill in prize and channel ID.');
-
-  const user = JSON.parse(sessionStorage.getItem('dkos_user') || '{}');
-  const res  = await fetch(API_URL + '/api/giveaways', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + accessToken },
-    body: JSON.stringify({ guildId: GUILD, channelId: channel, prize, winners, hostId: user.id, durationMs: duration * 60000 }),
-  });
-  const data = await res.json();
-  toast(data.success ? '🎉 Giveaway started!' : '❌ ' + data.error);
-  if (data.success) loadGiveaways();
+  const prize=document.getElementById('g_prize').value.trim(), channel=document.getElementById('g_channel').value.trim();
+  const duration=parseInt(document.getElementById('g_duration').value), winners=parseInt(document.getElementById('g_winners').value);
+  if (!prize||!channel) { toast('❌ Preis und Channel ausfüllen!'); return; }
+  const user=JSON.parse(sessionStorage.getItem('dkos_user')||'{}');
+  try { const d=await api('POST','/api/giveaways',{guildId:CONFIG.guildId,channelId:channel,prize,winners,hostId:user.id,durationMs:duration*60000}); toast(d.success?'🎉 Giveaway gestartet!':'❌ '+d.error); if(d.success) loadGiveaways(); }
+  catch { toast('❌ API nicht erreichbar.'); }
 }
-
 async function endGiveaway(msgId) {
-  const res  = await fetch(API_URL + '/api/giveaways', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + accessToken },
-    body: JSON.stringify({ action: 'end', messageId: msgId, guildId: GUILD }),
-  });
-  toast('✅ Ended');
-  loadGiveaways();
+  try { await api('POST','/api/giveaways',{action:'end',messageId:msgId,guildId:CONFIG.guildId}); toast('✅ Beendet!'); loadGiveaways(); }
+  catch { toast('❌ Fehler.'); }
 }
 
-// ── Toast ──────────────────────────────────────────────────────
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+// ══ TICKETS ══════════════════════════════════════════════════
+async function loadTickets() {
+  const tbody=document.getElementById('ticketTbl');
+  try {
+    const data=await api('GET','/api/tickets?guild='+CONFIG.guildId);
+    const open=Array.isArray(data)?data.filter(t=>t.status==='open'):(data.open||[]);
+    const closed=Array.isArray(data)?data.filter(t=>t.status==='closed'):(data.closed||[]);
+    document.getElementById('tOpen').textContent=open.length;
+    document.getElementById('tClosed').textContent=closed.length;
+    document.getElementById('tTotal').textContent=open.length+closed.length;
+    if (!open.length) { tbody.innerHTML='<tr><td class="tbl-empty" colspan="5">Keine offenen Tickets.</td></tr>'; return; }
+    tbody.innerHTML=open.map(t=>`<tr>
+      <td><code style="color:var(--accent)">#${t.id}</code></td>
+      <td><code style="font-size:0.75rem">${esc(t.user_id)}</code></td>
+      <td><code style="font-size:0.75rem">${esc(t.channel_id)}</code></td>
+      <td style="color:var(--text-dim)">${new Date(t.created_at*1000).toLocaleString('de-DE')}</td>
+      <td><span class="pill pill-green">Offen</span></td>
+    </tr>`).join('');
+  } catch { tbody.innerHTML='<tr><td class="tbl-empty" colspan="5">❌ /api/tickets nicht implementiert.</td></tr>'; }
 }
+
+// ══ CUSTOM COMMANDS ══════════════════════════════════════════
+async function loadCustomCmds() {
+  const tbody=document.getElementById('ccTbl');
+  try {
+    const data=await api('GET','/api/customcmds?guild='+CONFIG.guildId);
+    if (!data.length) { tbody.innerHTML='<tr><td class="tbl-empty" colspan="4">Keine Custom Commands.</td></tr>'; return; }
+    tbody.innerHTML=data.map(c=>`<tr>
+      <td><code style="color:var(--accent)">${esc(c.trigger)}</code></td>
+      <td><span class="pill pill-purple">${esc(c.match)}</span></td>
+      <td style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.response)}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="delCustomCmd(${c.id})">Entfernen</button></td>
+    </tr>`).join('');
+  } catch { tbody.innerHTML='<tr><td class="tbl-empty" colspan="4">❌ /api/customcmds nicht implementiert.</td></tr>'; }
+}
+async function addCustomCmd() {
+  const body={guildId:CONFIG.guildId,trigger:document.getElementById('cc_trigger').value.trim(),response:document.getElementById('cc_response').value.trim(),match:document.getElementById('cc_match').value};
+  if (!body.trigger||!body.response) { toast('❌ Trigger und Antwort ausfüllen!'); return; }
+  try { const d=await api('POST','/api/customcmds',body); toast(d.success?'✅ Hinzugefügt!':'❌ '+(d.error||'Fehler')); if(d.success) loadCustomCmds(); }
+  catch { toast('❌ API nicht erreichbar.'); }
+}
+async function delCustomCmd(id) {
+  try { await api('DELETE','/api/customcmds/'+id); toast('✅ Entfernt.'); loadCustomCmds(); }
+  catch { toast('❌ Fehler.'); }
+}
+
+// ══ WAR FEED ═════════════════════════════════════════════════
+const CONFLICTS_INFO=[
+  {key:'ukraine',label:'Ukraine War',emoji:'🇺🇦'},
+  {key:'israel',label:'Israel / Gaza',emoji:'🇮🇱'},
+  {key:'syria',label:'Syria',emoji:'🇸🇾'},
+  {key:'global',label:'Global Conflicts',emoji:'🌍'},
+];
+function renderConflictGrid() {
+  const saved=JSON.parse(localStorage.getItem('dkos_warfeed')||'{}');
+  document.getElementById('conflictGrid').innerHTML=CONFLICTS_INFO.map(c=>`
+    <div class="conflict-card">
+      <div class="conflict-card-top">
+        <div class="conflict-name">${c.emoji} ${c.label}</div>
+        <label class="toggle"><input type="checkbox" id="wf_${c.key}" ${saved[c.key]?'checked':''} onchange="toggleConflict('${c.key}',this.checked)"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="conflict-status" id="wf_status_${c.key}">${saved[c.key]?'<span class="pill pill-green">Aktiv</span>':'<span class="pill pill-red">Inaktiv</span>'}</div>
+    </div>`).join('');
+}
+async function toggleConflict(key,enabled) {
+  const saved=JSON.parse(localStorage.getItem('dkos_warfeed')||'{}');
+  saved[key]=enabled; localStorage.setItem('dkos_warfeed',JSON.stringify(saved));
+  document.getElementById('wf_status_'+key).innerHTML=enabled?'<span class="pill pill-green">Aktiv</span>':'<span class="pill pill-red">Inaktiv</span>';
+  try { await api('POST','/api/warfeed',{guildId:CONFIG.guildId,conflict:key,enabled}); toast('✅ '+key+' '+(enabled?'aktiviert':'deaktiviert')+'!'); }
+  catch { toast('✅ Lokal gespeichert.'); }
+}
+async function saveWarFeedChannel() {
+  const ch=document.getElementById('wf_channel').value.trim();
+  if (!ch) { toast('❌ Channel ID eingeben!'); return; }
+  try { const d=await api('POST','/api/warfeed/setup',{guildId:CONFIG.guildId,channelId:ch}); toast(d.success?'✅ Gespeichert!':'❌ '+d.error); }
+  catch { toast('❌ API nicht erreichbar.'); }
+}
+
+// ══ TOAST & UTILS ════════════════════════════════════════════
+let toastTimer;
+function toast(msg) {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),3500);
+}
+function esc(s) { return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function tryParse(s) { try { return JSON.parse(s||'[]').length; } catch { return 0; } }
 </script>
 </body>
 </html>
