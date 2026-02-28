@@ -441,31 +441,32 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- config.js muss VOR dem Haupt-Script geladen sein -->
-<script src="../config.js"></script>
+<!-- config.js laden – Pfad ggf. anpassen! -->
+<script src="../config.js" onerror="console.warn('[DarkOS] config.js nicht gefunden – Pfad prüfen!')"></script>
 <script>
 // ══ CONFIG ═══════════════════════════════════════════════════
-// Liest automatisch aus config.js (window.DARKOS) wenn vorhanden.
-// Fallback: Werte hier direkt eintragen.
-const CONFIG = {
-  apiUrl:   (window.DARKOS?.apiUrl)   || '',
-  clientId: (window.DARKOS?.clientId) || '',
-  guildId:  (window.DARKOS?.guildId)  || '',
-};
+// Liest window.DARKOS aus config.js (wird per <script src> oben geladen).
+// Struktur: config.js im Root, admin.html in pages/ → Pfad ../config.js ist korrekt.
+function getCFG(k) {
+  const src = window.DARKOS || {};
+  return src[k] || '';
+}
+// Proxy damit CONFIG.clientId etc. immer den aktuellen Wert liest
+const CONFIG = new Proxy({}, { get: (_, k) => getCFG(k) });
 
 // ══ OAUTH2 ════════════════════════════════════════════════════
-const REDIRECT = window.location.href.split('?')[0].split('#')[0];
-const OAUTH_URL = 'https://discord.com/oauth2/authorize'
-  + '?client_id=' + encodeURIComponent(CONFIG.clientId)
-  + '&response_type=token'
-  + '&redirect_uri=' + encodeURIComponent(REDIRECT)
-  + '&scope=identify+guilds';
-
 let accessToken = null;
 
 function doLogin() {
-  if (!CONFIG.clientId) { showErr('❌ clientId fehlt in CONFIG!'); return; }
-  window.location.href = OAUTH_URL;
+  const clientId = getCFG('clientId');
+  if (!clientId) { showErr('❌ clientId fehlt in CONFIG! Prüfe config.js'); return; }
+  const redirect = window.location.href.split('?')[0].split('#')[0];
+  const url = 'https://discord.com/oauth2/authorize'
+    + '?client_id=' + encodeURIComponent(clientId)
+    + '&response_type=token'
+    + '&redirect_uri=' + encodeURIComponent(redirect)
+    + '&scope=identify+guilds';
+  window.location.href = url;
 }
 
 async function handleToken(token) {
