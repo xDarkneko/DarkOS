@@ -441,13 +441,16 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- config.js muss VOR dem Haupt-Script geladen sein -->
+<script src="../config.js"></script>
 <script>
 // ══ CONFIG ═══════════════════════════════════════════════════
-// Diese 3 Werte eintragen:
+// Liest automatisch aus config.js (window.DARKOS) wenn vorhanden.
+// Fallback: Werte hier direkt eintragen.
 const CONFIG = {
-  apiUrl:   '',   // z.B. 'http://localhost:3000'
-  clientId: '',   // Discord Application (Client) ID
-  guildId:  '',   // Community Server ID
+  apiUrl:   (window.DARKOS?.apiUrl)   || '',
+  clientId: (window.DARKOS?.clientId) || '',
+  guildId:  (window.DARKOS?.guildId)  || '',
 };
 
 // ══ OAUTH2 ════════════════════════════════════════════════════
