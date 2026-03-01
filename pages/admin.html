@@ -133,19 +133,35 @@
     ::-webkit-scrollbar{width:5px}
     ::-webkit-scrollbar-track{background:transparent}
     ::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px}
+    .logo-img{height:22px;width:auto;object-fit:contain;display:block}
+    .login-logo-img{height:48px;width:auto;margin:0 auto 0.8rem;display:block}
+    .lang-btn,.ctrl-btn{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.28rem 0.5rem;cursor:pointer;font-size:0.7rem;font-family:var(--font-mono);color:var(--text-dim);transition:all 0.2s;letter-spacing:0.05em}
+    .lang-btn:hover,.ctrl-btn:hover{color:var(--text);border-color:var(--accent)}
+    .sidebar-controls{display:flex;gap:0.3rem;align-items:center}
   </style>
 </head>
 <body>
-<script>(function(){var t=localStorage.getItem('dkos-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+<script>(function(){
+  var t=localStorage.getItem('dkos-theme')||'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.getElementById('themeBtn');
+    if(b) b.textContent=t==='dark'?'☀️':'🌙';
+    var logo=t==='dark'?'../assets/logo.png':'../assets/logo_white.png';
+    ['sidebarLogo','loginLogo'].forEach(function(id){var el=document.getElementById(id);if(el)el.src=logo;});
+    var lb=document.getElementById('langBtn');
+    if(lb){var lang=localStorage.getItem('dkos-lang')||'de';lb.textContent=lang==='de'?'ENG':'DEU';}
+  });
+})();</script>
 
 <!-- Login -->
 <div class="login-overlay" id="loginOverlay">
   <div class="login-card">
-    <div class="login-logo">⚡ <em>Dark</em>OS</div>
-    <p>Melde dich mit Discord an.<br>Du benötigst die <strong>Admin-Rolle</strong> auf dem Community Server.</p>
+    <img id="loginLogo" src="../assets/logo.png" alt="DarkOS" style="height:50px;width:auto;margin:0 auto 1rem;display:block" />
+    <p><span data-i18n="login-desc">Melde dich mit Discord an.<br>Du benötigst die <strong>Admin-Rolle</strong> auf dem Community Server.</span></p>
     <button class="btn-discord" onclick="doLogin()">
       <svg width="18" height="14" viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
-      Login with Discord
+      <span data-i18n="login-btn">Login with Discord</span>
     </button>
     <div class="login-err" id="loginErr"></div>
   </div>
@@ -155,21 +171,24 @@
 <div class="layout" id="dashboard" style="display:none">
   <aside class="sidebar">
     <div class="sidebar-logo">
-      ⚡ <em>Dark</em>OS
-      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <img id="sidebarLogo" src="../assets/logo.png" alt="DarkOS" style="height:26px;width:auto" />
+      <div style="display:flex;gap:0.35rem">
+        <button class="ctrl-btn" id="langBtn" onclick="toggleLang()">ENG</button>
+        <button class="ctrl-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+      </div>
     </div>
 
-    <div class="sidebar-section">Übersicht</div>
-    <button class="nav-btn active" onclick="show('overview',this)">📊 Statistics</button>
+    <div class="sidebar-section" data-i18n="nav-overview">Übersicht</div>
+    <button class="nav-btn active" onclick="show('overview',this)">📊 <span data-i18n="page-overview-title">Statistiken</span></button>
 
-    <div class="sidebar-section">Konfiguration</div>
+    <div class="sidebar-section" data-i18n="nav-config">Konfiguration</div>
     <button class="nav-btn" onclick="show('bot-setup',this)">⚙️ Bot Setup</button>
     <button class="nav-btn" onclick="show('logs',this)">📋 Log Channels</button>
     <button class="nav-btn" onclick="show('subscriptions',this)">🔔 Subscriptions</button>
     <button class="nav-btn" onclick="show('warfeed',this)">🌍 War Feed</button>
-    <button class="nav-btn" onclick="show('customcmds',this)">💬 Custom Commands</button>
+    <button class="nav-btn" onclick="show('customcmds',this)">💬 <span data-i18n="nav-customcmds">Eigene Commands</span></button>
 
-    <div class="sidebar-section">Tools</div>
+    <div class="sidebar-section" data-i18n="nav-tools">Tools</div>
     <button class="nav-btn" onclick="show('giveaway',this)">🎉 Giveaways</button>
     <button class="nav-btn" onclick="show('tickets',this)">🎫 Tickets</button>
 
@@ -181,7 +200,7 @@
           <span class="badge-admin">Admin</span>
         </div>
       </div>
-      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+      <button class="btn-logout" onclick="logout()">🚪 <span data-i18n="nav-logout">Abmelden</span></button>
     </div>
   </aside>
 
@@ -190,15 +209,15 @@
     <!-- Overview -->
     <div class="page active" id="page-overview">
       <div class="page-header">
-        <div class="page-title">📊 Statistics</div>
-        <div class="page-sub">Live-Daten deines Servers. <a href="#" onclick="loadStats();return false" style="color:var(--accent)">↻ Refresh</a></div>
+        <div class="page-title">📊 <span data-i18n="page-overview-title">Statistiken</span></div>
+        <div class="page-sub"><span data-i18n="page-overview-sub">Live-Daten deines Servers.</span> <a href="#" onclick="loadStats();return false" style="color:var(--accent)">↻ Refresh</a></div>
       </div>
       <div class="stat-row">
-        <div class="stat-box"><div class="stat-box-num" id="dMembers">—</div><div class="stat-box-lbl">Members</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="dMembers">—</div><div class="stat-box-lbl" data-i18n="stat-members">Mitglieder</div></div>
         <div class="stat-box"><div class="stat-box-num" id="dTickets">—</div><div class="stat-box-lbl">Tickets</div></div>
-        <div class="stat-box"><div class="stat-box-num" id="dMessages">—</div><div class="stat-box-lbl">Messages</div></div>
-        <div class="stat-box"><div class="stat-box-num" id="dJoins">—</div><div class="stat-box-lbl">Joins</div></div>
-        <div class="stat-box"><div class="stat-box-num" id="dLeaves">—</div><div class="stat-box-lbl">Leaves</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="dMessages">—</div><div class="stat-box-lbl" data-i18n="stat-messages">Nachrichten</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="dJoins">—</div><div class="stat-box-lbl" data-i18n="stat-joins">Beitritte</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="dLeaves">—</div><div class="stat-box-lbl" data-i18n="stat-leaves">Verlassen</div></div>
         <div class="stat-box"><div class="stat-box-num" id="dUptime">—</div><div class="stat-box-lbl">Uptime</div></div>
       </div>
       <div class="card">
@@ -497,6 +516,12 @@ function showDash(user) {
 }
 
 window.addEventListener('load', () => {
+  // Init theme & lang
+  applyTheme(localStorage.getItem('dkos-theme') || 'dark');
+  currentLang = localStorage.getItem('dkos-lang') || 'de';
+  applyLang();
+
+  // OAuth
   const hash  = new URLSearchParams(window.location.hash.slice(1));
   const token = hash.get('access_token') || sessionStorage.getItem('dkos_token');
   const user  = sessionStorage.getItem('dkos_user');
@@ -504,16 +529,117 @@ window.addEventListener('load', () => {
   if (token && user) { accessToken = token; showDash(JSON.parse(user)); }
 });
 
+// ══ LANG ══════════════════════════════════════════════════════
+let currentLang = localStorage.getItem('dkos-lang') || 'de';
+
+const TRANSLATIONS = {
+  // sidebar sections
+  'nav-overview':       { de: 'Übersicht',       en: 'Overview' },
+  'nav-config':         { de: 'Konfiguration',   en: 'Configuration' },
+  'nav-tools':          { de: 'Tools',            en: 'Tools' },
+  'nav-customcmds':     { de: 'Eigene Commands',  en: 'Custom Commands' },
+  'nav-logout':         { de: 'Abmelden',         en: 'Logout' },
+  // login
+  'login-desc':         { de: '<span data-i18n="login-desc">Melde dich mit Discord an.<br>Du benötigst die <strong>Admin-Rolle</strong> auf dem Community Server.</span>', en: 'Sign in with Discord.<br>You need the <strong>Admin role</strong> on the community server.' },
+  'login-btn':          { de: 'Mit Discord anmelden', en: 'Login with Discord' },
+  // overview
+  'page-overview-title':{ de: 'Statistiken',       en: 'Statistics' },
+  'page-overview-sub':  { de: 'Live-Daten deines Servers.', en: 'Live data from your server.' },
+  'stat-members':       { de: 'Mitglieder',        en: 'Members' },
+  'stat-messages':      { de: 'Nachrichten',       en: 'Messages' },
+  'stat-joins':         { de: 'Beitritte',         en: 'Joins' },
+  'stat-leaves':        { de: 'Verlassen',         en: 'Leaves' },
+  // bot-setup
+  'setup-sub':          { de: 'IDs hier eintragen — kein .env Edit nötig!', en: 'Enter IDs here — no .env editing needed!' },
+  'setup-alert':        { de: 'Änderungen werden sofort gespeichert. Kein Neustart nötig.', en: 'Changes are saved immediately. No restart needed.' },
+  'setup-server-ids':   { de: 'Server IDs',        en: 'Server IDs' },
+  'setup-role-ids':     { de: 'Rollen IDs',        en: 'Role IDs' },
+  'setup-ticket':       { de: 'Ticket Einstellungen', en: 'Ticket Settings' },
+  'setup-channels':     { de: 'Benachrichtigungs-Channels', en: 'Notification Channels' },
+  'setup-appearance':   { de: 'Erscheinungsbild',  en: 'Appearance' },
+  'btn-save':           { de: 'Speichern',         en: 'Save' },
+  'btn-reload':         { de: 'Neu laden',         en: 'Reload' },
+  // logs
+  'logs-sub':           { de: 'Konfiguriere wo welche Logs landen.', en: 'Configure where each type of log gets posted.' },
+  // subs
+  'subs-sub':           { de: 'Anime, Twitch, YouTube und Driver Alerts.', en: 'Anime, Twitch, YouTube and driver alerts.' },
+  'subs-add':           { de: 'Subscription hinzufügen', en: 'Add Subscription' },
+  'subs-active':        { de: 'Aktive Subscriptions', en: 'Active Subscriptions' },
+  'subs-none':          { de: 'Keine Subscriptions.', en: 'No subscriptions.' },
+  // warfeed
+  'wf-sub':             { de: 'Automatische Konflikt-News in Discord Threads.', en: 'Automatic conflict news in Discord threads.' },
+  'wf-enable':          { de: 'Konflikte aktivieren', en: 'Enable Conflicts' },
+  'wf-hint':            { de: 'Threads werden automatisch pro Konflikt erstellt', en: 'Threads are created automatically per conflict' },
+  // custom cmds
+  'cc-sub':             { de: 'Eigene Trigger und Antworten.', en: 'Custom triggers and responses.' },
+  'cc-add':             { de: 'Command hinzufügen', en: 'Add Command' },
+  'cc-active':          { de: 'Aktive Commands',   en: 'Active Commands' },
+  'cc-response':        { de: 'Antwort',           en: 'Response' },
+  'cc-match':           { de: 'Match-Typ',         en: 'Match Type' },
+  'cc-none':            { de: 'Keine Custom Commands.', en: 'No custom commands.' },
+  // giveaway
+  'ga-sub':             { de: 'Giveaways starten und verwalten.', en: 'Start and manage giveaways.' },
+  'ga-new':             { de: 'Neues Giveaway',    en: 'New Giveaway' },
+  'ga-prize':           { de: 'Preis',             en: 'Prize' },
+  'ga-duration':        { de: 'Dauer (Minuten)',   en: 'Duration (minutes)' },
+  'ga-winners':         { de: 'Anzahl Gewinner',   en: 'Number of Winners' },
+  'ga-start':           { de: 'Starten',           en: 'Start' },
+  'ga-active':          { de: 'Aktive Giveaways',  en: 'Active Giveaways' },
+  'ga-past':            { de: 'Vergangene Giveaways', en: 'Past Giveaways' },
+  'ga-ends':            { de: 'Endet',             en: 'Ends' },
+  'ga-entries':         { de: 'Einträge',          en: 'Entries' },
+  'ga-end-btn':         { de: 'Beenden',           en: 'End' },
+  // tickets
+  'tk-sub':             { de: 'Übersicht aller Support-Tickets.', en: 'Overview of all support tickets.' },
+  'tk-alert':           { de: 'Tickets werden auf Discord verwaltet. Hier siehst du die Übersicht.', en: 'Tickets are managed on Discord. This is a read-only overview.' },
+  'tk-open-stat':       { de: 'Offen',             en: 'Open' },
+  'tk-closed-stat':     { de: 'Geschlossen',       en: 'Closed' },
+  'tk-total-stat':      { de: 'Gesamt',            en: 'Total' },
+  'tk-open-list':       { de: 'Offene Tickets',    en: 'Open Tickets' },
+  'tk-created':         { de: 'Erstellt',          en: 'Created' },
+  'remove':             { de: 'Entfernen',         en: 'Remove' },
+};
+
+function t(key) { return (TRANSLATIONS[key] || {})[currentLang] || (TRANSLATIONS[key] || {})['de'] || key; }
+
+function applyLang() {
+  // All elements with data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    el.innerHTML = t(key);
+  });
+  // Lang button label
+  const btn = document.getElementById('langBtn');
+  if (btn) btn.textContent = currentLang === 'de' ? 'ENG' : 'DEU';
+  // html lang attr
+  document.documentElement.lang = currentLang;
+}
+
+function toggleLang() {
+  currentLang = currentLang === 'de' ? 'en' : 'de';
+  localStorage.setItem('dkos-lang', currentLang);
+  applyLang();
+  // Re-render conflict grid for translated labels
+  renderConflictGrid();
+}
+
 // ══ THEME ═════════════════════════════════════════════════════
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+  const logoSrc = theme === 'dark' ? '../assets/logo.png' : '../assets/logo_white.png';
+  ['sidebarLogo','loginLogo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.src = logoSrc;
+  });
+}
+
 function toggleTheme() {
   const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
   localStorage.setItem('dkos-theme', next);
-  document.getElementById('themeBtn').textContent = next === 'dark' ? '🌙' : '☀️';
+  applyTheme(next);
 }
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('themeBtn').textContent = (localStorage.getItem('dkos-theme')||'dark') === 'dark' ? '🌙' : '☀️';
-});
 
 // ══ NAV ═══════════════════════════════════════════════════════
 function show(id, btn) {
