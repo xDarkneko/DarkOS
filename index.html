@@ -283,21 +283,69 @@ var SG = {
   },
 };
 
-function sgDemo(key, period) {
-  var n = {'1d':24,'3d':3,'7d':7,'30d':30,'1y':52,'all':104}[period]||7;
-  var isH = period==='1d', isW = period==='1y'||period==='all';
-  var labels = [], now = new Date();
-  for (var i = n-1; i >= 0; i--) {
-    var d = new Date(now);
-    if (isH)      { d.setHours(d.getHours()-i);    labels.push(String(d.getHours()).padStart(2,'0')+':00'); }
-    else if (isW) { d.setDate(d.getDate()-i*7);     labels.push(d.toLocaleDateString('de-DE',{day:'2-digit',month:'short'})); }
-    else          { d.setDate(d.getDate()-i);        labels.push(d.toLocaleDateString('de-DE',{day:'2-digit',month:'short'})); }
-  }
-  var base = {members:450,tickets:8,messages:120,joins:15,leaves:8}[key]||50, v = base;
-  return { labels: labels, values: labels.map(function(_,i) {
-    v = Math.max(0, Math.round(v*(0.78+(Math.sin(i*.9+key.length)*.35+Math.cos(i*.5)*.2))+(Math.random()-.5)*base*.3));
-    return v;
-  })};
+
+
+/* ── Zahlen spiegeln: stats.js befüllt statMembers etc., wir spiegeln zu s2* ── */
+function sgMirrorStats() {
+  var map = {
+    'statMembers':  's2Members',
+    'statTickets':  's2Tickets',
+    'statMessages': 's2Messages',
+    'statJoins':    's2Joins',
+    'statLeaves':   's2Leaves',
+  };
+  Object.keys(map).forEach(function(src) {
+    var from = document.getElementById(src);
+    var to   = document.getElementById(map[src]);
+    if (from && to && from.textContent !== '—') {
+      to.textContent = from.textContent;
+    }
+  });
+}
+
+// MutationObserver auf die Hero-Werte — sobald stats.js sie setzt, kopieren wir sie
+(function() {
+  var targets = ['statMembers','statTickets','statMessages','statJoins','statLeaves'];
+  targets.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    new MutationObserver(function() { sgMirrorStats(); })
+      .observe(el, { childList: true, characterData: true, subtree: true });
+  });
+  // Auch beim Load einmal ausführen (falls Werte schon da sind)
+  window.addEventListener('load', function() { setTimeout(sgMirrorStats, 500); });
+  setInterval(sgMirrorStats, 3000); // Fallback-Polling
+})();
+
+/* ── Leerer Zustand wenn API nicht erreichbar ── */
+function sgDrawEmpty() {
+  var canvas = document.getElementById('sgCanvas');
+  if (!canvas) return;
+  var dpr = window.devicePixelRatio||1;
+  var W = canvas.offsetWidth, H = canvas.offsetHeight||220;
+  canvas.width = W*dpr; canvas.height = H*dpr;
+  var ctx = canvas.getContext('2d'); ctx.scale(dpr,dpr);
+  var dark = document.documentElement.getAttribute('data-theme') !== 'light';
+  var lblC = dark ? '#6b7a99' : '#9ba3af';
+  var color = SG.COL[SG.key] || '#7f5af0';
+  // Gestrichelter Rahmen
+  ctx.strokeStyle = color + '33';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6,5]);
+  ctx.strokeRect(8, 8, W-16, H-16);
+  ctx.setLineDash([]);
+  // Icon
+  ctx.font = '28px "DM Mono",monospace';
+  ctx.textAlign = 'center'; ctx.fillStyle = color + '55';
+  ctx.fillText('⏳', W/2, H/2 - 18);
+  // Text
+  ctx.font = '13px "DM Mono",monospace';
+  ctx.fillStyle = lblC;
+  var l = (typeof currentLang !== 'undefined' ? currentLang : 'en');
+  ctx.fillText(l === 'de' ? 'Noch keine Daten — Bot war noch nicht online' : 'No data yet — bot has not been online', W/2, H/2 + 10);
+  ctx.font = '11px "DM Mono",monospace';
+  ctx.fillStyle = color + '66';
+  ctx.fillText(l === 'de' ? 'Daten werden gesammelt sobald der Bot startet' : 'Data will appear once the bot comes online', W/2, H/2 + 30);
 }
 
 function sgMoveDivider(key) {
@@ -377,10 +425,14 @@ async function sgLoad() {
       if (r.ok) data = await r.json();
     } catch(e) {}
   }
-  if (!data) data = sgDemo(SG.key, SG.per);
-  SG.data = data;
+  // Kein Fallback auf Fake-Daten — nur echte API-Daten anzeigen
+  SG.data = data || { labels: [], values: [] };
   document.getElementById('sgLoad').classList.add('hide');
-  sgAnim();
+  if (!data) {
+    sgDrawEmpty();
+  } else {
+    sgAnim();
+  }
 }
 
 function sgDraw(prog) {
