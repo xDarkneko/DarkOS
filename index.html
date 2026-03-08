@@ -21,7 +21,30 @@
   /* ─────────────────────────────────────────────────────────
      Stats Graph Block
   ───────────────────────────────────────────────────────── */
-  .sb{border-radius:16px;border:1px solid var(--border,rgba(255,255,255,.07));background:var(--surface,#13151f);overflow:hidden}
+  /* Glow wrapper — sitzt außerhalb, damit overflow:hidden den glow nicht clippt */
+  .sb-wrap {
+    border-radius: 18px;
+    transition: box-shadow .55s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 0 0px 0px transparent;
+  }
+  .sb-wrap.glow {
+    /* Farbe wird per JS als --glow gesetzt */
+    box-shadow:
+      0 0 18px 2px  var(--glow, rgba(127,90,240,.0)),
+      0 0 48px 6px  var(--glow, rgba(127,90,240,.0)),
+      0 0 90px 12px var(--glow-soft, rgba(127,90,240,.0));
+  }
+
+  .sb{
+    border-radius:16px;
+    border:1px solid var(--border,rgba(255,255,255,.07));
+    background:var(--surface,#13151f);
+    overflow:hidden;
+    /* border-color wechselt mit Glow-Farbe */
+    transition: border-color .45s cubic-bezier(.4,0,.2,1);
+  }
+  .sb.open { border-color: var(--glow-border, rgba(127,90,240,.35)); }
+
   .sc{display:grid;grid-template-columns:repeat(5,1fr)}
   .scard{padding:1.7rem 1rem 1.4rem;text-align:center;cursor:pointer;position:relative;transition:background .2s;user-select:none;box-shadow:inset -1px 0 0 var(--border,rgba(255,255,255,.07))}
   .scard:last-child{box-shadow:none}
@@ -29,10 +52,21 @@
   .scard:hover::before{opacity:.5;left:10%;right:10%}
   .scard.active::before{opacity:1;left:0;right:0;border-radius:0}
   .scard:hover,.scard.active{background:var(--surface2,#1a1d2e)}
-  .scard-num{font-family:'Oxanium',sans-serif;font-size:1.55rem;font-weight:800;color:var(--c,var(--accent,#7f5af0));margin-bottom:.4rem;transition:transform .16s}
+
+  /* Zahlen — !important damit main.css nichts überschreibt */
+  .scard-num{
+    font-family:'Oxanium',sans-serif !important;
+    font-size:1.55rem !important;
+    font-weight:800 !important;
+    color:var(--c,#7f5af0) !important;
+    margin-bottom:.4rem;
+    display:block !important;
+    line-height:1.2;
+    transition:transform .16s;
+  }
   .scard:hover .scard-num,.scard.active .scard-num{transform:scale(1.07)}
-  .scard-lbl{font-size:.6rem;color:var(--text-dim,#6b7a99);text-transform:uppercase;letter-spacing:.1em}
-  .scard-caret{display:block;margin-top:.55rem;font-size:.46rem;color:var(--c,var(--accent,#7f5af0));opacity:0;transition:opacity .2s,transform .38s cubic-bezier(.34,1.56,.64,1)}
+  .scard-lbl{font-size:.6rem !important;color:var(--text-dim,#6b7a99) !important;text-transform:uppercase;letter-spacing:.1em;display:block !important}
+  .scard-caret{display:block !important;margin-top:.55rem;font-size:.46rem;color:var(--c,var(--accent,#7f5af0));opacity:0;transition:opacity .2s,transform .38s cubic-bezier(.34,1.56,.64,1)}
   .scard:hover .scard-caret{opacity:.4}
   .scard.active .scard-caret{opacity:1;transform:rotate(180deg)}
 
@@ -126,6 +160,7 @@
     <p class="stat-live-badge"><span id="statsLive">Updated in real time</span></p>
   </div>
 
+  <div class="sb-wrap" id="sgWrap">
   <div class="sb" id="sgBlock">
 
     <div class="sc">
@@ -185,7 +220,8 @@
       </div>
     </div>
 
-  </div>
+  </div><!-- .sb -->
+  </div><!-- .sb-wrap -->
 </section>
 
 <section class="twitch-section" id="twitch">
@@ -275,6 +311,24 @@ function sgMoveDivider(key) {
   div.style.setProperty('--ac', SG.COL[key]);
 }
 
+function sgSetGlow(color) {
+  var wrap = document.getElementById('sgWrap');
+  var block = document.getElementById('sgBlock');
+  if (!color) {
+    wrap.classList.remove('glow');
+    wrap.style.removeProperty('--glow');
+    wrap.style.removeProperty('--glow-soft');
+    block.style.removeProperty('--glow-border');
+    return;
+  }
+  // rgba aus hex bauen
+  var r = parseInt(color.slice(1,3),16), g = parseInt(color.slice(3,5),16), b = parseInt(color.slice(5,7),16);
+  wrap.style.setProperty('--glow',      'rgba('+r+','+g+','+b+',.28)');
+  wrap.style.setProperty('--glow-soft', 'rgba('+r+','+g+','+b+',.10)');
+  block.style.setProperty('--glow-border', 'rgba('+r+','+g+','+b+',.4)');
+  wrap.classList.add('glow');
+}
+
 function sgSetAccent(key) {
   var c = SG.COL[key];
   var dot = document.getElementById('sgDot');
@@ -283,6 +337,7 @@ function sgSetAccent(key) {
   t.style.color = c; t.textContent = SG.lbl(key);
   document.querySelectorAll('.gptab.active').forEach(function(b){ b.style.background = c; });
   sgMoveDivider(key);
+  sgSetGlow(SG.COL[key]);
 }
 
 function sgTog(key, el) {
@@ -290,7 +345,7 @@ function sgTog(key, el) {
   var canvas = document.getElementById('sgCanvas');
   var same = SG.key === key && block.classList.contains('open');
   document.querySelectorAll('.scard').forEach(function(c){ c.classList.remove('active'); });
-  if (same) { SG.key = null; block.classList.remove('open'); return; }
+  if (same) { SG.key = null; block.classList.remove('open'); sgSetGlow(null); return; }
   var wasOpen = block.classList.contains('open');
   SG.key = key; el.classList.add('active'); sgSetAccent(key);
   if (wasOpen) {
