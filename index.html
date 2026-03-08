@@ -6,9 +6,7 @@
   <script>
     (function () {
       const saved = localStorage.getItem('darkos-theme');
-      if (saved) {
-        document.documentElement.setAttribute('data-theme', saved);
-      }
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
     })();
   </script>
 
@@ -18,6 +16,69 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/main.css?v=2" />
+
+  <style>
+  /* ─────────────────────────────────────────────────────────
+     Stats Graph Block
+  ───────────────────────────────────────────────────────── */
+  .sb{border-radius:16px;border:1px solid var(--border,rgba(255,255,255,.07));background:var(--surface,#13151f);overflow:hidden}
+  .sc{display:grid;grid-template-columns:repeat(5,1fr)}
+  .scard{padding:1.7rem 1rem 1.4rem;text-align:center;cursor:pointer;position:relative;transition:background .2s;user-select:none;box-shadow:inset -1px 0 0 var(--border,rgba(255,255,255,.07))}
+  .scard:last-child{box-shadow:none}
+  .scard::before{content:'';position:absolute;top:0;left:22%;right:22%;height:2px;border-radius:0 0 4px 4px;background:var(--c,var(--accent,#7f5af0));opacity:0;transition:opacity .22s,left .22s,right .22s}
+  .scard:hover::before{opacity:.5;left:10%;right:10%}
+  .scard.active::before{opacity:1;left:0;right:0;border-radius:0}
+  .scard:hover,.scard.active{background:var(--surface2,#1a1d2e)}
+  .scard-num{font-family:'Oxanium',sans-serif;font-size:1.55rem;font-weight:800;color:var(--c,var(--accent,#7f5af0));margin-bottom:.4rem;transition:transform .16s}
+  .scard:hover .scard-num,.scard.active .scard-num{transform:scale(1.07)}
+  .scard-lbl{font-size:.6rem;color:var(--text-dim,#6b7a99);text-transform:uppercase;letter-spacing:.1em}
+  .scard-caret{display:block;margin-top:.55rem;font-size:.46rem;color:var(--c,var(--accent,#7f5af0));opacity:0;transition:opacity .2s,transform .38s cubic-bezier(.34,1.56,.64,1)}
+  .scard:hover .scard-caret{opacity:.4}
+  .scard.active .scard-caret{opacity:1;transform:rotate(180deg)}
+
+  /* gradient divider line */
+  .sdiv{height:1px;background:linear-gradient(90deg,transparent var(--ps,20%),var(--ac,var(--accent,#7f5af0)) var(--ps,20%),var(--ac,var(--accent,#7f5af0)) var(--pe,40%),transparent var(--pe,40%));opacity:0;transition:opacity .3s .05s}
+  .sb.open .sdiv{opacity:.45}
+
+  /* grid-template-rows trick — smooth open/close, no max-height jank */
+  .gpo{display:grid;grid-template-rows:0fr;transition:grid-template-rows .44s cubic-bezier(.4,0,.2,1)}
+  .sb.open .gpo{grid-template-rows:1fr}
+  .gpi{overflow:hidden;min-height:0}
+
+  .gp{padding:1.4rem 1.6rem 1.6rem;opacity:0;transform:translateY(-5px);transition:opacity .26s .07s,transform .3s .05s cubic-bezier(.4,0,.2,1)}
+  .sb.open .gp{opacity:1;transform:translateY(0)}
+
+  .gph{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.1rem}
+  .gptw{display:flex;align-items:center;gap:.5rem}
+  .gpdot{width:9px;height:9px;border-radius:50%;flex-shrink:0;transition:background .22s,box-shadow .22s}
+  .gptitle{font-family:'Oxanium',sans-serif;font-size:1rem;font-weight:700;transition:color .22s}
+
+  .gpts{display:flex;gap:.2rem;background:var(--surface3,#20243a);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:7px;padding:.2rem}
+  .gptab{padding:.25rem .58rem;border-radius:5px;border:none;background:none;cursor:pointer;font-family:'DM Mono',monospace;font-size:.67rem;color:var(--text-dim,#6b7a99);transition:color .15s,background .18s}
+  .gptab:hover{color:var(--text,#eef0f8)}
+  .gptab.active{color:#fff}
+
+  .gcw{position:relative;width:100%;border-radius:10px;overflow:hidden;background:var(--surface3,#20243a);border:1px solid var(--border,rgba(255,255,255,.07))}
+  [data-theme="light"] .gcw{background:#eff1f7}
+  .gcw canvas{width:100%;height:220px;display:block;cursor:crosshair;transition:opacity .18s}
+
+  .gpl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:.4rem;font-size:.75rem;color:var(--text-dim,#6b7a99);border-radius:10px;background:var(--surface3,#20243a);transition:opacity .2s;pointer-events:none}
+  [data-theme="light"] .gpl{background:#eff1f7}
+  .gpl.hide{opacity:0}
+  .gpd{width:5px;height:5px;border-radius:50%;animation:gpda 1s ease-in-out infinite}
+  .gpd:nth-child(2){animation-delay:.15s}.gpd:nth-child(3){animation-delay:.3s}
+  @keyframes gpda{0%,100%{transform:scale(.6);opacity:.35}50%{transform:scale(1.2);opacity:1}}
+
+  #sgtt{position:fixed;background:var(--surface2,#1a1d2e);border:1px solid var(--border,rgba(255,255,255,.1));border-radius:8px;padding:.55rem .85rem;font-family:'DM Mono',monospace;font-size:.7rem;color:var(--text,#eef0f8);pointer-events:none;opacity:0;transition:opacity .1s;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.45);min-width:110px}
+  #sgtt.show{opacity:1}
+  .sgttd{color:var(--text-dim,#6b7a99);font-size:.63rem;margin-bottom:.28rem}
+  .sgttv{font-family:'Oxanium',sans-serif;font-size:1.05rem;font-weight:700}
+
+  @media(max-width:600px){
+    .sc{grid-template-columns:repeat(3,1fr)}
+    .scard:nth-child(4),.scard:nth-child(5){border-top:1px solid var(--border,rgba(255,255,255,.07))}
+  }
+  </style>
 </head>
 
 <nav class="nav">
@@ -56,17 +117,74 @@
   </div>
 </section>
 
+<!-- ══════════════════════════════════════════════════════
+     LIVE STATISTICS
+══════════════════════════════════════════════════════ -->
 <section class="stats-section" id="stats">
   <div class="section-header">
     <h2 id="statsTitle">Live Statistics</h2>
     <p class="stat-live-badge"><span id="statsLive">Updated in real time</span></p>
   </div>
-  <div class="stats-grid">
-    <div class="stat-card"><div class="stat-big" id="s2Members">—</div><div class="stat-name" data-key="stat.members">Members</div></div>
-    <div class="stat-card"><div class="stat-big" id="s2Tickets">—</div><div class="stat-name" data-key="stat.tickets">Tickets</div></div>
-    <div class="stat-card"><div class="stat-big" id="s2Messages">—</div><div class="stat-name" data-key="stat.messages">Messages</div></div>
-    <div class="stat-card"><div class="stat-big" id="s2Joins">—</div><div class="stat-name" data-key="stat.joins">Joins</div></div>
-    <div class="stat-card"><div class="stat-big" id="s2Leaves">—</div><div class="stat-name" data-key="stat.leaves">Leaves</div></div>
+
+  <div class="sb" id="sgBlock">
+
+    <div class="sc">
+      <div class="scard" data-key="members"  style="--c:#7f5af0" onclick="sgTog('members',this)">
+        <div class="scard-num" id="s2Members">—</div>
+        <div class="scard-lbl" data-key="stat.members">Members</div>
+        <span class="scard-caret">&#9660;</span>
+      </div>
+      <div class="scard" data-key="tickets"  style="--c:#f4a229" onclick="sgTog('tickets',this)">
+        <div class="scard-num" id="s2Tickets">—</div>
+        <div class="scard-lbl" data-key="stat.tickets">Tickets</div>
+        <span class="scard-caret">&#9660;</span>
+      </div>
+      <div class="scard" data-key="messages" style="--c:#2cb67d" onclick="sgTog('messages',this)">
+        <div class="scard-num" id="s2Messages">—</div>
+        <div class="scard-lbl" data-key="stat.messages">Messages</div>
+        <span class="scard-caret">&#9660;</span>
+      </div>
+      <div class="scard" data-key="joins"    style="--c:#38bdf8" onclick="sgTog('joins',this)">
+        <div class="scard-num" id="s2Joins">—</div>
+        <div class="scard-lbl" data-key="stat.joins">Joins</div>
+        <span class="scard-caret">&#9660;</span>
+      </div>
+      <div class="scard" data-key="leaves"   style="--c:#ff4757" onclick="sgTog('leaves',this)">
+        <div class="scard-num" id="s2Leaves">—</div>
+        <div class="scard-lbl" data-key="stat.leaves">Leaves</div>
+        <span class="scard-caret">&#9660;</span>
+      </div>
+    </div>
+
+    <div class="sdiv" id="sgDiv"></div>
+
+    <div class="gpo">
+      <div class="gpi">
+        <div class="gp">
+          <div class="gph">
+            <div class="gptw">
+              <div class="gpdot" id="sgDot"></div>
+              <div class="gptitle" id="sgTitle">—</div>
+            </div>
+            <div class="gpts">
+              <button class="gptab"        onclick="sgPer('1d',this)">1D</button>
+              <button class="gptab"        onclick="sgPer('3d',this)">3D</button>
+              <button class="gptab active" onclick="sgPer('7d',this)">7D</button>
+              <button class="gptab"        onclick="sgPer('30d',this)">30D</button>
+              <button class="gptab"        onclick="sgPer('1y',this)">1Y</button>
+              <button class="gptab"        onclick="sgPer('all',this)">All</button>
+            </div>
+          </div>
+          <div class="gcw">
+            <div class="gpl hide" id="sgLoad">
+              <div class="gpd"></div><div class="gpd"></div><div class="gpd"></div>
+            </div>
+            <canvas id="sgCanvas"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -106,5 +224,199 @@
 <script src="assets/js/stats.js"></script>
 <script src="assets/js/twitch.js"></script>
 <script src="assets/js/main.js"></script>
+
+<div id="sgtt"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   Stats Graph
+════════════════════════════════════════════════════════════ */
+var SG = {
+  key: null, per: '7d', data: {}, animId: null,
+  COL: { members:'#7f5af0', tickets:'#f4a229', messages:'#2cb67d', joins:'#38bdf8', leaves:'#ff4757' },
+  lbl: function(k) {
+    var m = {
+      members:  {de:'Mitglieder', en:'Members'},
+      tickets:  {de:'Tickets',    en:'Tickets'},
+      messages: {de:'Nachrichten',en:'Messages'},
+      joins:    {de:'Beitritte',  en:'Joins'},
+      leaves:   {de:'Verlassen',  en:'Leaves'},
+    };
+    var l = (typeof currentLang !== 'undefined' ? currentLang : 'en');
+    return (m[k]||{})[l] || (m[k]||{}).en || k;
+  },
+};
+
+function sgDemo(key, period) {
+  var n = {'1d':24,'3d':3,'7d':7,'30d':30,'1y':52,'all':104}[period]||7;
+  var isH = period==='1d', isW = period==='1y'||period==='all';
+  var labels = [], now = new Date();
+  for (var i = n-1; i >= 0; i--) {
+    var d = new Date(now);
+    if (isH)      { d.setHours(d.getHours()-i);    labels.push(String(d.getHours()).padStart(2,'0')+':00'); }
+    else if (isW) { d.setDate(d.getDate()-i*7);     labels.push(d.toLocaleDateString('de-DE',{day:'2-digit',month:'short'})); }
+    else          { d.setDate(d.getDate()-i);        labels.push(d.toLocaleDateString('de-DE',{day:'2-digit',month:'short'})); }
+  }
+  var base = {members:450,tickets:8,messages:120,joins:15,leaves:8}[key]||50, v = base;
+  return { labels: labels, values: labels.map(function(_,i) {
+    v = Math.max(0, Math.round(v*(0.78+(Math.sin(i*.9+key.length)*.35+Math.cos(i*.5)*.2))+(Math.random()-.5)*base*.3));
+    return v;
+  })};
+}
+
+function sgMoveDivider(key) {
+  var card = document.querySelector('.scard[data-key="'+key+'"]');
+  if (!card) return;
+  var br = document.querySelector('.sc').getBoundingClientRect();
+  var cr = card.getBoundingClientRect();
+  var div = document.getElementById('sgDiv');
+  div.style.setProperty('--ps', ((cr.left-br.left)/br.width*100).toFixed(1)+'%');
+  div.style.setProperty('--pe', ((cr.right-br.left)/br.width*100).toFixed(1)+'%');
+  div.style.setProperty('--ac', SG.COL[key]);
+}
+
+function sgSetAccent(key) {
+  var c = SG.COL[key];
+  var dot = document.getElementById('sgDot');
+  dot.style.background = c; dot.style.boxShadow = '0 0 8px '+c+'88';
+  var t = document.getElementById('sgTitle');
+  t.style.color = c; t.textContent = SG.lbl(key);
+  document.querySelectorAll('.gptab.active').forEach(function(b){ b.style.background = c; });
+  sgMoveDivider(key);
+}
+
+function sgTog(key, el) {
+  var block = document.getElementById('sgBlock');
+  var canvas = document.getElementById('sgCanvas');
+  var same = SG.key === key && block.classList.contains('open');
+  document.querySelectorAll('.scard').forEach(function(c){ c.classList.remove('active'); });
+  if (same) { SG.key = null; block.classList.remove('open'); return; }
+  var wasOpen = block.classList.contains('open');
+  SG.key = key; el.classList.add('active'); sgSetAccent(key);
+  if (wasOpen) {
+    canvas.style.opacity = '0';
+    setTimeout(function(){ sgLoad(); canvas.style.opacity = '1'; }, 190);
+  } else {
+    block.classList.add('open'); sgLoad();
+  }
+}
+
+function sgPer(period, btn) {
+  SG.per = period;
+  var c = SG.COL[SG.key]||'var(--accent,#7f5af0)';
+  document.querySelectorAll('.gptab').forEach(function(b){ b.classList.remove('active'); b.style.background=''; });
+  btn.classList.add('active'); btn.style.background = c;
+  var canvas = document.getElementById('sgCanvas');
+  canvas.style.opacity = '0';
+  setTimeout(function(){ sgLoad(); canvas.style.opacity = '1'; }, 170);
+}
+
+async function sgLoad() {
+  if (!SG.key) return;
+  document.getElementById('sgLoad').classList.remove('hide');
+  var cfg = window.DARKOS||{}, data = null;
+  if (cfg.apiUrl && cfg.guildId) {
+    try {
+      var r = await fetch(cfg.apiUrl+'/api/stats/history?guild='+cfg.guildId+'&period='+SG.per+'&type='+SG.key,
+        {signal:AbortSignal.timeout(5000)});
+      if (r.ok) data = await r.json();
+    } catch(e) {}
+  }
+  if (!data) data = sgDemo(SG.key, SG.per);
+  SG.data = data;
+  document.getElementById('sgLoad').classList.add('hide');
+  sgAnim();
+}
+
+function sgDraw(prog) {
+  var canvas = document.getElementById('sgCanvas');
+  if (!canvas || !SG.data.labels) return;
+  var dpr = window.devicePixelRatio||1;
+  var W = canvas.offsetWidth, H = canvas.offsetHeight||220;
+  canvas.width = W*dpr; canvas.height = H*dpr;
+  var ctx = canvas.getContext('2d'); ctx.scale(dpr,dpr);
+  var dark = document.documentElement.getAttribute('data-theme') !== 'light';
+  var gridC = dark?'rgba(255,255,255,0.042)':'rgba(0,0,0,0.055)';
+  var lblC  = dark?'#6b7a99':'#9ba3af';
+  var bgC   = dark?'#20243a':'#eff1f7';
+  var color = SG.COL[SG.key]||'#7f5af0';
+  var labels = SG.data.labels||[], values = SG.data.values||[], n = labels.length;
+  if (!n) return;
+  var PL=44,PR=16,PT=14,PB=34,gW=W-PL-PR,gH=H-PT-PB;
+  var maxV = Math.max.apply(null, values.concat([1]));
+  var nM = Math.ceil(maxV*1.18/10)*10;
+  ctx.font='10px "DM Mono",monospace'; ctx.fillStyle=lblC; ctx.textAlign='right';
+  for (var i=0;i<=4;i++) {
+    var v=Math.round(nM/4*i), y=PT+gH-(v/nM)*gH;
+    ctx.beginPath();ctx.strokeStyle=gridC;ctx.lineWidth=1;ctx.setLineDash([3,4]);
+    ctx.moveTo(PL,y);ctx.lineTo(PL+gW,y);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillText(v,PL-5,y+4);
+  }
+  ctx.textAlign='center';ctx.fillStyle=lblC;
+  var xSt=Math.ceil(n/Math.min(n,Math.floor(gW/54)));
+  for (var i=0;i<n;i+=xSt) ctx.fillText(labels[i],PL+(i/(n-1||1))*gW,H-5);
+  var pts=values.map(function(v,i){return{x:PL+(i/(n-1||1))*gW,y:PT+gH-(Math.min(v*prog,nM)/nM)*gH};});
+  var fp=new Path2D();
+  fp.moveTo(pts[0].x,PT+gH);fp.lineTo(pts[0].x,pts[0].y);
+  for(var i=1;i<pts.length;i++){var cx=pts[i].x-pts[i-1].x;fp.bezierCurveTo(pts[i-1].x+cx*.45,pts[i-1].y,pts[i].x-cx*.45,pts[i].y,pts[i].x,pts[i].y);}
+  fp.lineTo(pts[pts.length-1].x,PT+gH);fp.closePath();
+  var gr=ctx.createLinearGradient(0,PT,0,PT+gH);
+  gr.addColorStop(0,color+'cc');gr.addColorStop(.5,color+'30');gr.addColorStop(1,color+'00');
+  ctx.fillStyle=gr;ctx.fill(fp);
+  var lp=new Path2D();lp.moveTo(pts[0].x,pts[0].y);
+  for(var i=1;i<pts.length;i++){var cx=pts[i].x-pts[i-1].x;lp.bezierCurveTo(pts[i-1].x+cx*.45,pts[i-1].y,pts[i].x-cx*.45,pts[i].y,pts[i].x,pts[i].y);}
+  ctx.strokeStyle=color;ctx.lineWidth=2.4;ctx.lineJoin='round';ctx.lineCap='round';ctx.beginPath();ctx.stroke(lp);
+  pts.forEach(function(p){
+    ctx.beginPath();ctx.arc(p.x,p.y,3.5,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+    ctx.beginPath();ctx.arc(p.x,p.y,1.8,0,Math.PI*2);ctx.fillStyle=bgC;ctx.fill();
+  });
+}
+
+function sgAnim() {
+  if (SG.animId) cancelAnimationFrame(SG.animId);
+  var start=performance.now(),dur=680;
+  function ease(t){return 1-Math.pow(1-t,3);}
+  (function frame(now){
+    var p=ease(Math.min((now-start)/dur,1));sgDraw(p);
+    if(p<1)SG.animId=requestAnimationFrame(frame);
+  })(performance.now());
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var canvas=document.getElementById('sgCanvas'), tip=document.getElementById('sgtt');
+  canvas.addEventListener('mousemove',function(e){
+    var lb=SG.data.labels||[],vl=SG.data.values||[],n=lb.length;
+    if(!n){tip.classList.remove('show');return;}
+    var rect=canvas.getBoundingClientRect(),gW=rect.width-44-16;
+    var idx=Math.max(0,Math.min(n-1,Math.round(((e.clientX-rect.left-44)/gW)*(n-1))));
+    var c=SG.COL[SG.key]||'var(--accent)';
+    tip.innerHTML='<div class="sgttd">'+lb[idx]+'</div><div class="sgttv" style="color:'+c+'">'+(vl[idx]!=null?vl[idx]:'—')+'</div>';
+    tip.classList.add('show');
+    var lx=e.clientX+14;if(lx+140>window.innerWidth)lx=e.clientX-tip.offsetWidth-14;
+    tip.style.left=lx+'px';tip.style.top=(e.clientY-16)+'px';
+  });
+  canvas.addEventListener('mouseleave',function(){tip.classList.remove('show');});
+});
+
+var sgRsz;
+window.addEventListener('resize',function(){
+  clearTimeout(sgRsz);sgRsz=setTimeout(function(){
+    if(SG.data.labels)sgDraw(1);
+    if(SG.key)sgMoveDivider(SG.key);
+  },150);
+});
+
+// Hook in toggleLang so panel title updates on language switch
+window.addEventListener('load', function() {
+  if (typeof toggleLang === 'function') {
+    var orig = toggleLang;
+    toggleLang = function() {
+      orig();
+      if (SG.key) document.getElementById('sgTitle').textContent = SG.lbl(SG.key);
+    };
+  }
+});
+</script>
+
 </body>
 </html>
