@@ -48,9 +48,10 @@
   .sc{display:grid;grid-template-columns:repeat(5,1fr)}
   .scard{padding:1.7rem 1rem 1.4rem;text-align:center;cursor:pointer;position:relative;transition:background .2s;user-select:none;box-shadow:inset -1px 0 0 var(--border,rgba(255,255,255,.07))}
   .scard:last-child{box-shadow:none}
-  .scard::before{content:'';position:absolute;top:0;left:22%;right:22%;height:2px;border-radius:0 0 4px 4px;background:var(--c,var(--accent,#7f5af0));opacity:0;transition:opacity .22s,left .22s,right .22s}
-  .scard:hover::before{opacity:.5;left:10%;right:10%}
-  .scard.active::before{opacity:1;left:0;right:0;border-radius:0}
+  /* Always-visible accent bar — subtle on all, full on active */
+  .scard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:0;background:var(--c,var(--accent,#7f5af0));opacity:.25;transition:opacity .22s,box-shadow .22s}
+  .scard:hover::before{opacity:.6;box-shadow:0 0 8px var(--c,#7f5af0)}
+  .scard.active::before{opacity:1;box-shadow:0 0 12px var(--c,#7f5af0)}
   .scard:hover,.scard.active{background:var(--surface2,#1a1d2e)}
 
   /* Zahlen — !important damit main.css nichts überschreibt */
@@ -164,29 +165,29 @@
   <div class="sb" id="sgBlock">
 
     <div class="sc">
-      <div class="scard" data-key="members"  style="--c:#7f5af0" onclick="sgTog('members',this)">
-        <div class="scard-num" id="s2Members">—</div>
-        <div class="scard-lbl" data-key="stat.members">Members</div>
+      <div class="scard" data-key="members" style="--c:#7f5af0" onclick="sgTog('members',this)">
+        <div id="s2Members" style="font-family:'Oxanium',sans-serif;font-size:1.55rem;font-weight:800;color:#7f5af0;margin-bottom:.4rem;display:block;line-height:1.2;transition:transform .16s">—</div>
+        <div style="font-size:.6rem;color:#6b7a99;text-transform:uppercase;letter-spacing:.1em;display:block" data-key="stat.members">Members</div>
         <span class="scard-caret">&#9660;</span>
       </div>
-      <div class="scard" data-key="tickets"  style="--c:#f4a229" onclick="sgTog('tickets',this)">
-        <div class="scard-num" id="s2Tickets">—</div>
-        <div class="scard-lbl" data-key="stat.tickets">Tickets</div>
+      <div class="scard" data-key="tickets" style="--c:#f4a229" onclick="sgTog('tickets',this)">
+        <div id="s2Tickets" style="font-family:'Oxanium',sans-serif;font-size:1.55rem;font-weight:800;color:#f4a229;margin-bottom:.4rem;display:block;line-height:1.2;transition:transform .16s">—</div>
+        <div style="font-size:.6rem;color:#6b7a99;text-transform:uppercase;letter-spacing:.1em;display:block" data-key="stat.tickets">Tickets</div>
         <span class="scard-caret">&#9660;</span>
       </div>
       <div class="scard" data-key="messages" style="--c:#2cb67d" onclick="sgTog('messages',this)">
-        <div class="scard-num" id="s2Messages">—</div>
-        <div class="scard-lbl" data-key="stat.messages">Messages</div>
+        <div id="s2Messages" style="font-family:'Oxanium',sans-serif;font-size:1.55rem;font-weight:800;color:#2cb67d;margin-bottom:.4rem;display:block;line-height:1.2;transition:transform .16s">—</div>
+        <div style="font-size:.6rem;color:#6b7a99;text-transform:uppercase;letter-spacing:.1em;display:block" data-key="stat.messages">Messages</div>
         <span class="scard-caret">&#9660;</span>
       </div>
-      <div class="scard" data-key="joins"    style="--c:#38bdf8" onclick="sgTog('joins',this)">
-        <div class="scard-num" id="s2Joins">—</div>
-        <div class="scard-lbl" data-key="stat.joins">Joins</div>
+      <div class="scard" data-key="joins" style="--c:#38bdf8" onclick="sgTog('joins',this)">
+        <div id="s2Joins" style="font-family:'Oxanium',sans-serif;font-size:1.55rem;font-weight:800;color:#38bdf8;margin-bottom:.4rem;display:block;line-height:1.2;transition:transform .16s">—</div>
+        <div style="font-size:.6rem;color:#6b7a99;text-transform:uppercase;letter-spacing:.1em;display:block" data-key="stat.joins">Joins</div>
         <span class="scard-caret">&#9660;</span>
       </div>
-      <div class="scard" data-key="leaves"   style="--c:#ff4757" onclick="sgTog('leaves',this)">
-        <div class="scard-num" id="s2Leaves">—</div>
-        <div class="scard-lbl" data-key="stat.leaves">Leaves</div>
+      <div class="scard" data-key="leaves" style="--c:#ff4757" onclick="sgTog('leaves',this)">
+        <div id="s2Leaves" style="font-family:'Oxanium',sans-serif;font-size:1.55rem;font-weight:800;color:#ff4757;margin-bottom:.4rem;display:block;line-height:1.2;transition:transform .16s">—</div>
+        <div style="font-size:.6rem;color:#6b7a99;text-transform:uppercase;letter-spacing:.1em;display:block" data-key="stat.leaves">Leaves</div>
         <span class="scard-caret">&#9660;</span>
       </div>
     </div>
