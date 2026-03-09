@@ -205,13 +205,33 @@ body.light .hero-logo { mix-blend-mode: multiply; filter: drop-shadow(0 8px 32px
 .stat-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-top: 0.2rem; transition: color 0.25s; }
 
 /* ── Stats section ──────────────────────────────────────────── */
-.stats-section { padding: 7rem 2rem; text-align: center; position: relative; overflow: hidden; }
-.stats-section::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(127,90,240,0.07) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 40% at 20% 80%, rgba(44,182,125,0.05) 0%, transparent 60%);
+.stats-section {
+  padding: 7rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
+
+/* Grid lines — same style as hero, fades at edges */
+.stats-section::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    linear-gradient(rgba(127,90,240,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(127,90,240,0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 95% 80% at 50% 50%, black 5%, transparent 72%);
+}
+
+/* Ambient orbs */
+.stats-section::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 55% 65% at 50% 50%,  rgba(127,90,240,0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 40% at 10% 90%,  rgba(44,182,125,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 22% 32% at 92% 10%,  rgba(127,90,240,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse 18% 22% at 78% 95%,  rgba(255,71,87,0.04)  0%, transparent 50%);
+}
+
 .section-header { position: relative; z-index: 1; margin-bottom: 3rem; }
 .section-header h2 {
   font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 800;
