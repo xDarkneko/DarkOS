@@ -37,6 +37,45 @@ body {
   --nav-bg:    rgba(8,12,20,0.85);
 }
 
+/* ── Single continuous page background (dark) ─────────────────
+   Fixed so it never moves — sections scroll over it seamlessly.
+   No per-section backgrounds needed anymore.                  */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* Top-left hero orb — purple */
+    radial-gradient(ellipse 70% 55% at 30%  8%,  rgba(127,90,240,0.18) 0%, transparent 60%),
+    /* Center-right accent */
+    radial-gradient(ellipse 50% 45% at 85% 35%,  rgba(127,90,240,0.09) 0%, transparent 55%),
+    /* Mid-page green orb */
+    radial-gradient(ellipse 55% 40% at 12% 58%,  rgba(44,182,125,0.08) 0%, transparent 55%),
+    /* Lower-center purple bloom */
+    radial-gradient(ellipse 65% 50% at 60% 78%,  rgba(127,90,240,0.10) 0%, transparent 60%),
+    /* Bottom-right red hint */
+    radial-gradient(ellipse 35% 30% at 90% 92%,  rgba(255,71,87,0.05)  0%, transparent 50%),
+    /* Base */
+    #080c14;
+}
+
+/* Grid — also fixed, same trick */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(127,90,240,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(127,90,240,0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 120% 100% at 50% 30%, black 20%, transparent 80%);
+  opacity: 0.7;
+}
+
 /* ── Variables: Light ───────────────────────────────────────── */
 body.light {
   --bg:        #eeeaff;
@@ -55,53 +94,29 @@ body.light {
   --nav-bg:    rgba(238,234,255,0.9);
 }
 
-/* ── Light Mode — Aurora Background ──────────────────────────── */
-/* Page background: aurora diagonal sweep */
-body.light {
+/* ── Light Mode — fixed continuous background ─────────────────── */
+body.light::before {
   background:
-    radial-gradient(ellipse 80% 60% at  15%  5%,  rgba(91,61,232,0.18)  0%, transparent 55%),
-    radial-gradient(ellipse 55% 55% at  88% 12%,  rgba(200,80,255,0.1)  0%, transparent 50%),
-    radial-gradient(ellipse 65% 50% at  50% 95%,  rgba(14,165,160,0.14) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 40% at   5% 85%,  rgba(91,61,232,0.08)  0%, transparent 50%),
+    radial-gradient(ellipse 75% 55% at 20%  5%,  rgba(91,61,232,0.20)  0%, transparent 55%),
+    radial-gradient(ellipse 50% 45% at 88% 18%,  rgba(180,80,255,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 55% 42% at 10% 55%,  rgba(14,165,160,0.11) 0%, transparent 52%),
+    radial-gradient(ellipse 60% 48% at 65% 82%,  rgba(91,61,232,0.13)  0%, transparent 58%),
+    radial-gradient(ellipse 30% 28% at 92% 90%,  rgba(14,165,160,0.08) 0%, transparent 50%),
     #eeeaff;
 }
-
-/* Hero orbs — stronger in light */
-body.light .hero::before {
-  background:
-    radial-gradient(ellipse 65% 55% at 50% 25%, rgba(91,61,232,0.14)  0%, transparent 65%),
-    radial-gradient(ellipse 40% 45% at 85% 70%, rgba(14,165,160,0.10) 0%, transparent 55%),
-    radial-gradient(ellipse 30% 35% at 10% 60%, rgba(200,80,255,0.08) 0%, transparent 50%);
-}
-
-/* Hero grid — slightly darker purple lines */
-body.light .hero-grid {
-  background:
-    linear-gradient(rgba(91,61,232,0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(91,61,232,0.08) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-
-/* Stats section */
-body.light .stats-section::before {
+body.light::after {
   background:
     linear-gradient(rgba(91,61,232,0.07) 1px, transparent 1px),
     linear-gradient(90deg, rgba(91,61,232,0.07) 1px, transparent 1px);
   background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 120% 100% at 50% 30%, black 20%, transparent 80%);
+  opacity: 0.6;
 }
-body.light .stats-section::after {
-  background:
-    radial-gradient(ellipse 60% 65% at 50% 50%, rgba(91,61,232,0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 35% 40% at  8% 90%, rgba(14,165,160,0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 25% 30% at 92% 10%, rgba(200,80,255,0.07) 0%, transparent 50%);
-}
-
-/* Twitch section — seamless continuation, no distinct orbs */
-body.light .twitch-section::before {
-  background:
-    radial-gradient(ellipse 100% 55% at 50% 0%,  rgba(91,61,232,0.07) 0%, transparent 65%),
-    radial-gradient(ellipse  80% 70% at 50% 100%, rgba(91,61,232,0.04) 0%, transparent 60%);
-}
+/* Remove all per-section overrides in light */
+body.light .hero::before { background: none; }
+body.light .stats-section::before,
+body.light .stats-section::after { display: none; }
+body.light .twitch-section::before { display: none; }
 
 /* Cards + strips */
 body.light .stat-card {
@@ -193,24 +208,12 @@ a { color: inherit; text-decoration: none; }
 
 /* ── Hero ───────────────────────────────────────────────────── */
 .hero {
-  position: relative; min-height: 100vh;
+  position: relative; min-height: 100vh; z-index: 1;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   padding: 8rem 2rem 5rem; text-align: center; overflow: hidden;
 }
-.hero::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 60% 50% at 50% 30%, rgba(127,90,240,0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 40% at 80% 70%, rgba(44,182,125,0.07) 0%, transparent 60%);
-}
-.hero-grid {
-  position: absolute; inset: 0; pointer-events: none;
-  background:
-    linear-gradient(rgba(127,90,240,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(127,90,240,0.05) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
-}
+/* hero::before removed — body::before handles global bg */
+.hero-grid { display: none; } /* grid now handled by fixed body::after */
 .hero-content {
   position: relative; z-index: 1; max-width: 720px; width: 100%;
   display: flex; flex-direction: column; align-items: center;
@@ -280,28 +283,11 @@ body.light .hero-logo { mix-blend-mode: multiply; filter: drop-shadow(0 8px 32px
   padding: 7rem 2rem;
   text-align: center;
   position: relative;
-  overflow: hidden;
+  z-index: 1;
 }
 
-/* Grid lines — same style as hero, fades at edges */
-.stats-section::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
-  background:
-    linear-gradient(rgba(127,90,240,0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(127,90,240,0.045) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 95% 80% at 50% 50%, black 5%, transparent 72%);
-}
-
-/* Ambient orbs */
-.stats-section::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
-  background:
-    radial-gradient(ellipse 55% 65% at 50% 50%,  rgba(127,90,240,0.08) 0%, transparent 65%),
-    radial-gradient(ellipse 30% 40% at 10% 90%,  rgba(44,182,125,0.06) 0%, transparent 55%),
-    radial-gradient(ellipse 22% 32% at 92% 10%,  rgba(127,90,240,0.05) 0%, transparent 50%),
-    radial-gradient(ellipse 18% 22% at 78% 95%,  rgba(255,71,87,0.04)  0%, transparent 50%);
-}
+/* stats bg removed — body::before/after handles entire page bg */
+.stats-section::before, .stats-section::after { display: none; }
 
 .section-header { position: relative; z-index: 1; margin-bottom: 3rem; }
 .section-header h2 {
@@ -344,15 +330,10 @@ body.light .hero-logo { mix-blend-mode: multiply; filter: drop-shadow(0 8px 32px
   padding: 5rem 2rem;
   text-align: center;
   position: relative;
-  overflow: hidden;
+  z-index: 1;
 }
-/* Seamless fade-through from stats section — no distinct orbs */
-.twitch-section::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
-  background:
-    radial-gradient(ellipse 100% 60% at 50% 0%,   rgba(127,90,240,0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 80%  80% at 50% 100%,  rgba(127,90,240,0.04) 0%, transparent 65%);
-}
+/* twitch section bg removed — body::before handles it */
+.twitch-section::before { display: none; }
 .twitch-section .section-header,
 .twitch-section .twitch-card { position: relative; z-index: 1; }
 .twitch-card {
