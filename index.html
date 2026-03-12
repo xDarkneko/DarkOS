@@ -26,7 +26,7 @@
     border-radius: 18px;
     transition: box-shadow .55s cubic-bezier(.4,0,.2,1);
     box-shadow: 0 0 0px 0px transparent;
-    max-width: 800px;
+    max-width: 700px;
     margin: 0 auto;
   }
   .sb-wrap.glow {
@@ -50,10 +50,10 @@
   .sc{display:grid;grid-template-columns:repeat(5,1fr)}
   .scard{padding:1.7rem 1rem 1.4rem;text-align:center;cursor:pointer;position:relative;transition:background .2s;user-select:none;box-shadow:inset -1px 0 0 var(--border,rgba(255,255,255,.07))}
   .scard:last-child{box-shadow:none}
-  /* Always-visible accent bar — subtle on all, full on active */
-  .scard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:0;background:var(--c,var(--accent,#7f5af0));opacity:.25;transition:opacity .22s,box-shadow .22s}
-  .scard:hover::before{opacity:.6;box-shadow:0 0 8px var(--c,#7f5af0)}
-  .scard.active::before{opacity:1;box-shadow:0 0 12px var(--c,#7f5af0)}
+  /* Bar nur bei hover/active */
+  .scard::before{content:'';position:absolute;top:0;left:25%;right:25%;height:2px;border-radius:0 0 3px 3px;background:var(--c,var(--accent,#7f5af0));opacity:0;transition:opacity .22s,left .22s,right .22s,box-shadow .22s}
+  .scard:hover::before{opacity:.55;left:12%;right:12%;box-shadow:0 0 8px var(--c,#7f5af0)}
+  .scard.active::before{opacity:1;left:0;right:0;border-radius:0;box-shadow:0 0 14px var(--c,#7f5af0)}
   .scard:hover,.scard.active{background:var(--surface2,#1a1d2e)}
 
   /* Zahlen — !important damit main.css nichts überschreibt */
@@ -110,6 +110,19 @@
   #sgtt.show{opacity:1}
   .sgttd{color:var(--text-dim,#6b7a99);font-size:.63rem;margin-bottom:.28rem}
   .sgttv{font-family:'Oxanium',sans-serif;font-size:1.05rem;font-weight:700}
+
+
+  /* ── Custom Cursor ─────────────────────────────────────── */
+  * { cursor: none !important; }
+  #cur-dot  { position:fixed;top:0;left:0;width:6px;height:6px;border-radius:50%;background:#fff;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .15s,height .15s,background .25s,box-shadow .25s; }
+  #cur-ring { position:fixed;top:0;left:0;width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(127,90,240,.7);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width .35s cubic-bezier(.4,0,.2,1),height .35s cubic-bezier(.4,0,.2,1),border-color .35s,box-shadow .35s,opacity .25s; }
+  #cur-dot.hover  { width:4px;height:4px; }
+  #cur-ring.hover { width:46px;height:46px;border-color:var(--cur-c,#7f5af0);box-shadow:0 0 16px var(--cur-c,rgba(127,90,240,.4)); }
+  #cur-dot.click  { width:3px;height:3px; }
+  #cur-ring.click { width:24px;height:24px;border-width:2px; }
+  body.light #cur-dot  { background:#0d0f1a; }
+  body.light #cur-ring { border-color:rgba(91,61,232,.6); }
+  @media(hover:none){ #cur-dot,#cur-ring{ display:none } * { cursor:auto !important } }
 
   @media(max-width:600px){
     .sc{grid-template-columns:repeat(3,1fr)}
@@ -526,6 +539,81 @@ window.addEventListener('load', function() {
     };
   }
 });
+</script>
+
+
+<!-- Custom Cursor -->
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+<script>
+(function(){
+  var dot  = document.getElementById('cur-dot');
+  var ring = document.getElementById('cur-ring');
+  if (!dot || !ring) return;
+
+  var mx=0,my=0, rx=0,ry=0, raf;
+  var COLORS = {
+    members:'#7f5af0', tickets:'#f4a229', messages:'#2cb67d',
+    joins:'#38bdf8', leaves:'#ff4757',
+    accent:'#7f5af0', default:'rgba(127,90,240,.7)'
+  };
+
+  document.addEventListener('mousemove', function(e){
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx+'px'; dot.style.top = my+'px';
+  });
+
+  // Ring follows with lag
+  function lerp(a,b,t){ return a+(b-a)*t; }
+  (function loop(){
+    rx = lerp(rx, mx, 0.12);
+    ry = lerp(ry, my, 0.12);
+    ring.style.left = rx+'px';
+    ring.style.top  = ry+'px';
+    requestAnimationFrame(loop);
+  })();
+
+  // Hover detection — change color per element
+  document.addEventListener('mouseover', function(e){
+    var t = e.target.closest('[data-key],[onclick],[href],button,a,.scard,.btn-primary,.stat-chip,.twitch-card');
+    if (!t) { ring.classList.remove('hover'); dot.classList.remove('hover'); return; }
+
+    ring.classList.add('hover'); dot.classList.add('hover');
+
+    // pick color from scard or use accent
+    var card = t.closest('.scard');
+    var color = card
+      ? getComputedStyle(card).getPropertyValue('--c').trim() || '#7f5af0'
+      : '#7f5af0';
+    document.documentElement.style.setProperty('--cur-c', color);
+    dot.style.background = color;
+    dot.style.boxShadow = '0 0 6px '+color;
+    ring.style.borderColor = color;
+  });
+  document.addEventListener('mouseout', function(e){
+    var t = e.target.closest('[data-key],[onclick],[href],button,a,.scard,.btn-primary,.stat-chip,.twitch-card');
+    if (!t) return;
+    ring.classList.remove('hover'); dot.classList.remove('hover');
+    dot.style.background = '';
+    dot.style.boxShadow = '';
+    ring.style.borderColor = '';
+  });
+
+  document.addEventListener('mousedown', function(){
+    ring.classList.add('click'); dot.classList.add('click');
+  });
+  document.addEventListener('mouseup', function(){
+    ring.classList.remove('click'); dot.classList.remove('click');
+  });
+
+  // Hide on leave
+  document.addEventListener('mouseleave', function(){
+    ring.style.opacity='0'; dot.style.opacity='0';
+  });
+  document.addEventListener('mouseenter', function(){
+    ring.style.opacity='1'; dot.style.opacity='1';
+  });
+})();
 </script>
 
 </body>
