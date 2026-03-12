@@ -96,12 +96,11 @@ body.light .stats-section::after {
     radial-gradient(ellipse 25% 30% at 92% 10%, rgba(200,80,255,0.07) 0%, transparent 50%);
 }
 
-/* Twitch section */
+/* Twitch section — seamless continuation, no distinct orbs */
 body.light .twitch-section::before {
   background:
-    radial-gradient(ellipse 60% 65% at 50% 55%, rgba(145,70,255,0.09) 0%, transparent 60%),
-    radial-gradient(ellipse 30% 35% at 88% 85%, rgba(14,165,160,0.07) 0%, transparent 50%),
-    radial-gradient(ellipse 22% 28% at  8% 15%, rgba(91,61,232,0.06)  0%, transparent 50%);
+    radial-gradient(ellipse 100% 55% at 50% 0%,  rgba(91,61,232,0.07) 0%, transparent 65%),
+    radial-gradient(ellipse  80% 70% at 50% 100%, rgba(91,61,232,0.04) 0%, transparent 60%);
 }
 
 /* Cards + strips */
@@ -347,13 +346,12 @@ body.light .hero-logo { mix-blend-mode: multiply; filter: drop-shadow(0 8px 32px
   position: relative;
   overflow: hidden;
 }
-/* Soft ambient orbs only — no grid (grid looked cursed) */
+/* Seamless fade-through from stats section — no distinct orbs */
 .twitch-section::before {
   content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
   background:
-    radial-gradient(ellipse 65% 55% at 50% 60%,  rgba(145,70,255,0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 28% 38% at 90% 15%,  rgba(127,90,240,0.05) 0%, transparent 55%),
-    radial-gradient(ellipse 22% 28% at  8% 85%,  rgba(44,182,125,0.04) 0%, transparent 50%);
+    radial-gradient(ellipse 100% 60% at 50% 0%,   rgba(127,90,240,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 80%  80% at 50% 100%,  rgba(127,90,240,0.04) 0%, transparent 65%);
 }
 .twitch-section .section-header,
 .twitch-section .twitch-card { position: relative; z-index: 1; }
