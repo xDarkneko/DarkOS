@@ -370,6 +370,7 @@ body.light .hero-logo { mix-blend-mode: multiply; filter: drop-shadow(0 8px 32px
   padding: 3rem 2.5rem; display: flex; align-items: center;
   justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
   transition: background 0.25s, border-color 0.25s;
+  position: relative; z-index: 1;
 }
 .footer-brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 800; font-size: 1rem; color: var(--text); transition: color 0.25s; }
 .footer-logo { width: 28px; height: 28px; object-fit: contain; border-radius: 50%; filter: drop-shadow(0 0 6px var(--glow)); }
