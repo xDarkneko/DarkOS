@@ -37,31 +37,64 @@ body {
   --nav-bg:    rgba(8,12,20,0.85);
 }
 
-/* ── Single continuous page background (dark) ─────────────────
-   Fixed so it never moves — sections scroll over it seamlessly.
-   No per-section backgrounds needed anymore.                  */
-body::before {
-  content: '';
+/* ── Animated orb system ───────────────────────────────────────
+   Orbs live as real DOM elements (.orb) so they can animate
+   independently. body::after handles the fixed grid.         */
+
+/* Keyframes — each orb drifts on its own path */
+@keyframes orb1 { 0%,100%{transform:translate(0,0) scale(1)}   33%{transform:translate(4vw,3vh) scale(1.08)}  66%{transform:translate(-3vw,5vh) scale(0.95)} }
+@keyframes orb2 { 0%,100%{transform:translate(0,0) scale(1)}   40%{transform:translate(-5vw,-4vh) scale(1.1)} 70%{transform:translate(3vw,2vh) scale(0.92)} }
+@keyframes orb3 { 0%,100%{transform:translate(0,0) scale(1)}   30%{transform:translate(3vw,-5vh) scale(0.94)} 65%{transform:translate(-4vw,3vh) scale(1.07)} }
+@keyframes orb4 { 0%,100%{transform:translate(0,0) scale(1)}   45%{transform:translate(-3vw,4vh) scale(1.12)} 75%{transform:translate(5vw,-2vh) scale(0.96)} }
+@keyframes orb5 { 0%,100%{transform:translate(0,0) scale(1)}   35%{transform:translate(4vw,4vh) scale(0.93)}  68%{transform:translate(-2vw,-3vh) scale(1.06)} }
+
+.orb {
   position: fixed;
-  inset: 0;
-  z-index: 0;
+  border-radius: 50%;
   pointer-events: none;
-  background:
-    /* Top-left hero orb — purple */
-    radial-gradient(ellipse 70% 55% at 30%  8%,  rgba(127,90,240,0.18) 0%, transparent 60%),
-    /* Center-right accent */
-    radial-gradient(ellipse 50% 45% at 85% 35%,  rgba(127,90,240,0.09) 0%, transparent 55%),
-    /* Mid-page green orb */
-    radial-gradient(ellipse 55% 40% at 12% 58%,  rgba(44,182,125,0.08) 0%, transparent 55%),
-    /* Lower-center purple bloom */
-    radial-gradient(ellipse 65% 50% at 60% 78%,  rgba(127,90,240,0.10) 0%, transparent 60%),
-    /* Bottom-right red hint */
-    radial-gradient(ellipse 35% 30% at 90% 92%,  rgba(255,71,87,0.05)  0%, transparent 50%),
-    /* Base */
-    #080c14;
+  filter: blur(60px);
+  z-index: 0;
+  will-change: transform;
+}
+.orb-1 {
+  width: 55vw; height: 55vh;
+  top: -10vh; left: 10vw;
+  background: radial-gradient(ellipse at center, rgba(127,90,240,0.22) 0%, transparent 70%);
+  animation: orb1 18s ease-in-out infinite;
+}
+.orb-2 {
+  width: 45vw; height: 50vh;
+  top: 30vh; right: -5vw;
+  background: radial-gradient(ellipse at center, rgba(127,90,240,0.12) 0%, transparent 70%);
+  animation: orb2 22s ease-in-out infinite;
+}
+.orb-3 {
+  width: 40vw; height: 45vh;
+  top: 45vh; left: -8vw;
+  background: radial-gradient(ellipse at center, rgba(44,182,125,0.11) 0%, transparent 70%);
+  animation: orb3 26s ease-in-out infinite;
+}
+.orb-4 {
+  width: 50vw; height: 45vh;
+  bottom: -5vh; right: 5vw;
+  background: radial-gradient(ellipse at center, rgba(127,90,240,0.13) 0%, transparent 70%);
+  animation: orb4 20s ease-in-out infinite;
+}
+.orb-5 {
+  width: 30vw; height: 30vh;
+  bottom: 15vh; left: 30vw;
+  background: radial-gradient(ellipse at center, rgba(255,71,87,0.07) 0%, transparent 70%);
+  animation: orb5 24s ease-in-out infinite;
 }
 
-/* Grid — also fixed, same trick */
+/* Light mode orb colors */
+body.light .orb-1 { background: radial-gradient(ellipse at center, rgba(91,61,232,0.22)  0%, transparent 70%); }
+body.light .orb-2 { background: radial-gradient(ellipse at center, rgba(180,80,255,0.14) 0%, transparent 70%); }
+body.light .orb-3 { background: radial-gradient(ellipse at center, rgba(14,165,160,0.13) 0%, transparent 70%); }
+body.light .orb-4 { background: radial-gradient(ellipse at center, rgba(91,61,232,0.15)  0%, transparent 70%); }
+body.light .orb-5 { background: radial-gradient(ellipse at center, rgba(14,165,160,0.09) 0%, transparent 70%); }
+
+/* Fixed grid on top of orbs */
 body::after {
   content: '';
   position: fixed;
@@ -69,11 +102,17 @@ body::after {
   z-index: 0;
   pointer-events: none;
   background:
-    linear-gradient(rgba(127,90,240,0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(127,90,240,0.045) 1px, transparent 1px);
+    linear-gradient(rgba(127,90,240,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(127,90,240,0.04) 1px, transparent 1px);
   background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 120% 100% at 50% 30%, black 20%, transparent 80%);
-  opacity: 0.7;
+  mask-image: radial-gradient(ellipse 140% 100% at 50% 25%, black 15%, transparent 75%);
+  opacity: 0.8;
+}
+body.light::after {
+  background:
+    linear-gradient(rgba(91,61,232,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91,61,232,0.07) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
 /* ── Variables: Light ───────────────────────────────────────── */
@@ -94,25 +133,8 @@ body.light {
   --nav-bg:    rgba(238,234,255,0.9);
 }
 
-/* ── Light Mode — fixed continuous background ─────────────────── */
-body.light::before {
-  background:
-    radial-gradient(ellipse 75% 55% at 20%  5%,  rgba(91,61,232,0.20)  0%, transparent 55%),
-    radial-gradient(ellipse 50% 45% at 88% 18%,  rgba(180,80,255,0.12) 0%, transparent 50%),
-    radial-gradient(ellipse 55% 42% at 10% 55%,  rgba(14,165,160,0.11) 0%, transparent 52%),
-    radial-gradient(ellipse 60% 48% at 65% 82%,  rgba(91,61,232,0.13)  0%, transparent 58%),
-    radial-gradient(ellipse 30% 28% at 92% 90%,  rgba(14,165,160,0.08) 0%, transparent 50%),
-    #eeeaff;
-}
-body.light::after {
-  background:
-    linear-gradient(rgba(91,61,232,0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(91,61,232,0.07) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 120% 100% at 50% 30%, black 20%, transparent 80%);
-  opacity: 0.6;
-}
-/* Remove all per-section overrides in light */
+/* Light mode base bg color (orbs animated via .orb classes above) */
+body.light { background: #eeeaff; }
 body.light .hero::before { background: none; }
 body.light .stats-section::before,
 body.light .stats-section::after { display: none; }
