@@ -277,7 +277,12 @@
     <div class="tc-info">
       <div class="tc-avatar-wrap">
         <div class="tc-avatar" id="tcAvatar">
-          <svg viewBox="0 0 24 24" fill="white" width="26" height="26"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
+          <!-- Fallback: Twitch logo — wird durch Avatar-Bild ersetzt sobald geladen -->
+          <img id="tcAvatarImg" src="" alt="xDarkNeko_"
+               style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:none;"/>
+          <svg id="tcAvatarFallback" viewBox="0 0 24 24" fill="white" width="26" height="26">
+            <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/>
+          </svg>
         </div>
         <div class="tc-avatar-ring" id="tcAvatarRing"></div>
       </div>
@@ -658,5 +663,50 @@ window.addEventListener('load', function() {
 })();
 </script>
 
+
+<script>
+/* ── Twitch Avatar Fetch ─────────────────────────────────────
+   Priorität:
+   1. unavatar.io  — kein API-Key, kein Bot nötig, immer verfügbar
+   2. Bot-API      — falls Bot läuft, für Follower-Count etc.
+   Fallback: Twitch-Logo bleibt sichtbar.                    */
+(function fetchTwitchAvatar() {
+  var login = 'xDarkNeko_';
+
+  function setAvatar(url) {
+    var img      = document.getElementById('tcAvatarImg');
+    var fallback = document.getElementById('tcAvatarFallback');
+    if (!img) return;
+    img.onload = function() {
+      img.style.display = 'block';
+      if (fallback) fallback.style.display = 'none';
+    };
+    img.onerror = function() {}; // silent — SVG bleibt
+    img.src = url;
+  }
+
+  // Strategie 1: unavatar.io — kein Bot, kein Key nötig
+  // Direkt als src setzen — browser cached es automatisch
+  setAvatar('https://unavatar.io/twitch/' + login);
+
+  // Strategie 2: Bot-API — für Follower-Count (optional, nur wenn Bot läuft)
+  var cfg = window.DARKOS || {};
+  if (cfg.apiUrl) {
+    fetch(cfg.apiUrl + '/api/twitch/user?login=' + login, { signal: AbortSignal.timeout(4000) })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(d) {
+        if (!d) return;
+        // Profilbild aus Bot-API überschreibt unavatar (höhere Qualität)
+        if (d.profile_image_url) setAvatar(d.profile_image_url);
+        // Follower-Count updaten
+        if (d.followers != null) {
+          var el = document.getElementById('twitchFollowers');
+          if (el) el.textContent = d.followers.toLocaleString();
+        }
+      })
+      .catch(function() {}); // Bot offline — unavatar reicht
+  }
+})();
+</script>
 </body>
 </html>
