@@ -685,26 +685,38 @@ window.addEventListener('load', function() {
     img.src = url;
   }
 
-  // Strategie 1: unavatar.io — kein Bot, kein Key nötig
-  // Direkt als src setzen — browser cached es automatisch
-  setAvatar('https://unavatar.io/twitch/' + login);
+  // Strategie 1: DecAPI — kein Key, kein Bot, returns Avatar-URL als plain text
+  fetch('https://decapi.me/twitch/avatar/' + login, { signal: AbortSignal.timeout(5000) })
+    .then(function(r) { return r.ok ? r.text() : null; })
+    .then(function(url) {
+      if (url && url.startsWith('http')) setAvatar(url.trim());
+    })
+    .catch(function() {}); // silent — SVG Fallback bleibt
 
-  // Strategie 2: Bot-API — für Follower-Count (optional, nur wenn Bot läuft)
+  // Strategie 2: DecAPI Follower-Count
+  fetch('https://decapi.me/twitch/followcount/' + login, { signal: AbortSignal.timeout(5000) })
+    .then(function(r) { return r.ok ? r.text() : null; })
+    .then(function(count) {
+      if (!count || isNaN(count.trim())) return;
+      var el = document.getElementById('twitchFollowers');
+      if (el) el.textContent = parseInt(count.trim()).toLocaleString();
+    })
+    .catch(function() {});
+
+  // Strategie 3: Bot-API — überschreibt DecAPI falls Bot läuft (höhere Qualität)
   var cfg = window.DARKOS || {};
   if (cfg.apiUrl) {
     fetch(cfg.apiUrl + '/api/twitch/user?login=' + login, { signal: AbortSignal.timeout(4000) })
       .then(function(r) { return r.ok ? r.json() : null; })
       .then(function(d) {
         if (!d) return;
-        // Profilbild aus Bot-API überschreibt unavatar (höhere Qualität)
         if (d.profile_image_url) setAvatar(d.profile_image_url);
-        // Follower-Count updaten
         if (d.followers != null) {
           var el = document.getElementById('twitchFollowers');
           if (el) el.textContent = d.followers.toLocaleString();
         }
       })
-      .catch(function() {}); // Bot offline — unavatar reicht
+      .catch(function() {});
   }
 })();
 </script>
