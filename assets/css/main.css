@@ -39,64 +39,92 @@ body {
 
 /* ── Variables: Light ───────────────────────────────────────── */
 body.light {
-  --bg:        #f0f0ff;
-  --surface:   #fafaff;
-  --surface2:  #eeecff;
-  --surface3:  #e8e6fa;
-  --border:    rgba(91,61,232,0.12);
-  --text:      #0d0f1a;
-  --text-dim:  #5a5480;
+  --bg:        #eeeaff;
+  --surface:   #f5f2ff;
+  --surface2:  #ede8ff;
+  --surface3:  #e2dcf8;
+  --border:    rgba(91,61,232,0.14);
+  --text:      #0d0a1f;
+  --text-dim:  #5a527a;
   --accent:    #5b3de8;
   --accent2:   #0ea5a0;
   --accent3:   #e84040;
-  --glow:      rgba(91,61,232,0.18);
-  --shadow:    0 4px 24px rgba(91,61,232,0.08);
-  --shadow-lg: 0 12px 48px rgba(91,61,232,0.15);
-  --nav-bg:    rgba(240,238,255,0.88);
+  --glow:      rgba(91,61,232,0.22);
+  --shadow:    0 4px 24px rgba(91,61,232,0.1);
+  --shadow-lg: 0 12px 48px rgba(91,61,232,0.18);
+  --nav-bg:    rgba(238,234,255,0.9);
 }
 
-/* Light mode — richer background */
+/* ── Light Mode — Aurora Background ──────────────────────────── */
+/* Page background: aurora diagonal sweep */
 body.light {
   background:
-    radial-gradient(ellipse 70% 50% at 20% 10%, rgba(91,61,232,0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 60% at 80% 80%, rgba(14,165,160,0.06) 0%, transparent 55%),
-    #f0f0ff;
+    radial-gradient(ellipse 80% 60% at  15%  5%,  rgba(91,61,232,0.18)  0%, transparent 55%),
+    radial-gradient(ellipse 55% 55% at  88% 12%,  rgba(200,80,255,0.1)  0%, transparent 50%),
+    radial-gradient(ellipse 65% 50% at  50% 95%,  rgba(14,165,160,0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at   5% 85%,  rgba(91,61,232,0.08)  0%, transparent 50%),
+    #eeeaff;
 }
+
+/* Hero orbs — stronger in light */
 body.light .hero::before {
   background:
-    radial-gradient(ellipse 60% 50% at 50% 30%, rgba(91,61,232,0.1) 0%, transparent 70%),
-    radial-gradient(ellipse 35% 40% at 80% 70%, rgba(14,165,160,0.07) 0%, transparent 60%);
+    radial-gradient(ellipse 65% 55% at 50% 25%, rgba(91,61,232,0.14)  0%, transparent 65%),
+    radial-gradient(ellipse 40% 45% at 85% 70%, rgba(14,165,160,0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 35% at 10% 60%, rgba(200,80,255,0.08) 0%, transparent 50%);
 }
+
+/* Hero grid — slightly darker purple lines */
 body.light .hero-grid {
   background:
-    linear-gradient(rgba(91,61,232,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(91,61,232,0.06) 1px, transparent 1px);
+    linear-gradient(rgba(91,61,232,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91,61,232,0.08) 1px, transparent 1px);
   background-size: 48px 48px;
 }
+
+/* Stats section */
 body.light .stats-section::before {
   background:
-    linear-gradient(rgba(91,61,232,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(91,61,232,0.05) 1px, transparent 1px);
+    linear-gradient(rgba(91,61,232,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91,61,232,0.07) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 body.light .stats-section::after {
   background:
-    radial-gradient(ellipse 55% 65% at 50% 50%, rgba(91,61,232,0.07) 0%, transparent 65%),
-    radial-gradient(ellipse 30% 40% at 10% 90%, rgba(14,165,160,0.06) 0%, transparent 55%);
+    radial-gradient(ellipse 60% 65% at 50% 50%, rgba(91,61,232,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 35% 40% at  8% 90%, rgba(14,165,160,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 25% 30% at 92% 10%, rgba(200,80,255,0.07) 0%, transparent 50%);
 }
+
+/* Twitch section */
 body.light .twitch-section::before {
   background:
-    radial-gradient(ellipse 60% 70% at 50% 50%, rgba(91,61,232,0.07) 0%, transparent 65%),
-    radial-gradient(ellipse 30% 35% at 85% 80%, rgba(14,165,160,0.05) 0%, transparent 55%);
+    radial-gradient(ellipse 60% 65% at 50% 55%, rgba(145,70,255,0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 35% at 88% 85%, rgba(14,165,160,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse 22% 28% at  8% 15%, rgba(91,61,232,0.06)  0%, transparent 50%);
 }
-body.light .twitch-section::after {
-  background:
-    linear-gradient(rgba(91,61,232,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(91,61,232,0.04) 1px, transparent 1px);
-  background-size: 48px 48px;
+
+/* Cards + strips */
+body.light .stat-card {
+  background: rgba(245,242,255,0.85);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 20px rgba(91,61,232,0.1), inset 0 1px 0 rgba(255,255,255,0.7);
 }
-body.light .stat-card { box-shadow: 0 2px 16px rgba(91,61,232,0.07); }
-body.light .hero-stats-strip { box-shadow: 0 8px 32px rgba(91,61,232,0.1); }
+body.light .hero-stats-strip {
+  background: rgba(245,242,255,0.8);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(91,61,232,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+body.light .twitch-card {
+  background: rgba(245,242,255,0.85);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px rgba(145,70,255,0.12), inset 0 1px 0 rgba(255,255,255,0.7);
+}
+body.light .nav {
+  background: rgba(238,234,255,0.88);
+  border-bottom-color: rgba(91,61,232,0.15);
+}
+/* Accent badge etc pick up purple tint naturally via --surface */
 
 /* ── Reset ──────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -319,22 +347,13 @@ body.light .hero-logo { mix-blend-mode: multiply; filter: drop-shadow(0 8px 32px
   position: relative;
   overflow: hidden;
 }
-/* Smooth fade from stats section above */
+/* Soft ambient orbs only — no grid (grid looked cursed) */
 .twitch-section::before {
   content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
   background:
-    radial-gradient(ellipse 60% 70% at 50% 50%,  rgba(145,70,255,0.08) 0%, transparent 65%),
-    radial-gradient(ellipse 35% 40% at 85% 80%,  rgba(127,90,240,0.06) 0%, transparent 55%),
-    radial-gradient(ellipse 25% 30% at 12% 20%,  rgba(44,182,125,0.05) 0%, transparent 50%);
-}
-/* Grid lines — same family */
-.twitch-section::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
-  background:
-    linear-gradient(rgba(145,70,255,0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(145,70,255,0.035) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, black 5%, transparent 72%);
+    radial-gradient(ellipse 65% 55% at 50% 60%,  rgba(145,70,255,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 28% 38% at 90% 15%,  rgba(127,90,240,0.05) 0%, transparent 55%),
+    radial-gradient(ellipse 22% 28% at  8% 85%,  rgba(44,182,125,0.04) 0%, transparent 50%);
 }
 .twitch-section .section-header,
 .twitch-section .twitch-card { position: relative; z-index: 1; }
