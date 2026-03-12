@@ -39,20 +39,64 @@ body {
 
 /* ── Variables: Light ───────────────────────────────────────── */
 body.light {
-  --bg:        #f0f2f7;
-  --surface:   #ffffff;
-  --surface2:  #f7f9fc;
-  --border:    rgba(0,0,0,0.08);
+  --bg:        #f0f0ff;
+  --surface:   #fafaff;
+  --surface2:  #eeecff;
+  --surface3:  #e8e6fa;
+  --border:    rgba(91,61,232,0.12);
   --text:      #0d0f1a;
-  --text-dim:  #6b7280;
+  --text-dim:  #5a5480;
   --accent:    #5b3de8;
   --accent2:   #0ea5a0;
   --accent3:   #e84040;
-  --glow:      rgba(91,61,232,0.15);
-  --shadow:    0 4px 24px rgba(0,0,0,0.07);
-  --shadow-lg: 0 12px 48px rgba(91,61,232,0.12);
-  --nav-bg:    rgba(240,242,247,0.88);
+  --glow:      rgba(91,61,232,0.18);
+  --shadow:    0 4px 24px rgba(91,61,232,0.08);
+  --shadow-lg: 0 12px 48px rgba(91,61,232,0.15);
+  --nav-bg:    rgba(240,238,255,0.88);
 }
+
+/* Light mode — richer background */
+body.light {
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 10%, rgba(91,61,232,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 80% 80%, rgba(14,165,160,0.06) 0%, transparent 55%),
+    #f0f0ff;
+}
+body.light .hero::before {
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 30%, rgba(91,61,232,0.1) 0%, transparent 70%),
+    radial-gradient(ellipse 35% 40% at 80% 70%, rgba(14,165,160,0.07) 0%, transparent 60%);
+}
+body.light .hero-grid {
+  background:
+    linear-gradient(rgba(91,61,232,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91,61,232,0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+body.light .stats-section::before {
+  background:
+    linear-gradient(rgba(91,61,232,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91,61,232,0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+body.light .stats-section::after {
+  background:
+    radial-gradient(ellipse 55% 65% at 50% 50%, rgba(91,61,232,0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 40% at 10% 90%, rgba(14,165,160,0.06) 0%, transparent 55%);
+}
+body.light .twitch-section::before {
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 50%, rgba(91,61,232,0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 35% at 85% 80%, rgba(14,165,160,0.05) 0%, transparent 55%);
+}
+body.light .twitch-section::after {
+  background:
+    linear-gradient(rgba(91,61,232,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91,61,232,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+body.light .stat-card { box-shadow: 0 2px 16px rgba(91,61,232,0.07); }
+body.light .hero-stats-strip { box-shadow: 0 8px 32px rgba(91,61,232,0.1); }
 
 /* ── Reset ──────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -269,7 +313,31 @@ body.light .hero-logo { mix-blend-mode: multiply; filter: drop-shadow(0 8px 32px
 .stat-name { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); transition: color 0.25s; }
 
 /* ── Twitch ─────────────────────────────────────────────────── */
-.twitch-section { padding: 5rem 2rem; text-align: center; position: relative; }
+.twitch-section {
+  padding: 5rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+/* Smooth fade from stats section above */
+.twitch-section::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 50%,  rgba(145,70,255,0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 35% 40% at 85% 80%,  rgba(127,90,240,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 25% 30% at 12% 20%,  rgba(44,182,125,0.05) 0%, transparent 50%);
+}
+/* Grid lines — same family */
+.twitch-section::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    linear-gradient(rgba(145,70,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(145,70,255,0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, black 5%, transparent 72%);
+}
+.twitch-section .section-header,
+.twitch-section .twitch-card { position: relative; z-index: 1; }
 .twitch-card {
   display: inline-flex; align-items: center; gap: 2rem;
   background: var(--surface); border: 1px solid rgba(145,70,255,0.2);
