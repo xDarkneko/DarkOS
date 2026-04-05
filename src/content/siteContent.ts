@@ -17,23 +17,9 @@ export type ChangelogItem = {
 export const DEFAULT_NEWS: NewsItem[] = [
   {
     id: 1,
-    date: 'Nov 02, 2023',
-    title: 'Vorbereitung auf Bot Integration',
-    content: 'Wir arbeiten intensiv an der Anbindung der Echtzeit-Statistiken vom Discord-Bot an dieses Dashboard.',
-    type: 'In Development',
-  },
-  {
-    id: 2,
-    date: 'Oct 28, 2023',
-    title: 'Brandneue Website Online!',
-    content: 'Das neue Team Darkness Hub ist nun live mit interaktiven Graphen, Topografie und mehr.',
-    type: 'Website Launch',
-  },
-  {
-    id: 3,
-    date: 'Oct 25, 2023',
-    title: 'Twitch Integrationen',
-    content: 'Die Live-Status Abfrage für xDarkNeko_ wurde optimiert und ist nun direkt auf der Startseite sichtbar.',
+    date: 'Apr. 05, 2026',
+    title: 'Website Version V1!',
+    content: 'We released the Website now in the Full version!',
     type: 'Update',
   },
 ];
@@ -41,34 +27,10 @@ export const DEFAULT_NEWS: NewsItem[] = [
 export const DEFAULT_CHANGELOGS: ChangelogItem[] = [
   {
     id: 1,
-    version: 'v2.4.2',
-    date: 'Nov 02, 2023',
+    version: 'v1.0.0',
+    date: 'Apr. 05, 2026',
     changes: [
-      'Logo-Assets erfolgreich implementiert.',
-      'Inhalte aktualisiert und Community-News integriert.',
-      'Performance der Graphen für mobile Geräte optimiert.',
-    ],
-    platform: 'Web',
-  },
-  {
-    id: 2,
-    version: 'v2.4.1',
-    date: 'Oct 30, 2023',
-    changes: [
-      'Topografie-Hintergrund für Light Mode angepasst (Midnight Black).',
-      'Sprachumschaltung zwischen GER/ENG korrigiert.',
-      'Magischer Cursor-Trail feiner gestaltet.',
-    ],
-    platform: 'Web',
-  },
-  {
-    id: 3,
-    version: 'v2.4.0',
-    date: 'Oct 28, 2023',
-    changes: [
-      'Initialer Release des neuen Community Dashboards.',
-      'Implementierung des Dynamic Island Status-Systems.',
-      'Zentrale Steuerung der Community-News.',
+      'Full overhaul of the entire website.',
     ],
     platform: 'Web',
   },
