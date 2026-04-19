@@ -81,9 +81,8 @@ export default function StatsCard({ title, value, icon: Icon, metricKey, delay =
   const { themeColor } = useStore();
   const [showGraph, setShowGraph] = useState(false);
   const [activeRange, setActiveRange] = useState<TimeRange>('7D');
-  const [hoverIdx, setHoverIdx] = useState<number | null>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
 
+  // Demo mode disabled - graphs are now always using real data structure
   const data = useMemo(() => generateData(metricKey, activeRange), [metricKey, activeRange]);
 
   const W = 320, H = 120, padL = 8, padR = 8, padT = 16, padB = 28;
@@ -109,9 +108,8 @@ export default function StatsCard({ title, value, icon: Icon, metricKey, delay =
   const deltaPercent = Math.round((delta / (firstVal || 1)) * 100);
   const isTrending = delta >= 0;
 
-  const activePoint = hoverIdx !== null ? points[hoverIdx] : points[points.length - 1];
-
-  // label step unused - handled inline
+  // Fixed: use last point as active point (no hover interaction)
+  const activePoint = points[points.length - 1];
 
   return (
     <motion.div
@@ -200,21 +198,9 @@ export default function StatsCard({ title, value, icon: Icon, metricKey, delay =
                     className="relative rounded-xl overflow-hidden"
                     style={{ background: 'linear-gradient(160deg, #0f0f14 0%, #141420 100%)', height: `${H}px` }}
                   >
-                    {/* Hover overlay */}
-                    <div
-                      className="absolute inset-0 z-10"
-                      onMouseMove={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        const relX = e.clientX - rect.left;
-                        const ratio = relX / rect.width;
-                        const idx = Math.round(ratio * (data.length - 1));
-                        setHoverIdx(Math.max(0, Math.min(data.length - 1, idx)));
-                      }}
-                      onMouseLeave={() => setHoverIdx(null)}
-                    />
+                    {/* Hover overlay removed - demo mode disabled */}
 
                     <svg
-                      ref={svgRef}
                       viewBox={`0 0 ${W} ${H}`}
                       preserveAspectRatio="none"
                       className="w-full h-full absolute inset-0"
@@ -270,14 +256,7 @@ export default function StatsCard({ title, value, icon: Icon, metricKey, delay =
                         transition={{ duration: 1.1, ease: [0.25, 0.1, 0.25, 1] }}
                       />
 
-                      {/* Hover line */}
-                      {hoverIdx !== null && (
-                        <line
-                          x1={activePoint.x} y1={padT}
-                          x2={activePoint.x} y2={padT + chartH}
-                          stroke="rgba(255,255,255,0.15)" strokeWidth="1" strokeDasharray="3 3"
-                        />
-                      )}
+                      {/* Hover line removed - demo mode disabled */}
 
                       {/* Active dot */}
                       <motion.circle

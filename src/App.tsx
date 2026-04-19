@@ -77,19 +77,12 @@ export default function App() {
     }
   }, [isDarkMode]);
 
-  // Only hide cursor on non-touch devices
   useEffect(() => {
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (!isTouchDevice) {
-      const style = document.createElement('style');
-      style.id = 'cursor-hide';
-      style.innerHTML = `
-        @media (pointer: fine) {
-          * { cursor: none !important; }
-        }
-      `;
-      document.head.appendChild(style);
-      return () => { style.remove(); };
+      // Remove old cursor-hide style if exists
+      const oldStyle = document.getElementById('cursor-hide');
+      if (oldStyle) oldStyle.remove();
     }
   }, []);
 
