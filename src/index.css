@@ -7,10 +7,10 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Hide default cursor on desktop for magical cursor */
+/* Hide default cursor on desktop for magical cursor - FIXED */
 @media (min-width: 768px) {
   body, a, button, [role="button"], input, select, textarea {
-    cursor: none !important;
+    cursor: auto !important;
   }
 }
 
